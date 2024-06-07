@@ -1,0 +1,11 @@
+:root, body {
+    font-size: 17px;
+    margin: 0;
+    padding: 0;
+    background-color: rgb(230, 230, 230);
+}
+
+@font-face {
+    font-family: "Mate";
+    src: url("../assets/fonts/Mate/Mate-Regular.ttf");
+}
