@@ -2,17 +2,18 @@
 import React from "react";
 import { useFormStatus } from "react-dom";
 
-export function LoginButton() {
+export default function LoginButton() {
   const { pending } = useFormStatus()
 
   const handleClick = (event: React.MouseEvent) => {
     if (pending) {
-        event.preventDefault()
+        event.preventDefault();
+        alert("Please enter an email address and password.");
     }
   }
 
   return (
-    <button aria-disabled={pending} type="submit" onClick={handleClick}>
+    <button disabled={pending} type="submit" onClick={handleClick}>
         Login
     </button>
   )

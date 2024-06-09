@@ -1,0 +1,23 @@
+.protected-input {
+    display: block;
+    position: relative;
+    width: 100%;
+    background-color: rgb(255, 255, 255);
+    border: 1px solid rgb(124, 124, 124);
+}
+
+.protected-input input {
+    width: calc(100% - 0.4ch - 4px - 2.6rem);
+    border: none;
+    background: none;
+}
+
+.protected-input svg {
+    position: absolute;
+    display: block;
+    width: 1.7rem;
+    height: 1.7rem;
+    top: 50%;
+    right: 0.6rem;
+    transform: translateY(-50%);
+}

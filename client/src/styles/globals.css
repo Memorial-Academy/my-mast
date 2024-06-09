@@ -5,7 +5,45 @@
     background-color: rgb(230, 230, 230);
 }
 
+h1 {
+    font-family: "Mate";
+}
+
+input {
+    font-size: 1rem;
+    font-family: "Play";
+    letter-spacing: 0.12ch;
+    padding: 0.3ch;
+    margin: 0;
+    border: 1px solid rgb(124, 124, 124);
+    background-color: rgb(255, 255, 255);
+    outline: none;
+    color: black;
+}
+
 @font-face {
     font-family: "Mate";
     src: url("../assets/fonts/Mate/Mate-Regular.ttf");
+}
+
+@font-face {
+    font-family: "Mate";
+    font-style: italic;
+    src: url("../assets/fonts/Mate/Mate-Italic.ttf");
+}
+
+@font-face {
+    font-family: "Play";
+    src: url("../assets/fonts/Play/Play-Regular.ttf");
+}
+
+@font-face {
+    font-family: "Play";
+    font-weight: bold;
+    src: url("../assets/fonts/Play/Play-Regular.ttf");
+}
+
+@font-face {
+    font-family: "Kode Mono";
+    src: url("../assets/fonts/Kode_Mono/KodeMono-VariableFont_wght.ttf");
 }

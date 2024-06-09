@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="256" height="256" viewBox="0 0 256 256">
+    <style>
+        text.sealText {
+            font-family: "Mate", "Times New Roman", serif;
+            font-size: 16px;
+            letter-spacing: 3px;
+            word-spacing: 6px;
+            fill: white;
+            dominant-baseline: middle;
+            text-anchor: middle;
+        }
+        #text path {
+            stroke: none;
+            fill: none;
+            stroke-width: 6;
+        }
+        #sailboat path {
+            stroke: white;
+            fill: white;
+        }
+    </style>
+
+    <!-- Background -->
+    <circle cx="128" cy="128" r="116" stroke="#09305c" stroke-width="24" fill="#000411" />
+
+    <!-- Text -->
+    <g id="text">
+        <path id="upperCurve" d="M12 128 A116 116 0 1 1 244 128" />
+        <path id="lowerCurve" d="M12 128 A116 116 180 1 0 244 128" />
+
+        <text class="sealText" >
+            <textPath xlink:href="#upperCurve" startOffset="50%">
+                MEMORIAL ACADEMY
+            </textPath>
+        </text>
+        <text class="sealText" >
+            <textPath xlink:href="#lowerCurve" startOffset="50%">
+                <tspan>of</tspan> SCIENCE <tspan>&amp;</tspan> TECHNOLOGY
+            </textPath>
+        </text>
+    </g>
+
+    <!-- Sailboat -->
+    <!-- Reference guides -->
+    <!-- <path d="M128 24 l0 208 M24 128 l208 0" stroke="#2e2e2e" stroke-width="1" /> -->
+    <g id="sailboat" transform="scale(0.7) translate(55 45)">
+        <path d="M0 198 c50 51 206 51 256 0 c-20 6 -236 6 -256 0" stroke-width="1"/> <!-- Hull -->
+        <path d="
+            M68 202 l0 -152
+            M160 202 l0 -192
+        " stroke-width="3" /> <!-- Masts -->
+        <!-- Sails -->
+        <path d="M67 52 l-52 135 l52 0 Z" /> <!-- Rear sail -->
+        <path d="M160 12 l-82 175 l82 0 Z" /> <!-- Aft main sail -->
+        <path d="
+            M160 32 l90 168
+            M168 47 l75 141 l-75 -7 Z
+            m0 134 l-8 4.5
+        " stroke-width="1" /> <!-- Fore main sail -->
+    </g>
+</svg>

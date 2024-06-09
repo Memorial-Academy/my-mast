@@ -1,20 +1,23 @@
 import { Metadata } from "next";
-import { LoginButton } from "@/components/LoginButton";
+import LoginButton from "@/components/LoginButton";
+import "@/styles/auth.css";
+import ProtectedInput from "@/components/ProtectedInput";
 
 export const metadata: Metadata = {
-  title: ""
-}
+  title: "Login | MyMAST",
+};
 
 export default function Home() {
   return (
     <>
       <div id="auth">
+        <img alt="MAST seal" src="/seal.svg" />
         <h1>Welcome to MyMAST</h1>
         <p>Login to continue</p>
 
         <form>
           <input type="email" name="email" placeholder="Email" required />
-          <input type="password" name="password" placeholder="Password" required />
+          <ProtectedInput placeholder="Password" />
           <LoginButton />
         </form>
       </div>
