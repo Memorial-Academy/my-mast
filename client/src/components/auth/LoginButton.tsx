@@ -13,8 +13,6 @@ export default function LoginButton() {
   }
 
   return (
-    <button disabled={pending} type="submit" onClick={handleClick}>
-        Login
-    </button>
+    <input disabled={pending} type="submit" onClick={handleClick}  value="Login"/>
   )
 }

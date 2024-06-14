@@ -1,7 +1,5 @@
 {
     "watch": ["src"],
     "ext": "ts",
-    "execMap": {
-        "ts": "npx tsc && node ./dist/index.js"
-    }
+    "exec": "npx tsc && node ./dist/index.js"
 }
