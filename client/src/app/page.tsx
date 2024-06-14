@@ -15,7 +15,7 @@ export default function Home() {
         <h1>Welcome to MyMAST</h1>
         <p>Login to continue</p>
 
-        <form>
+        <form action={process.env.NEXT_PUBLIC_API_URL + "/auth"} method="POST" >
           <input type="email" name="email" placeholder="Email" required />
           <ProtectedInput placeholder="Password" />
           <LoginButton />
