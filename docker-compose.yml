@@ -1,0 +1,15 @@
+name: mymast
+services:
+  mongodb:
+    image: mongo
+    env_file: "./config/mongo.env"
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+      - /.config/mongo.env:/docker-entrypoint-initdb.d/.env:ro
+      - ./config/mongo_docker_entrypoint.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+      - ./config/mongod.conf:/etc/mongod.conf:ro
+    restart: always
+volumes:
+  mongo_data:
