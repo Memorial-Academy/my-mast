@@ -14,15 +14,34 @@
 }
 
 #auth form {
-    display: flex;
-    flex-direction: column;
     width: 70%;
     padding: 0 15%;
     gap: 0.8em;
 }
 
-#auth button {
+form#signup {
+    padding: 0 7%;
+    width: 86%;
+}
+
+#auth input[type="submit"] {
     font-size: 1rem;
     font-family: "Play";
     letter-spacing: 0.12ch;
+    background-color: var(--background-dark-white);
+    width: calc(35% - 0.6ch);
+    margin: 3% 32.5%;
+}
+
+#auth input[type="submit"]:hover {
+    background-color: rgb(205,205,205);
+}
+
+#auth h2 {
+    font-size: 1.2rem;
+    font-weight: normal;
+}
+
+.role-selector {
+    border: 2px 
 }

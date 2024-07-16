@@ -2,7 +2,7 @@
 import React from "react";
 import { useFormStatus } from "react-dom";
 
-export default function LoginButton() {
+export default function LoginButton({text}: {text: string}) {
   const { pending } = useFormStatus()
 
   const handleClick = (event: React.MouseEvent) => {
@@ -13,6 +13,6 @@ export default function LoginButton() {
   }
 
   return (
-    <input disabled={pending} type="submit" onClick={handleClick}  value="Login"/>
+    <input disabled={pending} type="submit" onClick={handleClick} value={text} />
   )
 }

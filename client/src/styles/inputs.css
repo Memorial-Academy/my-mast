@@ -1,0 +1,16 @@
+label.labelled-input.required::after {
+    content: "*";
+    color: red;
+}
+
+.labelled-input-wrapper {
+    padding: 0.4rem 0;
+}
+
+input.labelled-input {
+    width: calc(100% - 0.6ch);
+}
+
+input[type="checkbox"], input[type="radio"] {
+    margin: 0 0.3rem;
+}

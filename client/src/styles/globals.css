@@ -1,12 +1,31 @@
+@import url(./inputs.css);
+
 :root, body {
+    --background-white: rgb(230,230,230);
+    --background-dark-white: rgb(218, 218, 218);
+    --light-gray: rgb(124,124,124);
+    --white: rgb(255,255,255);
+
     font-size: 17px;
     margin: 0;
     padding: 0;
-    background-color: rgb(230, 230, 230);
+}
+
+body {
+    background-color: var(--background-white);
 }
 
 h1 {
     font-family: "Mate";
+}
+
+h2 {
+    font-family: "Play";
+}
+
+p, label {
+    font-size: 1rem;
+    font-family: "Lato";
 }
 
 input {
@@ -15,10 +34,15 @@ input {
     letter-spacing: 0.12ch;
     padding: 0.3ch;
     margin: 0;
-    border: 1px solid rgb(124, 124, 124);
-    background-color: rgb(255, 255, 255);
+    border: 1px solid var(--light-gray);
+    background-color: var(--white);
     outline: none;
     color: black;
+}
+
+input[type="checkbox"], input[type="radio"] {
+    display: inline;
+    width: auto;
 }
 
 @font-face {
@@ -41,6 +65,23 @@ input {
     font-family: "Play";
     font-weight: bold;
     src: url("../assets/fonts/Play/Play-Regular.ttf");
+}
+
+@font-face {
+    font-family: "Lato";
+    src: url("../assets/fonts/Lato/Lato-Regular.ttf");
+}
+
+@font-face {
+    font-family: "Lato";
+    src: url("../assets/fonts/Lato/Lato-Bold.ttf");
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: "Lato";
+    src: url("../assets/fonts/Lato/Lato-Italic.ttf");
+    font-style: italic;
 }
 
 @font-face {
