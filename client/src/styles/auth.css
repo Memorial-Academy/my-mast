@@ -42,6 +42,6 @@ form#signup {
     font-weight: normal;
 }
 
-.role-selector {
-    border: 2px 
+.signup-role-tracker {
+    display: none;
 }

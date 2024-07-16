@@ -1,9 +1,9 @@
 import { Router } from "express";
+import { loginHandler, logoutHandler, signupHandler } from "../controllers/auth.controller";
 
 export const AuthRouter = Router();
 
-// POST /api
-AuthRouter.post("/login", (req, res) => {
-    console.log(req.body);
-    res.end();
-})
+
+AuthRouter.post("/login", loginHandler)
+AuthRouter.post("/logout", logoutHandler)
+AuthRouter.post("/signup", signupHandler)
