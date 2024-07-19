@@ -31,6 +31,12 @@ export default function Home() {
             protected
           />
           <LoginButton text="Login" />
+          <p>
+            Don't have an account? <a href="/signup">Create one today</a> to enroll in and volunteer for MAST programs!
+          </p>
+          <p>
+            MyMAST is a central dashboard to manage everything related to your participation in MAST programs.
+          </p>
         </form>
       </div>
     </>

@@ -13,7 +13,7 @@ export default function Home() {
             <div id="auth">
                 <img alt="MAST seal" src="/seal.svg" />
                 <h1>Welcome to MyMAST</h1>
-                <p>Create an account to access enroll, volunteer, and participate in our programs!</p>
+                <p>Create an account to enroll, volunteer, and participate in our programs!</p>
                     <SignupForm />
             </div>
         </>

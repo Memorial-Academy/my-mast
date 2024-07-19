@@ -6,6 +6,7 @@ import { signupUser } from "@/app/lib/auth";
 import LabelledInput from "../LabelledInputs";
 
 import ParentSignupPage from "@/app/signup/parent";
+import VolunteerSignupPage from "@/app/signup/volunteer";
 
 export default function SignupForm() {
     const [userRole, setUserRole] = useState("");
@@ -42,9 +43,30 @@ export default function SignupForm() {
                         protected
                         name="password"
                     />
+
+                    <h2>General Information</h2>
+                    <LabelledInput
+                        question="First Name"
+                        placeholder="First name"
+                        required
+                        name="first_name"
+                    />
+                    <LabelledInput
+                        question="Last Name"
+                        placeholder="Last name"
+                        required
+                        name="last_name"
+                    />
+                    <LabelledInput
+                        question="Phone Number"
+                        placeholder="Phone number"
+                        required
+                        name="phone_number"
+                    />
                 </>}
 
                 {(userRole == "parent") && <ParentSignupPage />}
+                {(userRole == "volunteer") && <VolunteerSignupPage />}
                 
                 {(userRole != "") && <>
                     <input type="checkbox" name="agreement" id="agreement" required />

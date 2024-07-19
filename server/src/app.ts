@@ -1,19 +1,20 @@
 import Express from "express";
-import cookieParser from "cookie-parser";
+import CookieParser from "cookie-parser";
 import cors from "cors";
 import multer from "multer";
+// import { connect as ConnectDatabase } from "./db" ;
+
 require("dotenv").config();
 
 const app = Express();
 
 // Middleware
-// app.use(bodyParser.urlencoded({extended: true}));
-// app.use(bodyParser.json());
-// app.use(cookieParser());
+app.use(CookieParser());
 const upload = multer();
 app.use(upload.none())
 
 app.use(cors());
+
 
 // Routing
 import { AuthRouter } from "./routes/auth.routes";
