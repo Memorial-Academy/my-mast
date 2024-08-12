@@ -29,12 +29,12 @@ function generateSession(uuid: string) {
 }
 
 export function loginHandler(req: Request, res: Response) {
-    console.log(req.body)
-    res.end();
+    
 }
 
 export function logoutHandler(req: Request, res: Response) {
-
+    console.log(req.body)
+    res.end();
 }
 
 export function signupHandler(req: Request, res: Response) {

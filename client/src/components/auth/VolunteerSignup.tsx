@@ -3,7 +3,7 @@ import LabelledInput from "@/components/LabelledInputs";
 export default function VolunteerSignupPage() {
     return (
         <>
-            <input className="signup-role-tracker" value="volunteer" name="role" />
+            <input readOnly className="signup-role-tracker" value="volunteer" title="role" name="role" />
 
             <h2>Volunteer Information</h2>
             <LabelledInput 
