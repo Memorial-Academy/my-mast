@@ -45,3 +45,8 @@ form#signup {
 .signup-role-tracker {
     display: none;
 }
+
+p#form-message {
+    text-align: left;
+    color: red;    
+}

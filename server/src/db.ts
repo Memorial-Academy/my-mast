@@ -1,10 +1,6 @@
 import mongoose from "mongoose";
 require("dotenv").config({path: "../.env"});
 
-export function disconnect() {
-    mongoose.disconnect();
-}
-
 export const AuthDB = mongoose.createConnection(
     `mongodb://127.0.0.1:27017/auth`, {
         authSource: "admin",

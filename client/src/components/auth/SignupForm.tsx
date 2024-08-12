@@ -4,12 +4,24 @@ import { useState } from "react";
 import { MultipleChoice } from "../LabelledInputs";
 import { signupUser } from "@/app/lib/auth";
 import LabelledInput from "../LabelledInputs";
+import { redirect } from "next/navigation";
 
-import ParentSignupPage from "@/app/signup/parent";
-import VolunteerSignupPage from "@/app/signup/volunteer";
+import ParentSignupPage from "./ParentSignup";
+import VolunteerSignupPage from "./VolunteerSignup";
 
 export default function SignupForm() {
     const [userRole, setUserRole] = useState("");
+    const [formMessage, setFormMessage] = useState("");
+
+    async function formSubmissionHandler(data: FormData) {
+        const status = await signupUser(data);
+        
+        if (status == "") {
+            redirect("/")
+        } else {
+            setFormMessage(status);
+        }
+    }
     
     return (
         <>
@@ -27,7 +39,7 @@ export default function SignupForm() {
                     type="radio"
                 />
             </form>
-            <form id="signup" action={signupUser}>
+            <form id="signup" action={formSubmissionHandler}>
                 {(userRole != "") && <>
                     <h2>Let's start with some basic info...</h2>
                     <LabelledInput
@@ -69,8 +81,9 @@ export default function SignupForm() {
                 {(userRole == "volunteer") && <VolunteerSignupPage />}
                 
                 {(userRole != "") && <>
-                    <input type="checkbox" name="agreement" id="agreement" required />
+                    <input type="checkbox" name="agreement" id="agreement" required value="agree" />
                     <label htmlFor="agreement">I agree to the Privacy Policy and Terms of Service for the Memorial Academy of Science and Technology</label>
+                    <p id="form-message">{formMessage}</p>
                     <LoginButton text="Create Account" />
                 </>}
             </form>

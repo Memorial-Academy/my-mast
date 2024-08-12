@@ -1,7 +1,7 @@
 import { Schema } from "mongoose";
 import { UserDB } from "../../db";
 
-export const ParentUser = UserDB.model(
+const ParentUser = UserDB.model(
     "Parents",
     new Schema ({
         name: {
@@ -14,3 +14,5 @@ export const ParentUser = UserDB.model(
         linkedStudents: [String]
     })
 )
+
+export default ParentUser;

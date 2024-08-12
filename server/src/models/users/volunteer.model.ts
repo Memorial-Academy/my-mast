@@ -1,7 +1,7 @@
 import { Schema } from "mongoose";
 import { UserDB } from "../../db";
 
-export const VolunteerUser = UserDB.model(
+const VolunteerUser = UserDB.model(
     "Volunteers",
     new Schema ({
         name: {
@@ -19,3 +19,5 @@ export const VolunteerUser = UserDB.model(
         school: String
     })
 )
+
+export default VolunteerUser;

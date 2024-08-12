@@ -1,9 +1,10 @@
 import { Request, Response } from "express";
 import { randomBytes } from "crypto";
 import bcrypt from "bcrypt";
-import { AuthUser } from "../models/auth/user.model";
-import { ParentUser } from "../models/users/parent.model";
-import { VolunteerUser } from "../models/users/volunteer.model";
+import AuthUser from "../models/auth/user.model";
+import ParentUser from "../models/users/parent.model";
+import VolunteerUser from "../models/users/volunteer.model";
+import UserSession from "../models/auth/session.model";
 
 function authenticationError(res: Response, err: string | Error) {
     console.error(err);
@@ -12,11 +13,23 @@ function authenticationError(res: Response, err: string | Error) {
 }
 
 function generateSession(uuid: string) {
+    let sessionToken = randomBytes(25).toString("hex");
 
+    // calculate session expiry date
+    // sessions will last for 40 days, or 3456000000 milliseconds
+    let sessionExpiry = Date.now() + 3456000000;
+    
+    UserSession.create({
+        uuid: uuid,
+        token: sessionToken,
+        expires: sessionExpiry
+    })
+
+    return { sessionToken, sessionExpiry };
 }
 
 export function loginHandler(req: Request, res: Response) {
-    console.log(req.body);
+    console.log(req.body)
     res.end();
 }
 
@@ -26,8 +39,9 @@ export function logoutHandler(req: Request, res: Response) {
 
 export function signupHandler(req: Request, res: Response) {
     // Ensure ToS and Privacy agreement
-    if (req.body.agreement != "on") {
-        throw "Could not create account";
+    if (req.body.agreement != "agree") {
+        authenticationError(res, "Agree to Terms of Service and Privacy Policy");
+        return;
     }
 
     // Hash & salt password
@@ -43,8 +57,8 @@ export function signupHandler(req: Request, res: Response) {
                 return;
             }
 
-            var id = randomBytes(25).toString("hex");
-            console.log(req.body)
+            var id = randomBytes(32).toString("hex");
+            // console.log(req.body)
             // Add data to the user authentication datbase
             AuthUser.create({
                 password: hash,
@@ -84,8 +98,12 @@ export function signupHandler(req: Request, res: Response) {
                 })
             }
 
-            res.writeHead(200);
-            res.end();
+            const session = generateSession(id);
+
+            res.writeHead(200, {
+                "Content-Type": "application/json"
+            });
+            res.end(JSON.stringify(session));
         })
     })
 }

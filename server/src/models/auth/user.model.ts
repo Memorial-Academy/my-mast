@@ -1,7 +1,7 @@
 import { Schema } from "mongoose";
-import { AuthDB } from "../db";
+import { AuthDB } from "../../db";
 
-export const AuthUser = AuthDB.model(
+const AuthUser = AuthDB.model(
     "AuthCredentials",
     new Schema ({
         password: String,
@@ -10,3 +10,5 @@ export const AuthUser = AuthDB.model(
         uuid: String,
     })
 )
+
+export default AuthUser;
