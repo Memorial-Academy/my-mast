@@ -2,9 +2,8 @@
 import LoginButton from "@/components/auth/LoginButton";
 import { useState } from "react";
 import { MultipleChoice } from "../LabelledInputs";
-import { signupUser } from "@/app/lib/auth";
+import Authenticate from "@/app/lib/auth";
 import LabelledInput from "../LabelledInputs";
-import { redirect } from "next/navigation";
 
 import ParentSignupPage from "./ParentSignup";
 import VolunteerSignupPage from "./VolunteerSignup";
@@ -14,12 +13,10 @@ export default function SignupForm() {
     const [formMessage, setFormMessage] = useState("");
 
     async function formSubmissionHandler(data: FormData) {
-        const status = await signupUser(data);
+        const status = await Authenticate(data, "/auth/signup");
         
-        if (status == "") {
-            redirect("/")
-        } else {
-            setFormMessage(status);
+        if (status != "") {
+            setFormMessage("Could not create account");
         }
     }
     
@@ -27,7 +24,7 @@ export default function SignupForm() {
         <>
             <form onChange={(e) => {
                 const target = e.target as HTMLInputElement;
-                setUserRole(target.value)
+                setUserRole(target.value);
             }}>
                 <h2>I am a...</h2>
                 <MultipleChoice

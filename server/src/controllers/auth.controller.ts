@@ -12,7 +12,7 @@ function authenticationError(res: Response, err: string | Error) {
     res.end(err);
 }
 
-function generateSession(uuid: string) {
+function generateSession(uuid: string, role: string) {
     let sessionToken = randomBytes(25).toString("hex");
 
     // calculate session expiry date
@@ -22,18 +22,37 @@ function generateSession(uuid: string) {
     UserSession.create({
         uuid: uuid,
         token: sessionToken,
-        expires: sessionExpiry
+        expires: sessionExpiry,
+        role: role
     })
 
     return { sessionToken, sessionExpiry };
 }
 
-export function loginHandler(req: Request, res: Response) {
-    
+export async function loginHandler(req: Request, res: Response) {
+    let user = await AuthUser.findOne({
+        email: req.body.email
+    });
+
+    if (!user) {
+        res.writeHead(401);
+        res.end("Account does not exist");
+        return;
+    }
+
+    bcrypt.compare(req.body.password, user.password, (err, match) => {
+        if (err) console.error(err);
+        
+        if (match) {
+            let session = generateSession(user.uuid, user.role);
+            res.writeHead(200);
+            res.end(JSON.stringify(session));
+        }
+    })
 }
 
 export function logoutHandler(req: Request, res: Response) {
-    console.log(req.body)
+    console.log(req.body);
     res.end();
 }
 
@@ -81,7 +100,7 @@ export function signupHandler(req: Request, res: Response) {
                     linkedStudents: []
                 })
             } else if (req.body.role == "volunteer") {
-                const bday = req.body.birthday.split("-"); // req.body.birthday is formatted as YYYY-MM-DD
+                let bday = req.body.birthday.split("-"); // req.body.birthday is formatted as YYYY-MM-DD
                 VolunteerUser.create({
                     name: {
                         first: req.body.first_name,
@@ -98,7 +117,7 @@ export function signupHandler(req: Request, res: Response) {
                 })
             }
 
-            const session = generateSession(id);
+            let session = generateSession(id, req.body.role);
 
             res.writeHead(200, {
                 "Content-Type": "application/json"

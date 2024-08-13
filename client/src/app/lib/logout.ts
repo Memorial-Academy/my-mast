@@ -3,7 +3,6 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 export default async function logoutUser() {
-    console.log("running!")
     let cookieStore = cookies();
 
     if (!cookieStore.has("id")) return;

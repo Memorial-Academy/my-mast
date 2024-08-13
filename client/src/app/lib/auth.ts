@@ -1,5 +1,6 @@
 "use server";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 function POSTData(data: FormData, endpoint: string) {
     return fetch(process.env.NEXT_PUBLIC_API_URL + endpoint, {
@@ -8,16 +9,12 @@ function POSTData(data: FormData, endpoint: string) {
     })
 }
 
-export async function loginUser(data: FormData) {
-    POSTData(data, "/auth/login");
-}
-
-export async function signupUser(data: FormData) {
+export default async function authenticate(data: FormData, endpoint: string) {
     const cookieStore = cookies();
-    const serverRes = await POSTData(data, "/auth/signup");
+    const serverRes = await POSTData(data, endpoint);
 
     if (!serverRes.ok) {
-        return "Could not create account";
+        return "Encountered error";
     } else {
         let credentials = await serverRes.json();
         cookieStore.set({
@@ -31,5 +28,5 @@ export async function signupUser(data: FormData) {
         })
     }
 
-    return "";
+    redirect("/dashboard");
 }
