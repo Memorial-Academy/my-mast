@@ -10,7 +10,7 @@ export default function Home() {
     async function formSubmissionHandler(data: FormData) {
         const status = await Authenticate(data, "/auth/login");
         
-        if (status != "") {
+        if (status) {
             setFormMessage("Could not login. Make sure the email and password are correct.");
         }
     }

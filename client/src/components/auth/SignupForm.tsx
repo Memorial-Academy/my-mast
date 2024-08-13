@@ -15,7 +15,7 @@ export default function SignupForm() {
     async function formSubmissionHandler(data: FormData) {
         const status = await Authenticate(data, "/auth/signup");
         
-        if (status != "") {
+        if (status) {
             setFormMessage("Could not create account");
         }
     }
