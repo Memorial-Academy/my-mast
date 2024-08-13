@@ -52,8 +52,12 @@ export async function loginHandler(req: Request, res: Response) {
 }
 
 export function logoutHandler(req: Request, res: Response) {
-    console.log(req.body);
-    res.end();
+    UserSession.deleteOne({
+        token: req.body
+    }).then(() => {
+        res.writeHead(200);
+        res.end();
+    });   
 }
 
 export function signupHandler(req: Request, res: Response) {
