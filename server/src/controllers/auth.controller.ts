@@ -45,7 +45,9 @@ export async function loginHandler(req: Request, res: Response) {
         
         if (match) {
             let session = generateSession(user.uuid, user.role);
-            res.writeHead(200);
+            res.writeHead(200, {
+                "Content-Type": "application/json"
+            });
             res.end(JSON.stringify(session));
         }
     })
@@ -54,10 +56,14 @@ export async function loginHandler(req: Request, res: Response) {
 export function logoutHandler(req: Request, res: Response) {
     UserSession.deleteOne({
         token: req.body
-    }).then(() => {
+    })
+    .then(() => {
         res.writeHead(200);
         res.end();
-    });   
+    })
+    .catch((err) => {
+        console.error(err);
+    })  
 }
 
 export function signupHandler(req: Request, res: Response) {
@@ -129,4 +135,25 @@ export function signupHandler(req: Request, res: Response) {
             res.end(JSON.stringify(session));
         })
     })
+}
+
+export async function getSession(req: Request, res: Response) {
+    const session = await UserSession.findOne({
+        token: req.body
+    });
+    
+    // Exit if no session exists
+    if (!session) {
+        res.writeHead(401);
+        res.end();
+        return;
+    }
+
+    res.writeHead(200, {
+        "Content-Type": "application/json"
+    });
+    res.end(JSON.stringify({
+        uuid: session.uuid,
+        role: session.role
+    }));
 }
