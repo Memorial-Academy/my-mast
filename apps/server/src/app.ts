@@ -17,7 +17,6 @@ app.use(BodyParser.json());
 
 app.use(cors());
 
-
 // Routing
 import { AuthRouter } from "./routes/auth.routes";
 app.use("/auth", AuthRouter);
@@ -25,7 +24,7 @@ app.use("/auth", AuthRouter);
 app.get("/", (req,res) => {
     res.writeHead(200);
     res.end("MyMAST API is running on " + process.env.PORT);
-})
+});
 
 app.listen(process.env.PORT, () => {
     console.log("Server running on port " + process.env.PORT);
