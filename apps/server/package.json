@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "main": "dist/index.js",
   "scripts": {
-    "dev": "npx nodemon"
+    "dev": "npx nodemon",
+    "check-types": "tsc --noEmit"
   },
   "repository": {
     "type": "git",

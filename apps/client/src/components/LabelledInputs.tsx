@@ -1,4 +1,4 @@
-import ProtectedInput from "./auth/ProtectedInput";
+import { ProtectedInput } from "@mymast/ui";
 
 type TextInputProps = {
     question: string,
@@ -49,8 +49,6 @@ export default function LabelledInput(props: TextInputProps) {
         </div>
     )
 }
-
-
 
 export function MultipleChoice(props: SelectableInputProps) {
     return props.values.map(value => {

@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "check-types": "tsc --noEmit"
   },
   "repository": {
     "type": "git",
@@ -23,7 +24,8 @@
     "axios": "^1.7.2",
     "next": "14.2.3",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "@mymast/ui": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^20",

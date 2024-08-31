@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import "@/styles/globals.css";
+import { Layout }  from "@mymast/ui"
 
 export const metadata: Metadata = {
   title: "MyMAST",
@@ -13,9 +13,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
+      <Layout>
         {children}
-      </body>
+      </Layout>
     </html>
   );
 }

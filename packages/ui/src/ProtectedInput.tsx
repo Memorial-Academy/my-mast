@@ -1,8 +1,8 @@
 "use client";
 import React from "react";
-import "@/styles/protected_input.css";
+import "../styles/protected_input.css";
 
-export default function ProtectedInput({placeholder, name, id}: {placeholder: string, name: string, id?: string}) {
+export function ProtectedInput({placeholder, name, id}: {placeholder: string, name: string, id?: string}) {
     const [isHidden, setIsHidden] = React.useState(true);
 
     const toggleHidden = () => {

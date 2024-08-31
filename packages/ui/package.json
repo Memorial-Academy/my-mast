@@ -1,6 +1,15 @@
 {
-    "name": "ui",
+    "name": "@mymast/ui",
+    "type": "module",
     "exports": {
-        ".": "./"
+        ".": "./src/index.ts"
+    },
+    "dependencies": {
+        "react": "^18.3.1",
+        "react-dom": "^18.3.1"
+    },
+    "devDependencies": {
+        "@types/react": "^18",
+        "typescript": "^5.5.4"
     }
 }
