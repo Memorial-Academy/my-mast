@@ -1,7 +1,8 @@
 {
-  "name": "mymast_server",
+  "name": "server",
   "version": "0.1.0",
   "main": "dist/index.js",
+  "private": true,
   "scripts": {
     "dev": "npx nodemon",
     "check-types": "tsc --noEmit"
