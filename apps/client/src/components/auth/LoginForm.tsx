@@ -1,6 +1,6 @@
 "use client";
 import Authenticate from "@/app/lib/auth";
-import LabelledInput from "@/components/LabelledInputs";
+import { LabelledInput } from "@mymast/ui";
 import LoginButton from "@/components/auth/LoginButton";
 import { useState } from "react";
 

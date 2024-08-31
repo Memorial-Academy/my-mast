@@ -1,4 +1,4 @@
-import { ProtectedInput } from "@mymast/ui";
+import { ProtectedInput } from "./ProtectedInput"
 
 type TextInputProps = {
     question: string,
@@ -16,7 +16,7 @@ type SelectableInputProps = {
     required?: boolean
 }
 
-export default function LabelledInput(props: TextInputProps) {
+export function LabelledInput(props: TextInputProps) {
     let elem = <></>;
 
     if (props.protected) {

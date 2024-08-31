@@ -1,4 +1,4 @@
-import LabelledInput from "@/components/LabelledInputs";
+import { LabelledInput } from "@mymast/ui";
 
 export default function VolunteerSignupPage() {
     return (
