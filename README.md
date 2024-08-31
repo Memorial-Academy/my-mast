@@ -17,7 +17,7 @@ Volunteers will be able to create accounts to sign up for programs, track their 
 ## Development
 This is a monorepo for the three central components of MyMAST:
 - `server`: Express.js application providing an API to access/modify data related to the application
-- `web`: Next.js application serving content to end users (students, volunteers, and parents)
+- `client`: Next.js application serving content to end users (students, volunteers, and parents)
 - `admin`: Next.js application providing access to the administrative controls of MyMAST infrastructure
 
 The project utilizes PNPM as the package manager, with Turborepo as a monorepo manager.
@@ -40,5 +40,5 @@ The `config` directory provides the config files utilized to correctly configure
 - `MONGO_USER`: see `MONGO_USER` in `config/mongo.env`
 - `MONGO_PASSWORD`:  see `MONGO_PASSWORD` in `config/mongo.env`
 
-#### `apps/web/.env`
+#### `apps/client/.env`
 - `NEXT_PUBLIC_API_URL`: the URL to be used by the application to connect to the API server (ex: localhost:5000)
