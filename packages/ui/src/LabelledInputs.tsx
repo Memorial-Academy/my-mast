@@ -1,4 +1,5 @@
-import { ProtectedInput } from "./ProtectedInput"
+import { ProtectedInput } from "./ProtectedInput";
+import React from "react";
 
 type TextInputProps = {
     question: string,

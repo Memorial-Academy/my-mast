@@ -5,7 +5,9 @@
         "target": "ES2022",
         "rootDir": "./src/",
         "outDir": "./dist/",
-        "skipLibCheck": true
+        "skipLibCheck": true,
+        "allowSyntheticDefaultImports": true,
+        "jsx": "react"
     },
     "exclude": ["node_modules", "dist"],
     "include": ["src"]
