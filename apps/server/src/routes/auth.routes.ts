@@ -7,3 +7,4 @@ AuthRouter.post("/login", Controller.loginHandler);
 AuthRouter.post("/logout", Controller.logoutHandler);
 AuthRouter.post("/signup", Controller.signupHandler);
 AuthRouter.post("/getsession", Controller.getSession);
+AuthRouter.post("/reset_password", Controller.resetPassword);

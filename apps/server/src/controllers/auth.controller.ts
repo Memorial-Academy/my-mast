@@ -157,3 +157,7 @@ export async function getSession(req: Request, res: Response) {
         role: session.role
     }));
 }
+
+export function resetPassword(req: Request, res: Response) {
+    
+}

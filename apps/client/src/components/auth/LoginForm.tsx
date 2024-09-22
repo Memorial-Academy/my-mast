@@ -20,25 +20,26 @@ export default function Home() {
             <form action={formSubmissionHandler}>
 
                 <LabelledInput
-                  question="Email"
-                  name="email"
-                  placeholder="Email"
-                  required
+                    question="Email"
+                    name="email"
+                    placeholder="Email"
+                    required
                 />
                 <LabelledInput
-                  question="Password"
-                  name="password"
-                  placeholder="Password"
-                  required
-                  protected
+                    question="Password"
+                    name="password"
+                    placeholder="Password"
+                    required
+                    protected
                 />
                 <p id="form-message">{formMessage}</p>
                 <LoginButton text="Login" />
+                <p id="password_reset"><a href="/forgot_password">Reset password</a></p>
                 <p>
-                  Don't have an account? <a href="/signup">Create one today</a> to enroll in and volunteer for MAST programs!
+                    Don't have an account? <a href="/signup">Create one today</a> to enroll in and volunteer for MAST programs!
                 </p>
                 <p>
-                  MyMAST is a central dashboard to manage everything related to your participation in MAST programs.
+                    MyMAST is a central dashboard to manage everything related to your participation in MAST programs.
                 </p>
             </form>
         </>

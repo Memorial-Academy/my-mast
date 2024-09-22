@@ -29,8 +29,8 @@ form#signup {
     font-family: "Play";
     letter-spacing: 0.12ch;
     background-color: var(--background-dark-white);
-    width: calc(35% - 0.6ch);
-    margin: 3% 32.5%;
+    width: calc(40% - 0.6ch); /* 0.6ch padding per side */
+    margin: 3% 30%;
 }
 
 #auth input[type="submit"]:hover {
@@ -48,5 +48,10 @@ form#signup {
 
 p#form-message {
     text-align: left;
-    color: red;    
+    color: red;
+}
+
+#password_reset {
+    font-size: 0.9rem;
+    text-decoration: underline;
 }
