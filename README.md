@@ -39,6 +39,10 @@ The `config` directory provides the config files utilized to correctly configure
 - `PORT`: API server port
 - `MONGO_USER`: see `MONGO_USER` in `config/mongo.env`
 - `MONGO_PASSWORD`:  see `MONGO_PASSWORD` in `config/mongo.env`
+- `MAIL_URL`: URL to connect to mail server
+- `MAIL_PORT`: port to connect to mail server
+- `MAIL_USER`: username to connect to mail server
+- `MAIL_PASSWORD`: password to connect to mail server
 
 #### `apps/client/.env`
 - `NEXT_PUBLIC_API_URL`: the URL to be used by the application to connect to the API server (ex: localhost:5000)

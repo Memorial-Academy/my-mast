@@ -1,5 +1,5 @@
 import { Schema } from "mongoose";
-import { AuthDB } from "../../db";
+import { AuthDB } from "../../scripts/db";
 
 export const UserRoles = ["parent", "student", "volunteer"]
 

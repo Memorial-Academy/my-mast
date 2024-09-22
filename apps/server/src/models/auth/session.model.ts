@@ -1,5 +1,5 @@
 import { Schema } from "mongoose";
-import { AuthDB } from "../../db";
+import { AuthDB } from "../../scripts/db";
 import { UserRoles } from "./user.model";
 
 const UserSession  = AuthDB.model(

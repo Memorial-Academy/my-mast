@@ -1,5 +1,5 @@
 import { Schema } from "mongoose";
-import { UserDB } from "../../db";
+import { UserDB } from "../../scripts/db";
 
 const ParentUser = UserDB.model(
     "Parents",

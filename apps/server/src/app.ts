@@ -3,6 +3,7 @@ import CookieParser from "cookie-parser";
 import cors from "cors";
 import multer from "multer";
 import BodyParser from "body-parser";
+import { sendMail } from "./scripts/mailer";
 
 require("dotenv").config();
 
