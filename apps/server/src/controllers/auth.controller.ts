@@ -5,6 +5,7 @@ import AuthUser from "../models/auth/user.model";
 import ParentUser from "../models/users/parent.model";
 import VolunteerUser from "../models/users/volunteer.model";
 import UserSession from "../models/auth/session.model";
+import PasswordResetRequest from "../models/auth/password_reset";
 
 function authenticationError(res: Response, err: string | Error) {
     console.error(err);
@@ -13,7 +14,7 @@ function authenticationError(res: Response, err: string | Error) {
 }
 
 function generateSession(uuid: string, role: string) {
-    let sessionToken = randomBytes(25).toString("hex");
+    let sessionToken = randomBytes(35).toString("hex");
 
     // calculate session expiry date
     // sessions will last for 40 days, or 3456000000 milliseconds
@@ -49,6 +50,9 @@ export async function loginHandler(req: Request, res: Response) {
                 "Content-Type": "application/json"
             });
             res.end(JSON.stringify(session));
+        } else {
+            res.writeHead(403);
+            res.end();
         }
     })
 }
@@ -158,6 +162,60 @@ export async function getSession(req: Request, res: Response) {
     }));
 }
 
-export function resetPassword(req: Request, res: Response) {
-    
+export async function resetPassword(req: Request, res: Response) {
+    var resetRequst = await PasswordResetRequest.findOne({token: req.body.token});
+
+    if (resetRequst) {
+        let user = (await AuthUser.findOne({email: resetRequst!.email}))!;
+        
+        await PasswordResetRequest.deleteOne({token: req.body.token});
+
+        bcrypt.genSalt(10, (err, salt) => {
+            if (err) authenticationError(res, err);
+
+            bcrypt.hash(req.body.password, salt, async (err, hash) => {
+                if (err) authenticationError(res, err);
+                
+                user.password = hash;
+                user.save();
+            })
+        })
+
+        await UserSession.deleteMany({uuid: user.uuid});
+
+        res.writeHead(200);
+    } else {
+        res.writeHead(403);
+    }
+
+    res.end();
+}
+
+export async function initiatePasswordReset(req: Request, res: Response) {
+    res.writeHead(200);
+
+    // check user exists
+    if (!await AuthUser.findOne({email: req.body})) {
+        console.log("Password reset request for unknown user: " + req.body);
+        res.end();
+        return;
+    } else {
+        console.log("Password reset request for: " + req.body);
+    };
+
+    // generate password reset request
+    var token: string;
+    var existingRequest = await PasswordResetRequest.findOne({email: req.body});
+    if (existingRequest) {
+        token = existingRequest.token;
+    } else {
+        token = randomBytes(25).toString("hex");
+        PasswordResetRequest.create({
+            email: req.body,
+            token: token
+        });
+    }
+
+    console.log(token)
+    res.end();
 }
