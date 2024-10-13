@@ -124,14 +124,14 @@ export function NewPassword({token}: {token: string}) {
                         question="Password"
                         name="password"
                         placeholder="Password"
-                        protected
+                        type="protected"
                         required
                     />
                     <LabelledInput
                         question="Confirm Password"
                         name="password2"
                         placeholder="Password"
-                        protected
+                        type="protected"
                         required
                     />
                     <p id="form-message">{message}</p>

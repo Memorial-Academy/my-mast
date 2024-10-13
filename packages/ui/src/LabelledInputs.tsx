@@ -1,13 +1,14 @@
-import { ProtectedInput } from "./ProtectedInput";
+import PhoneNumberInput from "./PhoneNumberInput";
+import ProtectedInput from "./ProtectedInput";
 import React from "react";
 
 type TextInputProps = {
     question: string,
-    placeholder: string,
+    placeholder?: string,
     name: string,
     type?: string,
     required?: boolean
-    protected?: boolean
+    // protected?: boolean
 }
 
 type SelectableInputProps = {
@@ -20,11 +21,17 @@ type SelectableInputProps = {
 export function LabelledInput(props: TextInputProps) {
     let elem = <></>;
 
-    if (props.protected) {
+    if (props.type == "protected") {
         elem = (<ProtectedInput
-            placeholder={props.placeholder}
+            placeholder={props.placeholder!}
             name={props.name}
-            id={"input_" + props.name} 
+            id={"input_" + props.name}
+        />)
+    } else if (props.type == "phone") {
+        elem = (<PhoneNumberInput
+            name={props.name}
+            id={"input_" + props.name}
+            required={props.required ? true : false}
         />)
     } else {
         elem = (<input

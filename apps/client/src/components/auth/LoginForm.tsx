@@ -30,7 +30,7 @@ export default function Home() {
                     name="password"
                     placeholder="Password"
                     required
-                    protected
+                    type="protected"
                 />
                 <p id="form-message">{formMessage}</p>
                 <LoginButton text="Login" />

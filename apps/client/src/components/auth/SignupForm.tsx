@@ -49,7 +49,7 @@ export default function SignupForm() {
                         question="Password"
                         placeholder="Password"
                         required
-                        protected
+                        type="protected"
                         name="password"
                     />
 
@@ -68,9 +68,9 @@ export default function SignupForm() {
                     />
                     <LabelledInput
                         question="Phone Number"
-                        placeholder="Phone number"
                         required
                         name="phone_number"
+                        type="phone"
                     />
                 </>}
 
