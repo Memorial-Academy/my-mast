@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { useState, useRef } from "react";
+import { useState } from "react";
 
 type PhoneNumberInputProps = {
     name: string,

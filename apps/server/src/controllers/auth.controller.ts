@@ -1,11 +1,12 @@
 import { Request, Response } from "express";
 import { randomBytes } from "crypto";
 import bcrypt from "bcrypt";
-import AuthUser from "../models/auth/user.model";
-import ParentUser from "../models/users/parent.model";
-import VolunteerUser from "../models/users/volunteer.model";
-import UserSession from "../models/auth/session.model";
-import PasswordResetRequest from "../models/auth/password_reset";
+import AuthUser from "../models/auth/user.model.js";
+import ParentUser from "../models/users/parent.model.js";
+import VolunteerUser from "../models/users/volunteer.model.js";
+import UserSession from "../models/auth/session.model.js";
+import PasswordResetRequest from "../models/auth/password_reset.js";
+import { validateEmail, validatePhoneNumber } from "../scripts/input_validation.js";
 
 function authenticationError(res: Response, err: string | Error) {
     console.error(err);
@@ -31,6 +32,11 @@ function generateSession(uuid: string, role: string) {
 }
 
 export async function loginHandler(req: Request, res: Response) {
+    if (!validateEmail(req.body.email)) {
+        authenticationError(res, "Invalid email");
+        return;
+    }
+    
     let user = await AuthUser.findOne({
         email: req.body.email
     });
@@ -74,6 +80,10 @@ export function signupHandler(req: Request, res: Response) {
     // Ensure ToS and Privacy agreement
     if (req.body.agreement != "agree") {
         authenticationError(res, "Agree to Terms of Service and Privacy Policy");
+        return;
+    }
+    if (!validateEmail(req.body.email) || !validatePhoneNumber(req.body.phone_number)) {
+        authenticationError(res, "Invalid email or phone number");
         return;
     }
 

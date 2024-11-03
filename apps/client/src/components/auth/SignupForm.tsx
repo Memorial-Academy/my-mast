@@ -1,9 +1,8 @@
 "use client";
 import LoginButton from "@/components/auth/LoginButton";
 import { useState } from "react";
-import { MultipleChoice } from "@mymast/ui";
+import { MultipleChoice, LabelledInput  } from "@mymast/ui";
 import Authenticate from "@/app/lib/auth";
-import { LabelledInput } from "@mymast/ui";
 
 import ParentSignupPage from "./ParentSignup";
 import VolunteerSignupPage from "./VolunteerSignup";
