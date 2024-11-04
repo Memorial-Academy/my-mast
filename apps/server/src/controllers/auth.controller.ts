@@ -14,26 +14,26 @@ function authenticationError(res: Response, err: string | Error) {
     res.end(err);
 }
 
-function generateSession(uuid: string, role: string) {
+async function generateSession(uuid: string, role: string) {
     let sessionToken = randomBytes(35).toString("hex");
 
     // calculate session expiry date
     // sessions will last for 40 days, or 3456000000 milliseconds
     let sessionExpiry = Date.now() + 3456000000;
     
-    UserSession.create({
+    await UserSession.create({
         uuid: uuid,
         token: sessionToken,
         expires: sessionExpiry,
         role: role
     })
 
-    return { sessionToken, sessionExpiry };
+    return { sessionToken, sessionExpiry, uuid };
 }
 
 export async function loginHandler(req: Request, res: Response) {
     if (!validateEmail(req.body.email)) {
-        authenticationError(res, "Invalid email");
+        authenticationError(res, "Please enter a valid email address.");
         return;
     }
     
@@ -41,17 +41,18 @@ export async function loginHandler(req: Request, res: Response) {
         email: req.body.email
     });
 
+    // Account does not exist
     if (!user) {
         res.writeHead(401);
-        res.end("Account does not exist");
+        res.end("Could not login. Make sure the email and password are correct.");
         return;
     }
 
-    bcrypt.compare(req.body.password, user.password, (err, match) => {
+    bcrypt.compare(req.body.password, user.password, async (err, match) => {
         if (err) console.error(err);
         
         if (match) {
-            let session = generateSession(user.uuid, user.role);
+            let session = await generateSession(user.uuid, user.role);
             res.writeHead(200, {
                 "Content-Type": "application/json"
             });
@@ -82,8 +83,11 @@ export function signupHandler(req: Request, res: Response) {
         authenticationError(res, "Agree to Terms of Service and Privacy Policy");
         return;
     }
-    if (!validateEmail(req.body.email) || !validatePhoneNumber(req.body.phone_number)) {
-        authenticationError(res, "Invalid email or phone number");
+    if (!validateEmail(req.body.email)) {
+        authenticationError(res, "Please enter a valid email address.");
+        return;
+    } else if (!validatePhoneNumber(req.body.phone_number)) {
+        authenticationError(res, "Please enter a valid phone number.");
         return;
     }
 
@@ -96,12 +100,12 @@ export function signupHandler(req: Request, res: Response) {
             if (err) authenticationError(res, err);
 
             if (await AuthUser.findOne({email: req.body.email})) {
-                authenticationError(res, "Could not create account");
+                authenticationError(res, "Could not create account; please try again. If you already have an account, please try resetting your password.");
                 return;
             }
 
             var id = randomBytes(32).toString("hex");
-            // console.log(req.body)
+            
             // Add data to the user authentication datbase
             AuthUser.create({
                 password: hash,
@@ -141,7 +145,7 @@ export function signupHandler(req: Request, res: Response) {
                 })
             }
 
-            let session = generateSession(id, req.body.role);
+            let session = await generateSession(id, req.body.role);
 
             res.writeHead(200, {
                 "Content-Type": "application/json"
@@ -158,7 +162,14 @@ export async function getSession(req: Request, res: Response) {
     
     // Exit if no session exists
     if (!session) {
-        res.writeHead(401);
+        res.writeHead(404);
+        res.end();
+        return;
+    }
+
+    if (session.expires <= Date.now()) {
+        UserSession.deleteOne({session});
+        res.writeHead(404);
         res.end();
         return;
     }

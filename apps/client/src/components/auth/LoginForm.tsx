@@ -11,7 +11,8 @@ export default function Home() {
         const status = await Authenticate(data, "/auth/login");
         
         if (status) {
-            setFormMessage("Could not login. Make sure the email and password are correct.");
+            // setFormMessage("Could not login. Make sure the email and password are correct.");
+            setFormMessage(status);
         }
     }
 
