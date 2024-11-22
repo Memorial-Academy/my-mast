@@ -131,3 +131,21 @@ Requests a password reset for a user given the email address and initiates the p
 
 **Response:**
 N/A
+
+
+## `/user/<role>`
+`<role>` can be equal to `volunteer` or `parent`. Responses may differ slightly based on role, differences will be noted.
+*A valid session token for the user is required to use endpoints on this route.* The server will authorize all requests by ensuring the session token is authorized to access information on that user.
+
+### `/user/<role>/profile`
+Returns functionally-important information related to the user.<br>
+
+**Request**
+```javascript
+{
+    token: string,  // User's session token
+    uuid: string    // User's UUID
+}
+```
+
+**Response**

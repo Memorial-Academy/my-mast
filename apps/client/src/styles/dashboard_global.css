@@ -1,0 +1,21 @@
+main {
+    margin: 0 15%;
+    width: 70%;
+}
+
+/* NAV */
+nav {
+    padding: 1vh 2vw;
+}
+
+a.logo {
+    text-decoration: none;
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+}
+
+.logo img {
+    width: 5rem;
+    border-radius: 25px;
+}

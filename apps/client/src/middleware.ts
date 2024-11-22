@@ -12,7 +12,11 @@ export async function middleware(request: NextRequest) {
             console.log(session.status);
 
             if (session.status == 200) {
-                return NextResponse.next();
+                const headers = new Headers(request.headers);
+                headers.set("X-UserRole", (await session.json()).role)
+                return NextResponse.next({
+                    request: {headers}
+                });
             } else {
                 throw "Invalid session";
             }

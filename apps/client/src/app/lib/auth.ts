@@ -17,6 +17,10 @@ export default async function authenticate(data: FormData, endpoint: string) {
         return await serverRes.text();
     } else {
         let credentials = await serverRes.json();
+        /* Session cookie syntax:
+         * [0]: token
+         * [1]: uuid
+         */
         cookieStore.set({
             name: "id",
             value: JSON.stringify([

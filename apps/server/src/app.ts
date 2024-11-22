@@ -19,8 +19,10 @@ app.use(BodyParser.json());
 app.use(cors());
 
 // Routing
-import { AuthRouter } from "./routes/auth.routes";
+import AuthRouter from "./routes/auth.routes";
+import UserRouter from "./routes/user.routes";
 app.use("/auth", AuthRouter);
+app.use("/user", UserRouter);
 
 app.get("/", (req,res) => {
     res.writeHead(200);

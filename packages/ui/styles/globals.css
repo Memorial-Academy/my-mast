@@ -17,6 +17,8 @@ body {
 
 h1 {
     font-family: "Mate";
+    color: black;
+    font-size: 1.8rem;
 }
 
 h2 {
