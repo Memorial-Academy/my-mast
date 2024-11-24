@@ -240,3 +240,13 @@ export async function initiatePasswordReset(req: Request, res: Response) {
     console.log(token)
     res.end();
 }
+
+export async function adminCheck(req: Request, res: Response) {
+    const user = await VolunteerUser.findOne({uuid: req.body});
+    if (user && user.admin) {
+        res.writeHead(200);
+    } else {
+        res.writeHead(404);
+    }
+    res.end();
+} 

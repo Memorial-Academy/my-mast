@@ -16,7 +16,8 @@ const VolunteerUser = UserDB.model(
             day: Number,
             year: Number
         },
-        school: String
+        school: String,
+        admin: {type: Boolean, default: false}
     })
 )
 

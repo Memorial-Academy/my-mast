@@ -9,5 +9,6 @@ AuthRouter.post("/signup", Controller.signupHandler);
 AuthRouter.post("/getsession", Controller.getSession);
 AuthRouter.post("/reset_password", Controller.resetPassword);
 AuthRouter.post("/request_reset_password", Controller.initiatePasswordReset);
+AuthRouter.post("/admincheck", Controller.adminCheck)
 
 export default AuthRouter;

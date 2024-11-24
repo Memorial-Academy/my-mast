@@ -132,6 +132,23 @@ Requests a password reset for a user given the email address and initiates the p
 **Response:**
 N/A
 
+### `/auth/admincheck`
+Returns 200 if a UUID is linked to a user with administrator permissions, returns 404 if they are not.
+
+**Method:** `POST`
+
+**Request:**
+```
+<uuid>
+```
+
+**Response:**
+```javascript
+/* Status code 200 */
+```
+```javascript
+/* Status code 404 */
+```
 
 ## `/user/<role>`
 `<role>` can be equal to `volunteer` or `parent`. Responses may differ slightly based on role, differences will be noted.

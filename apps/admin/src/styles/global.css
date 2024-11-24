@@ -1,0 +1,45 @@
+header {
+    width: 98vw;
+    padding: 1vw;
+    display: grid;
+    grid-template-columns: 30% 70%;
+}
+
+header a {
+    display:flex;
+    flex-direction: row;
+    align-items: center;
+    gap:1.6rem;
+    text-decoration: none;
+}
+
+header h1 {
+    display: inline;
+}
+
+header img {
+    width: 8.5rem;
+}
+
+header nav {
+    display:flex;
+    justify-content: flex-end;
+    flex-direction: row;
+    width: 100%;
+}
+
+main {
+    margin: 0 30%;
+}
+
+.bi-fold {
+    display: grid;
+    grid-template-columns: 49.5% 49.5%;
+    gap: 1%;
+}
+
+.tri-fold {
+    display: grid;
+    grid-template-columns: 32.5% 32.5% 32.5%;
+    gap: 1%;
+}
