@@ -10,7 +10,7 @@ type SelectableInputProps = {
 
 export function MultipleChoice(props: SelectableInputProps) {
     return (
-        <>
+        <div className="labelled-input-wrapper">
             <p>{props.question}</p>
             {props.values.map(value => {
                 const htmlValue = value.toLowerCase();
@@ -31,6 +31,6 @@ export function MultipleChoice(props: SelectableInputProps) {
                     </>
                 )
             })}
-        </>
+        </div>
     )
 }
