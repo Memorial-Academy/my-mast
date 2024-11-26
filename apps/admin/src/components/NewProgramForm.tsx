@@ -101,7 +101,7 @@ export default function CreateProgramForm() {
             data.courses.push({
                 name: getFormData(formData, `course${courseIndex}_name`)!,
                 duration: parseInt(getFormData(formData, `course${courseIndex}_duration`)!),
-                available: formData.getAll("course1_enrollment_options").map(val => {return parseInt(val.toString().split("week ")[1])})
+                available: formData.getAll(`course${courseIndex}_enrollment_options`).map(val => {return parseInt(val.toString().split("week ")[1])})
             })
 
             courseIndex++;
