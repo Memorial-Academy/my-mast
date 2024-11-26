@@ -27,7 +27,6 @@ export default function SignupForm() {
                 const target = e.target as HTMLInputElement;
                 setUserRole(target.value);
             }}>
-                <h2>I am a...</h2>
                 <MultipleChoice
                     name="user-role"
                     values={[
@@ -35,6 +34,7 @@ export default function SignupForm() {
                     ]}
                     required
                     type="radio"
+                    question="I am a..."
                 />
             </form>
             <form id="signup" action={formSubmissionHandler}>

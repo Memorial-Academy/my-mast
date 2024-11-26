@@ -1,6 +1,6 @@
 import PhoneNumberInput from "./PhoneNumberInput";
 import ProtectedInput from "./ProtectedInput";
-import React from "react";
+import React, { ChangeEventHandler } from "react";
 
 type TextInputProps = {
     question: string,
@@ -9,6 +9,7 @@ type TextInputProps = {
     type?: string,
     required?: boolean
     // protected?: boolean
+    onChange?: ChangeEventHandler<HTMLInputElement>
 }
 
 export function LabelledInput(props: TextInputProps) {
@@ -34,6 +35,7 @@ export function LabelledInput(props: TextInputProps) {
             placeholder={props.placeholder}
             className="labelled-input"
             required={props.required ? true : false}
+            onChange={props.onChange}
         />)
     }
     
