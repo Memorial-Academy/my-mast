@@ -1,6 +1,8 @@
-type Schedule = {
+type Schedule = {   // represents one day
     dayCount: number,
-    date: string,
+    date: number,
+    month: number,
+    year: number,
     start: number,
     end: number
 }

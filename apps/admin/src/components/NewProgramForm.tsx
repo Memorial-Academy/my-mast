@@ -1,9 +1,9 @@
 "use client";
 import CreateWeeklySchedule from "@/components/CreateWeeklySchedule";
-import { LabelledInput } from "@mymast/ui";
-import { MultipleChoice } from "@mymast/ui"
-import { FormEvent, useState } from "react";
 import CreateCourse from "./CreateCourse";
+import { LabelledInput, MultipleChoice } from "@mymast/ui";
+import { FormEvent, useState } from "react";
+import SubmitNewProgram from "@/app/lib/submit_program";
 
 // types inherited from @/index.d.ts
 
@@ -77,9 +77,18 @@ export default function CreateProgramForm() {
                     break;
                 }
 
+                // string from form is formatted YYYY-MM-DD, make into an array of individual properties
+                let dateString = getFormData(formData, `week${weekIndex}_day${dayIndex}_date`)!
+                    .split("-")
+                    .map(str => {
+                        return parseInt(str);
+                    }); 
+
                 week.push({
                     dayCount: dayIndex,
-                    date: getFormData(formData, `week${weekIndex}_day${dayIndex}_date`)!,
+                    date: dateString[2],
+                    month: dateString[1],
+                    year: dateString[0],
                     start: parseFloat(getFormData(formData, `week${weekIndex}_day${dayIndex}_start`)!),
                     end: parseFloat(getFormData(formData, `week${weekIndex}_day${dayIndex}_end`)!),
                 })
@@ -101,18 +110,33 @@ export default function CreateProgramForm() {
             data.courses.push({
                 name: getFormData(formData, `course${courseIndex}_name`)!,
                 duration: parseInt(getFormData(formData, `course${courseIndex}_duration`)!),
-                available: formData.getAll(`course${courseIndex}_enrollment_options`).map(val => {return parseInt(val.toString().split("week ")[1])})
+                available: formData.getAll(`course${courseIndex}_enrollment_options`).map(val => {
+                    return parseInt( val.toString().split("week ")[1] )
+                })
             })
 
             courseIndex++;
         }
 
         setProgramData(data);
-        console.log(data);
+    }
+
+    function submitProgram(form: FormData) {
+        let confirmation = confirm(
+            "WARNING!" +
+            `\n\nYou are about to create a program entitled "${programData!.name}." Upon submission, this program will immediately be added to MyMAST's publicly accessible/searchable programs list, and users will be able to enroll.` + 
+            `\n\nIf you are unsure, click "Cancel" and make any needed changes. By clicking "OK," the program will be finalized and submitted to MyMAST. Upon submission, you will be redirected to the published MyMAST page.`
+        )
+        
+        if (!confirmation) {
+            return;
+        }
+
+        SubmitNewProgram(programData!);
     }
 
     return (
-        <form onChange={generateData}>
+        <form onChange={generateData} action={submitProgram} >
             <h3>General Information</h3>
             <LabelledInput
                 question="Program Name"
@@ -237,9 +261,9 @@ export default function CreateProgramForm() {
 
             {page == 3 ? <>
                 <hr/>
-                <h2>Preview your program!</h2>
+                <h2>Final review!</h2>
                 <p><b>Make sure all the details are correct!</b> If they are, click submit.</p>
-
+                <input type="submit" value="Submit" />
             </> : <></>}
         </form>
     )

@@ -151,18 +151,127 @@ Returns 200 if a UUID is linked to a user with administrator permissions, return
 ```
 
 ## `/user/<role>`
-`<role>` can be equal to `volunteer` or `parent`. Responses may differ slightly based on role, differences will be noted.
-*A valid session token for the user is required to use endpoints on this route.* The server will authorize all requests by ensuring the session token is authorized to access information on that user.
+`<role>` can be equal to `volunteer` or `parent`. Responses may differ slightly based on role, differences will be noted.<br>
+*A valid session token for the user is required to use endpoints on this route.* The server will authorize all requests by ensuring the session token is authorized to access information on that user.<br>
+All requests will have the basic structure of 
+```javascript
+{
+    token: string,  // User's session token
+    uuid: string    // User's UUID
+    // endpoint specific data (if necessary)
+}
+```
+to ensure successful user authentication.
 
 ### `/user/<role>/profile`
-Returns functionally-important information related to the user.<br>
+Returns functionally-important information related to the user.
 
 **Request**
 ```javascript
 {
     token: string,  // User's session token
     uuid: string    // User's UUID
+    // no endpoint specific data
+}
+```
+
+**Response**<br>
+`<role> == "volunteer"`
+```javascript
+{
+    name: {
+        first: string,
+        last: string
+    },
+    email: string,
+    phone: string,
+    birthday: {
+        month: number,
+        day: number,
+        year: number
+    }
+}
+```
+`<role> == "parent"`
+```javascript
+{
+    name: {
+        first: string,
+        last: string
+    },
+    email: string,
+    phone: string,
+    linkedStudents: string[]    // Array of UUID's for the corresponding students linked to the parent account
+}
+```
+
+## `/admin`
+Allows modification/creation of programs and management of the rest of MyMAST's information.<br>
+Like the `/user/<role>` route, all requests to `/admin` will have the basic structure of
+```javascript
+{
+    token: string,  // User's session token
+    uuid: string    // User's UUID
+    // endpoint specific data (if necessary)
+}
+```
+to ensure successful user authentication.
+
+### `/admin/createprogram`
+Allows admins to create new programs to be published to MyMAST.
+
+**Request**
+```javascript
+{
+    token: string,  // User's session token
+    uuid: string    // User's UUID
+    data: {
+        name: string,
+        location: {
+            type: "virtual" | "physical"
+
+            // only present if type == "physical"
+            common_name?: string,
+            address?: string,
+            city?: string,
+            state?: string,
+            zip?: string
+        },
+        schedule: {
+            dayCount: number,
+            date: number,
+            month: number,
+            year: number,
+            start: number,
+            end: number
+        }[][],
+        courses: {
+            name: string,
+            duration: number    // Duration in number of weeks
+            available: Array<number>    // Weeks during which a new sessions begin (students are able to enroll)
+        }[],
+        contact: {
+            name: {
+                first: string,
+                last: string
+            },
+            phone: string,
+            email: string
+        }
+    }
 }
 ```
 
 **Response**
+```javascript
+/* Status code 200 */
+<program id>
+```
+
+```javascript
+/* Status code 403 */
+```
+
+```javascript
+/* Status code 400 */
+```

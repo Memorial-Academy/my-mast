@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" y="400" viewBox="0 0 256 400">
+    <defs>
+        <linearGradient id="background" x1="0%" x2="100%" y1="0%" y2="0%" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#ffcc35" />
+            <stop offset="45%" stop-color="#f99000" />
+            <stop offset="98%" stop-color="#ff611f" />
+        </linearGradient>
+    </defs>
+    <style>
+        circle {
+            stroke: none;
+        }
+        path {
+            stroke: url(#background);
+            stroke-width: 5;
+        }
+        text {
+            font-family: "Kode Mono", monospace;
+            font-weight: bold;
+            fill:#575757;
+            font-size:56px;
+            letter-spacing: 5px;
+            text-anchor: middle;
+            width: 256px;
+        }
+        tspan.bracket {
+            fill: #b4b4b4;
+        }
+        tspan.special {
+            fill: #fc70c6;
+        }
+    </style>
+    <g fill="url(#background)" width="256" height="256">
+        <circle cx="9" cy="98" r="9" />
+        <path d="M9 98 L68 150" />
+        <circle cx="36" cy="250" r="6" />
+        <path d="M36 250 L68 150" />
+        <circle cx="68" cy="150" r="24" />
+        <path d="M68 150 L120 60 M68 150 L124 236" />
+        <circle cx="120" cy="60" r="9" />
+        <path d="M120 60 L54 15 M120 60 L150 6 M120 60 L196 172" />
+        <circle cx="54" cy="15" r="9" />
+        <circle cx="124" cy="236" r="9" />
+        <path d="M124 236 L196 172" />
+        <circle cx="196" cy="172" r="24" />
+        <path d="M196 172 L240 250 M196 172 L196 45" />
+        <circle cx="196" cy="45" r="9" />
+        <path d="M196 45 L247 30 M196 45 L253 115" />
+        <circle cx="150" cy="6" r="6" />
+        <circle cx="247" cy="30" r="9" />
+        <circle cx="253" cy="115" r="3" />
+        <circle cx="240" cy="250" r="6" />
+    </g>
+    <text x="128" y="320">
+        <tspan class="bracket">&lt;</tspan>Let<tspan class="special">'</tspan>s</text>
+    <text x="128" y="384"> Code<tspan class="bracket">/&gt;</tspan></text>
+</svg>

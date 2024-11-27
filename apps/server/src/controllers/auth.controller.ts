@@ -5,7 +5,7 @@ import AuthUser from "../models/auth/user.model.js";
 import ParentUser from "../models/users/parent.model.js";
 import VolunteerUser from "../models/users/volunteer.model.js";
 import UserSession from "../models/auth/session.model.js";
-import PasswordResetRequest from "../models/auth/password_reset.js";
+import PasswordResetRequest from "../models/auth/password_reset.model.js";
 import { validateEmail, validatePhoneNumber } from "../scripts/input_validation.js";
 
 function authenticationError(res: Response, err: string | Error) {

@@ -14,3 +14,10 @@ export const UserDB = mongoose.createConnection(
         user: process.env.MONGO_USER,
         pass: process.env.MONGO_PASSWORD
 })
+
+export const ApplicationDB = mongoose.createConnection(
+    `mongodb://127.0.0.1:27017/application`, {
+        authSource: "admin",
+        user: process.env.MONGO_USER,
+        pass: process.env.MONGO_PASSWORD
+})

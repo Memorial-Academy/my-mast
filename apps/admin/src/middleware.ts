@@ -12,7 +12,7 @@ export async function middleware(request: NextRequest) {
                 method: "POST",
                 body: sessionCookie[1] // uuid
             });
-            console.log(session.status, adminCheck.status);
+            // console.log(session.status, adminCheck.status);
 
             if (session.status == 200 && adminCheck.status == 200) {
                 return NextResponse.next();

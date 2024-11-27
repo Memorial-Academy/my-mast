@@ -3,6 +3,7 @@ import ParentUser from "../models/users/parent.model";
 import VolunteerUser from "../models/users/volunteer.model";
 
 export async function profileInfo(req: Request, res: Response) {
+    // the user ID used to authenticate the request (middleware) is the same used in the database search
     switch (req.params.role) {
         case "volunteer":
             res.writeHead(200);

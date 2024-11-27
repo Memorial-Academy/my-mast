@@ -23,7 +23,7 @@ export function LabelledDropdown(props: LabelledDropdownProps) {
                 onChange={props.onChange}
             >
                 {props.values.map(opt => {
-                    return <option value={opt[0]}>{opt[1]}</option>
+                    return <option key={opt[0]} value={opt[0]}>{opt[1]}</option>
                 })}
             </select>
         </div>
