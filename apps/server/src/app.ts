@@ -22,9 +22,11 @@ app.use(cors());
 import AuthRouter from "./routes/auth.routes";
 import UserRouter from "./routes/user.routes";
 import AdminRouter from "./routes/admin.routes";
+import ApplicationRouter from "./routes/application.routes";
 app.use("/auth", AuthRouter);
 app.use("/user", UserRouter);
 app.use("/admin", AdminRouter);
+app.use("/app", ApplicationRouter);
 
 app.get("/", (req,res) => {
     res.writeHead(200);

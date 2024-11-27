@@ -1,0 +1,16 @@
+header {
+    padding: 1vh 2vw;
+}
+
+header a {
+    text-decoration: none;
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    align-items: center;
+}
+
+header img {
+    width: 7rem;
+    border-radius: 25px;
+}

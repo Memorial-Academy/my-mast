@@ -1,0 +1,20 @@
+main {
+    margin: 0 30vw;
+
+}
+
+h2 {
+    font-weight: bold;
+    font-size: 2rem;
+}
+
+/* Individual enrollment pages */
+.split {
+    display: grid;
+    grid-template-columns: 44% 54%;
+    gap: 2vw;
+}
+
+.split img {
+    width: 100%;
+}

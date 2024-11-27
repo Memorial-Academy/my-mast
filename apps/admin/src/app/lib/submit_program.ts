@@ -18,6 +18,6 @@ export default async function SubmitNewProgram(programData: ProgramData) {
     })
 
     if (res.status == 200) {
-        redirect(`${process.env.NEXT_PUBLIC_MYMAST_URL}/enroll/${await res.text()}`);
+        redirect(`${process.env.NEXT_PUBLIC_MYMAST_URL}/program/${await res.text()}`);
     }
 }

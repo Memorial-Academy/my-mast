@@ -66,7 +66,7 @@ input[type="checkbox"], input[type="radio"] {
 @font-face {
     font-family: "Play";
     font-weight: bold;
-    src: url("../fonts/Play/Play-Regular.ttf");
+    src: url("../fonts/Play/Play-Bold.ttf");
 }
 
 @font-face {

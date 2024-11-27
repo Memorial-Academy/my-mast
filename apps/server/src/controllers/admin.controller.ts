@@ -37,6 +37,7 @@ export function createProgram(req: Request, res: Response) {
         location: {
             loc_type: submitted.location.type,
             common_name: submitted.location.common_name,
+            address: submitted.location.address,
             city: submitted.location.city,
             state: submitted.location.state,
             zip: submitted.location.zip
