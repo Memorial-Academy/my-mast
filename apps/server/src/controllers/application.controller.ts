@@ -4,10 +4,12 @@ import Program from "../models/application/program.model";
 export async function getProgram(req: Request, res: Response) {
     const program = await Program.findOne({id: req.params.id}, {
         "name": 1,
+        "program_type": 1,
         "location": 1,
         "schedule": 1,
         "contact": 1,
         "courses": 1,
+        "volunteering_hours": 1,
         "id": 1,
         "_id": 0
     });

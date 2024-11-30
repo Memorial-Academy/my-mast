@@ -23,9 +23,17 @@ h1 {
 
 h2 {
     font-family: "Play";
+    font-size: 1.55rem;
+    font-weight: bold;
 }
 
-p, label, a, td, th {
+h3 {
+    font-family: "Play";
+    font-weight: bold;
+    font-size: 1.25rem;
+}
+
+p, label, a, td, th, li {
     font-size: 1rem;
     font-family: "Lato";
 }

@@ -249,4 +249,18 @@ export async function adminCheck(req: Request, res: Response) {
         res.writeHead(404);
     }
     res.end();
-} 
+}
+
+export async function getRole(req: Request, res: Response) {
+    let user = await AuthUser.findOne({uuid: req.params.uuid}, {
+        "role": 1,
+    })
+
+    if (user) {
+        res.writeHead(200);
+        res.end(user.role);
+    } else {
+        res.writeHead(404);
+        res.end();
+    }
+}

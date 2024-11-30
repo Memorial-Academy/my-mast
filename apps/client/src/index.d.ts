@@ -1,3 +1,6 @@
+// This types file represents the object as received from the API/database.
+// There will be mismatches (as indicated) from the types file in "admin"
+
 type Schedule = {   // represents one day
     dayCount: number,
     date: number,
@@ -9,6 +12,7 @@ type Schedule = {   // represents one day
 
 type ProgramData = {
     name: string,
+    program_type: string,   // set server-side for database entry
     location: {
         // `type` on admin, `loc_type` on database and client 
         loc_type: string,   // "virtual" | "physical"

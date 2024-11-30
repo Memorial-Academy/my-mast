@@ -6,6 +6,11 @@ const Program = ApplicationDB.model(
     new Schema({
         id: { type: String, required: true },
         name: { type: String, required: true },
+        program_type: { type: String, required: true },
+        volunteering_hours: { type: {
+            total: { type: Number, required: true },
+            weekly: { type: [Number], required: true }
+        }, required: true },
         location: { type: {
             loc_type: { type: String, required: true, enum: ["physical", "virtual"]},
             

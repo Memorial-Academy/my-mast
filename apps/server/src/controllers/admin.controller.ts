@@ -28,23 +28,51 @@ export function createProgram(req: Request, res: Response) {
     const id = randomBytes(12).toString("hex");
     console.log(id);
     
-    // create object for schedule information
+    // determine if the program is for Let's Code or STEMpark
+    let programType: string;
+    let programName = submitted.name.toLowerCase();
+    if (programName.indexOf("let's code") > -1) {
+        programType = "letscode";
+    } else if (programName.indexOf("stempark")> -1) {
+        programType = "stempark";
+    } else {
+        res.writeHead(400);
+        res.end("Ensure all required information is submitted");
+        return;
+    }
+
+    // calculate total and weekly volunteering hours
+    let totalVolunteering = 0;
+    let weeklyHours = new Array<number>(submitted.schedule.length);
+    for (var i = 0; i < submitted.schedule.length; i++) {
+        weeklyHours[i] = 0;
+        for (var day of submitted.schedule[i]) {
+            weeklyHours[i] += day.end - day.start;
+        }
+        totalVolunteering += weeklyHours[i];
+        console.log(weeklyHours)
+    }
 
     // add to database
     Program.create({
         id: id,
-        name: submitted.name,
+        name: validateData(submitted.name, res), 
+        program_type: programType,
         location: {
-            loc_type: submitted.location.type,
+            loc_type: validateData(submitted.location.type, res),
             common_name: submitted.location.common_name,
             address: submitted.location.address,
             city: submitted.location.city,
             state: submitted.location.state,
             zip: submitted.location.zip
         },
-        schedule: submitted.schedule,
-        contact: submitted.contact,
-        courses: submitted.courses
+        schedule: validateData(submitted.schedule, res),
+        contact: validateData(submitted.contact, res),
+        courses: validateData(submitted.courses, res),
+        volunteering_hours: {
+            total: totalVolunteering,
+            weekly: weeklyHours
+        }
     })
 
     res.writeHead(200);

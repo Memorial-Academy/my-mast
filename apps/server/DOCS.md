@@ -150,6 +150,19 @@ Returns 200 if a UUID is linked to a user with administrator permissions, return
 /* Status code 404 */
 ```
 
+### `/auth/role/<uuid>`
+Returns the role of the provided UUID
+
+**Method:** `GET`
+
+**Request:**<br>
+See URL
+
+**Response:**
+```
+<role>
+```
+
 ## `/user/<role>`
 `<role>` can be equal to `volunteer` or `parent`. Responses may differ slightly based on role, differences will be noted.<br>
 *A valid session token for the user is required to use endpoints on this route.* The server will authorize all requests by ensuring the session token is authorized to access information on that user.<br>
@@ -165,6 +178,8 @@ to ensure successful user authentication.
 
 ### `/user/<role>/profile`
 Returns functionally-important information related to the user.
+
+**Method:** `POST`
 
 **Request**
 ```javascript
@@ -220,6 +235,8 @@ to ensure successful user authentication.
 ### `/admin/createprogram`
 Allows admins to create new programs to be published to MyMAST.
 
+**Method:** `POST`
+
 **Request**
 ```javascript
 {
@@ -274,4 +291,63 @@ Allows admins to create new programs to be published to MyMAST.
 
 ```javascript
 /* Status code 400 */
+```
+
+## `/app`
+These are paths used by the application to retrieve/manage information related to the app's core functionality.
+
+### `/app/getprogram/<program_id>`
+Returns all information for the provided program ID.
+
+**Method:** `GET`
+
+**Request:**<br>
+See URL
+
+**Response:**
+```javascript
+/* Status code 200 */
+{
+    id: string,
+    name: string,
+    program_type: "stempark" | "letscode",
+    location: {
+        loc_type: "virtual" | "physical"
+
+        // only present if type == "physical"
+        common_name?: string,
+        address?: string,
+        city?: string,
+        state?: string,
+        zip?: string
+    },
+    schedule: {
+        dayCount: number,
+        date: number,
+        month: number,
+        year: number,
+        start: number,
+        end: number
+    }[][],
+    courses: {
+        name: string,
+        duration: number    // Duration in number of weeks
+        available: Array<number>    // Weeks during which a new sessions begin (students are able to enroll)
+    }[],
+    contact: {
+        name: {
+            first: string,
+            last: string
+        },
+        phone: string,
+        email: string
+    },
+    volunteering_hours: {
+        total: number,
+        weekly: number[]
+    }
+}
+```
+```javascript
+/* Status code 404 */
 ```
