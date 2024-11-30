@@ -49,9 +49,9 @@ export default async function Page({params}: {params: Params}) {
         session.uuid = authCookie[1];
         session.token = authCookie[0];
 
-        session.role = await (await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/role/${session.uuid}`)).json()
+        session.role = await (await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/role/${session.uuid}`)).text()
 
-        if (session.role != signupType) {
+        if ((session.role == "parent" && signupType != "enroll") || (session.role == "volunteer" && signupType != "volunteer")) {
             redirect(`/programs/${session.role == "parent" ? "enroll" : "volunteer"}/${id}`);
         }
     }

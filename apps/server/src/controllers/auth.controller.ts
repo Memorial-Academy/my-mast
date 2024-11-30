@@ -7,6 +7,7 @@ import VolunteerUser from "../models/users/volunteer.model.js";
 import UserSession from "../models/auth/session.model.js";
 import PasswordResetRequest from "../models/auth/password_reset.model.js";
 import { validateEmail, validatePhoneNumber } from "../scripts/input_validation.js";
+import StudentUser from "../models/users/student.model.js";
 
 function authenticationError(res: Response, err: string | Error) {
     console.error(err);
@@ -104,7 +105,7 @@ export function signupHandler(req: Request, res: Response) {
                 return;
             }
 
-            var id = randomBytes(32).toString("hex");
+            let id = randomBytes(32).toString("hex");
             
             // Add data to the user authentication datbase
             AuthUser.create({
@@ -117,6 +118,44 @@ export function signupHandler(req: Request, res: Response) {
             // Add data to the correct user database for all user info
             // Parent account
             if (req.body.role == "parent") {
+                let students = [];
+                
+                // Get the student information
+                let index = 1;
+                let moreStudents = true;
+                while (moreStudents) {
+                    if (!req.body[`student${index}_first_name`]) {
+                        moreStudents = false;
+                        break;
+                    }
+
+                    let birthday = req.body[`student${index}_birthday`].split("-")  // YYYY-MM-DD
+
+                    students.push({
+                        name: {
+                            first: req.body[`student${index}_first_name`],
+                            last: req.body[`student${index}_last_name`],
+                        },
+                        uuid: "s_" + randomBytes(32).toString("hex"),
+                        birthday: {
+                            day: birthday[2],
+                            month: birthday[1],
+                            year: birthday[0]
+                        },
+                        notes: req.body[`student${index}_additional_info`],
+                        linkedParent: id
+                    })
+
+                    index++;
+                }
+
+                // Create student accounts
+                for (var student of students) {
+                    StudentUser.create(student);
+                }
+
+
+                // Create the parent account
                 ParentUser.create({
                     name: {
                         first: req.body.first_name,
@@ -125,7 +164,9 @@ export function signupHandler(req: Request, res: Response) {
                     email: req.body.email,
                     uuid: id,
                     phone: req.body.phone_number,
-                    linkedStudents: []
+                    linkedStudents: students.map(student => {
+                        return student.uuid;
+                    })
                 })
             } else if (req.body.role == "volunteer") {
                 let bday = req.body.birthday.split("-"); // req.body.birthday is formatted as YYYY-MM-DD

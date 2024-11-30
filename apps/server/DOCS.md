@@ -59,6 +59,14 @@ Handles signup of new users.
     role: "parent" | "volunteer"
     agreement: boolean,     // agreement to Privacy Policy and Terms of Service,
     birthday?: string       // formatted as YYYY-MM-DD
+
+    // for parent accounts only
+    // students have an indefinite number. This number will be represented in form fields as [i]
+    student[i]_first_name: string
+    student[i]_last_name: string
+    student[i]_birthday: string // YYYY-MM-DD
+    student[i]_additional_info: string
+    [...]
 }
 ```
 
