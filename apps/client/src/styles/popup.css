@@ -1,0 +1,30 @@
+.popup-wrapper {
+    position: absolute;
+    z-index:999;
+    background-color: rgba(0,0,0,0.7);
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+}
+
+.popup {
+    width: 54vw;
+    height: 55vh;
+    margin: 20vh 20vw;
+    background-color: var(--background-white);
+    border: none;
+    border-radius: 2rem;
+    position: relative; 
+    z-index:1000;
+    padding: 2.5vh 3vw;
+}
+
+.popup-close {
+    cursor: pointer;
+    position: absolute;
+    top: 1ch;
+    font-size: 1.8rem;
+    right: 2ch;
+    margin: 0;
+}
