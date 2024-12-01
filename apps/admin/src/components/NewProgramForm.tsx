@@ -20,14 +20,14 @@ export default function CreateProgramForm() {
         let formData = new FormData(e.currentTarget);
         
         let locationData;
+        
         let locationTypeFormData = getFormData(formData, "location_type")
+        setLocationType(locationTypeFormData!)
         if (locationTypeFormData == "virtual") {
-            setLocationType("virtual");
             locationData = {
                 type: "virtual"
             };
-        } else if (locationTypeFormData == "in-person") {
-            setLocationType("physical");
+        } else if (locationTypeFormData == "physical") {
             locationData = {
                 type: "physical",
                 common_name: getFormData(formData, "location_common")!,
@@ -111,7 +111,7 @@ export default function CreateProgramForm() {
                 name: getFormData(formData, `course${courseIndex}_name`)!,
                 duration: parseInt(getFormData(formData, `course${courseIndex}_duration`)!),
                 available: formData.getAll(`course${courseIndex}_enrollment_options`).map(val => {
-                    return parseInt( val.toString().split("week ")[1] )
+                    return parseInt( val.toString() )
                 })
             })
 
@@ -151,7 +151,10 @@ export default function CreateProgramForm() {
                 name="location_type"
                 type="radio"
                 required
-                values={["Virtual", "In-person"]}
+                values={[
+                    ["virtual", "Virtual"], 
+                    ["physical", "In-person"]
+                ]}
                 question="In-person or Virtual?"
             />
             {/* In-person ("physical") location */}

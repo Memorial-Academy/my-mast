@@ -30,7 +30,8 @@ export default function SignupForm() {
                 <MultipleChoice
                     name="user-role"
                     values={[
-                        "Parent", "Volunteer"
+                        ["parent", "Parent"], 
+                        ["volunteer", "Volunteer"]
                     ]}
                     required
                     type="radio"
