@@ -5,7 +5,17 @@ import EnrollButton from "./EnrollButton";
 type ProgramInfoProps = {
     data: ProgramData,
     signupType: string,
-    uuid: string
+    user: {
+        uuid: string
+        sessionToken: string
+    },
+    students?: Array<{
+        name: {
+            first: string,
+            last: string,
+        },
+        uuid: string
+    }>
 }
 
 export default function ProgramInfo(props: ProgramInfoProps) {
@@ -81,7 +91,13 @@ export default function ProgramInfo(props: ProgramInfoProps) {
                         Learn more
                     </a> about the {data.program_type == "letscode" ? "Let's Code" : "STEMpark"} program on the MAST website!
                 </p> */}
-                <EnrollButton signupType={props.signupType as ("volunteer" | "enroll")} />
+                <EnrollButton 
+                    signupType={props.signupType as ("volunteer" | "enroll")} 
+                    uuid={props.user.uuid}
+                    sessionToken={props.user.sessionToken} 
+                    program={data}
+                    students={props.students}
+                />
             </div>
         </div>
     )

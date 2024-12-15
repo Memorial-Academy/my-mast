@@ -1,19 +1,31 @@
 "use client";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
+import Popup from "../Popup";
+import { StudentEnrollmentPopup } from "./StudentEnrollmentPopup";
 
 type EnrollButtonProps = {
     signupType: "enroll" | "volunteer",
-    uuid?: string
+    program: ProgramData
+    uuid?: string,
+    sessionToken?: string,
+    students?: Array<{
+        name: {
+            first: string,
+            last: string,
+        },
+        uuid: string
+    }>
 }
 
 export default function EnrollButton(props: EnrollButtonProps) {
+    const [popupActive, setPopupActive] = useState(false);
     const router = useRouter();
     let text = "";
 
     if (props.uuid) {
         if (props.signupType == "enroll") {
-            text = "Enroll your student(s)!";
+            text = `Enroll your student${props.students!.length > 1 ? "s" : ""}!`;
         } else if (props.signupType == "volunteer") {
             text = "I'm ready to volunteer!";
         }
@@ -30,13 +42,26 @@ export default function EnrollButton(props: EnrollButtonProps) {
             alert(`You need an account in order to ${props.signupType == "volunteer" ? "volunteer for" : "enroll in"} a program! Click \"OK\" to go to the login/create account page!`);
             router.push("/");
         } else {
-            
+            setPopupActive(true);
         }
     }
-    
+
+
     return (
-        <button title={text} onClick={signupHandler}>
-            {text}
-        </button>
+        <>
+            <button title={text} onClick={signupHandler}>
+                {text}
+            </button>
+            <Popup active={popupActive} onClose={() => {setPopupActive(false)}}>
+                <h2>Let's {props.signupType == "volunteer" ? "volunteer" : "get enrolled"}!</h2>
+                
+                {(props.signupType == "enroll" && props.students) ? <>
+                    <StudentEnrollmentPopup 
+                        students={props.students}
+                        program={props.program}
+                    />
+                </> : <></>}
+            </Popup>
+        </>
     )
 }

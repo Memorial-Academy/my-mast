@@ -11,6 +11,7 @@ type Schedule = {   // represents one day
 }
 
 type ProgramData = {
+    id: string,
     name: string,
     program_type: string,   // set server-side for database entry
     location: {
@@ -40,4 +41,31 @@ type Course = {
     name: string,
     duration: number    // Duration in number of weeks
     available: Array<number>    // Weeks during which a new sessions begin (students are able to enroll)
+}
+
+type Student = {
+    name: {
+        first: string,
+        last: string
+    },
+    notes: string | null,
+    uuid: string,
+    birthday: {
+        day: number,
+        month: number,
+        year: number
+    },
+    linkedParents: string,
+    enrollments: {
+        program: string,
+        course: string,
+        week: number
+    }[]
+}
+
+// Enrollment details
+type StudentEnrollmentInformation = {
+    id: string,
+    class: number,
+    week: number
 }

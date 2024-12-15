@@ -14,3 +14,7 @@ input.labelled-input {
 input[type="checkbox"], input[type="radio"] {
     margin: 0 0.3rem;
 }
+.labelled-input-wrapper p {
+    margin: 0;
+    margin-bottom: 0.5ch;
+}

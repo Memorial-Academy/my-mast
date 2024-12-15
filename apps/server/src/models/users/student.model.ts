@@ -16,7 +16,11 @@ const StudentUser = UserDB.model(
         }, required: true },
         notes: { type: String, required: false, default: "" },
         linkedParent: { type: String, required: true },
-        enrollments: {type: [String], required: false, default: [] }
+        enrollments: {type: [{
+            program: { type: String, required: true },
+            course: { type: Number, required: true },
+            week: { type: Number, required: true }
+        }], required: true, default: [] }
     })
 )
 

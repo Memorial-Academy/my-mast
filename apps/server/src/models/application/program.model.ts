@@ -30,6 +30,7 @@ const Program = ApplicationDB.model(
             end: { type: Number, required: true }
         }]], required: true },
         courses: { type: [{
+            id: { type: Number, required: true },
             name: { type: String, required: true },
             duration: { type: Number, required: true },
             available: { type: [Number], required: true }

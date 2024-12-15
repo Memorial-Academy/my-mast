@@ -29,6 +29,7 @@ export default async function Page({params}: {params: Params}) {
     const id = (await params).id;
     const signupType = (await params).signup;
     const req = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/app/program/${id}`);
+    let students = [];  // filled with information of students later
 
     if (["volunteer", "enroll"].indexOf(signupType) == -1 || req.status != 200) {
         redirect("/programs");
@@ -54,11 +55,41 @@ export default async function Page({params}: {params: Params}) {
         if ((session.role == "parent" && signupType != "enroll") || (session.role == "volunteer" && signupType != "volunteer")) {
             redirect(`/programs/${session.role == "parent" ? "enroll" : "volunteer"}/${id}`);
         }
+
+        // get information about students
+        if (signupType == "enroll") {
+            const studentInfo = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/parent/students`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    token: session.token,
+                    uuid: session.uuid
+                })
+            })
+            
+
+            students = (await studentInfo.json()).map((student: Student) => {
+                return {
+                    name: student.name,
+                    uuid: student.uuid
+                }
+            })
+        }
     }
 
     return (
         <>
-            <ProgramInfo data={data} signupType={signupType} uuid={session.uuid} />
+            <ProgramInfo 
+                data={data} 
+                signupType={signupType}
+                user={{
+                    uuid: session.uuid,
+                    sessionToken: session.token
+                }}
+                students={students}
+            />
         </>
     )
 }

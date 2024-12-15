@@ -16,7 +16,6 @@ export function MultipleChoice(props: SelectableInputProps) {
         <div className="labelled-input-wrapper">
             <p>{props.question}</p>
             {props.values.map(value => {
-                const htmlValue = value[0];
                 let id = `input_${props.name}_${value[0]}`;
                     
                 return (
@@ -24,17 +23,26 @@ export function MultipleChoice(props: SelectableInputProps) {
                         <input 
                             type={props.type}
                             value={value[0]}
-                            required={props.required ? true : false}
+                            required={props.required && props.type == "radio" ? true : false}
                             name={props.name}
                             id={id}
                             key={id}
                             onChange={(e) => {
                                 let temp = data;
-                                if(e.target.checked) {
-                                    temp.push(value[0])
-                                } else {
-                                    temp.splice(temp.indexOf(value[0]), 1)
+                                
+                                if (props.type == "radio") {
+                                    // process data if type is radio
+                                    temp = [value[0]]
+                                    temp[0] == value[0];
+                                } else if (props.type == "checkbox") {
+                                    // process data if type is checkbox
+                                    if (e.target.checked) {
+                                        temp.push(value[0])
+                                    } else {
+                                        temp.splice(temp.indexOf(value[0]), 1)
+                                    }
                                 }
+
                                 setData(temp);
 
                                 if (props.onChange) {

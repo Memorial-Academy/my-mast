@@ -228,6 +228,75 @@ Returns functionally-important information related to the user.
 }
 ```
 
+### `/user/parent/students`
+This endpoint is only available to users with the `role` of `parent`.<br>
+Returns the information for all the students linked to that parent account.
+
+**Method:** `POST`
+
+**Request**
+```javascript
+{
+    token: string,  // User's session token
+    uuid: string    // User's UUID
+    // no endpoint specific data
+}
+```
+
+**Respoonse**
+```javascript
+/* Status code 200 */
+{
+    name: {
+        first: string,
+        last: string
+    },
+    notes: string | null,
+    uuid: string,
+    birthday: {
+        day: number,
+        year: number,
+        month: number
+    },
+    linkedParent: string,
+    enrollments: string[]   // array of program IDs
+}[]
+```
+``` javascript
+/* Status code 404 */
+```
+
+### `/user/parent/newenrollment`
+This endpoint is only available to users with the `role` of `parent`.<br>
+Allows an authorized parent to add enrollments to any linked students.
+
+**Method:** `POST`
+
+**Request**
+```javascript
+{
+    token: string,  // User's session token
+    uuid: string    // User's UUID
+    program: string // program ID
+    data: {
+        id: string  // student's UUID
+        course: number  // course ID
+        week: number    // week of attendance
+    }[]
+}
+```
+
+**Respoonse**
+```javascript
+/* Status code 200 */
+```
+``` javascript
+/* Status code 403 */
+```
+``` javascript
+/* Status code 500 */
+```
+
 ## `/admin`
 Allows modification/creation of programs and management of the rest of MyMAST's information.<br>
 Like the `/user/<role>` route, all requests to `/admin` will have the basic structure of

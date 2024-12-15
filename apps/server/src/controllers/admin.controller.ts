@@ -53,6 +53,19 @@ export function createProgram(req: Request, res: Response) {
         console.log(weeklyHours)
     }
 
+    // generate IDs for courses
+    let coursesSubmitted = validateData(submitted.courses, res);
+    let courses = [];
+
+    for (var i = 0; i < coursesSubmitted.length; i++) {
+        courses.push({
+            id: i,
+            name: coursesSubmitted[i].name,
+            duration: coursesSubmitted[i].duration,
+            available: coursesSubmitted[i].available,
+        })
+    }
+
     // add to database
     Program.create({
         id: id,
@@ -68,7 +81,7 @@ export function createProgram(req: Request, res: Response) {
         },
         schedule: validateData(submitted.schedule, res),
         contact: validateData(submitted.contact, res),
-        courses: validateData(submitted.courses, res),
+        courses: courses,
         volunteering_hours: {
             total: totalVolunteering,
             weekly: weeklyHours
