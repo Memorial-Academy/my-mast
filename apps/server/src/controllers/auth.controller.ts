@@ -182,7 +182,9 @@ export function signupHandler(req: Request, res: Response) {
                         month: parseInt(bday[1]),
                         day: parseInt(bday[2]),
                         year: parseInt(bday[0])
-                    }
+                    },
+                    school: req.body.school,
+                    skills: req.body.skills
                 })
             }
 

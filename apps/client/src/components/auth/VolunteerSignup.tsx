@@ -18,6 +18,12 @@ export default function VolunteerSignupPage() {
                 required
                 name="birthday"
             />
+            <LabelledInput 
+                question="Do you have any special interest, experiences, etc. that you want us to know about? List them here!"
+                type="text"
+                name="skills"
+                placeholder="Brag about yourself here"
+            />
         </>
     )
 }
