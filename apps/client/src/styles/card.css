@@ -1,0 +1,17 @@
+.card {
+    background-color: white;
+    border: 3px solid var(--light-blue);
+    border-radius: 10px;
+    padding: 1rem;
+    margin: 2ch 0;
+}
+
+.card h4 {
+    margin: 0.8ch 0;
+}
+
+.card .action-link {
+    text-align: right;
+    width: 100%;
+    display: block;
+}

@@ -31,15 +31,3 @@ header nav {
 main {
     margin: 0 30%;
 }
-
-.bi-fold {
-    display: grid;
-    grid-template-columns: 49.5% 49.5%;
-    gap: 1%;
-}
-
-.tri-fold {
-    display: grid;
-    grid-template-columns: 32.5% 32.5% 32.5%;
-    gap: 1%;
-}

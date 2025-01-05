@@ -5,6 +5,7 @@
     --background-dark-white: rgb(218, 218, 218);
     --light-gray: rgb(124,124,124);
     --white: rgb(255,255,255);
+    --light-blue: rgb(27, 128, 223);
 
     font-size: 17px;
     margin: 0;
@@ -33,6 +34,12 @@ h3 {
     font-size: 1.25rem;
 }
 
+h4 {
+    font-size: 1.1em;
+    font-family: "Play";
+    font-weight: bold;
+}
+
 p, label, a, td, th, li {
     font-size: 1rem;
     font-family: "Lato";
@@ -55,6 +62,20 @@ input[type="checkbox"], input[type="radio"] {
     width: auto;
 }
 
+/* Useful classes */
+.bi-fold {
+    display: grid;
+    grid-template-columns: 49.5% 49.5%;
+    gap: 1%;
+}
+
+.tri-fold {
+    display: grid;
+    grid-template-columns: 32.5% 32.5% 32.5%;
+    gap: 1%;
+}
+
+/* Fonts */
 @font-face {
     font-family: "Mate";
     src: url("../fonts/Mate/Mate-Regular.ttf");

@@ -58,7 +58,7 @@ type Student = {
     linkedParents: string,
     enrollments: {
         program: string,
-        course: string,
+        course: number,
         week: number
     }[]
 }

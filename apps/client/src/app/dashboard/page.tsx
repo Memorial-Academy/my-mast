@@ -1,3 +1,4 @@
+import ParentDashboard from "@/components/dashboard/ParentDashboard";
 import { Metadata } from "next";
 import { cookies, headers } from "next/headers";
 
@@ -24,6 +25,8 @@ export default async function Page() {
     return (
         <>
             <h2>Welcome, {userData.name.first}!</h2>
+            {userRole == "parent" && <ParentDashboard uuid={sessionCookie[1]} token={sessionCookie[0]} />}
+            {userRole == "volunteer" && <p>hi</p>}
         </>
     )
 }
