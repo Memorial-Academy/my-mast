@@ -74,10 +74,10 @@ export function StudentEnrollmentPopup(props: StudentEnrollmentPopupProps) {
                         }
 
                         return <li>
-                            {name} is enrolling in {course.name} during week {info.week}. 
-                            The class lasts {course.duration} week{course.duration > 1 ? "s" : ""}&nbsp;
-                            and begins on {schedule[info.week - 1][0].month}/{schedule[info.week - 1][0].date}/{schedule[info.week - 1][0].year}&nbsp;
-                            and ends on {schedule[info.week + course.duration - 2].at(-1)!.month}/{schedule[info.week + course.duration - 2].at(-1)!.date}/{schedule[info.week + course.duration - 2].at(-1)!.year}.
+                            {name} is enrolling in {props.program.courses.length > 1 ? course.name : props.program.name} during week {info.week}. 
+                            The class lasts {course.duration} week{course.duration > 1 ? "s" : ""}
+                            &nbsp;and begins on {schedule[info.week - 1][0].month}/{schedule[info.week - 1][0].date}/{schedule[info.week - 1][0].year}
+                            &nbsp;and ends on {schedule[info.week + course.duration - 2].at(-1)!.month}/{schedule[info.week + course.duration - 2].at(-1)!.date}/{schedule[info.week + course.duration - 2].at(-1)!.year}.
                         </li>
                     })}
                 </ul>
@@ -89,7 +89,7 @@ export function StudentEnrollmentPopup(props: StudentEnrollmentPopupProps) {
                     <br/>
                     Note: donations are completely optional and have no impact on your enrollment.
                 </p>
-                <p><a href="https://memorialacademy.org/donate" target="_blank" rel="noopener">Click here</a> to donate (link will open in a new tab).</p>
+                <p><a href="https://memorialacademy.org/donate" target="_blank" rel="noopener">Click here</a> to make a tax-deductible donation (link will open in a new tab).</p>
 
                 <input type="button" value="Back" onClick={() => {setPage(1)}} />
                 <input type="submit" value="Submit" onClick={async () => {
@@ -140,7 +140,7 @@ type StudentEnrollmentSectionProps = {
 }
 
 function StudentEnrollmentSection(props: StudentEnrollmentSectionProps) {
-    const [course, setCourse] = useState(-1);
+    const [course, setCourse] = useState(props.classes.length > 1 ? -1 : 0);    // automatically select course 0 if there is only one class in the program
 
     return (
         <>
@@ -170,7 +170,18 @@ function StudentEnrollmentSection(props: StudentEnrollmentSectionProps) {
                         required
                     />
                 </> : <></>}
-            </> : <></>}
+            </> : <>
+                <input type="hidden" name={`${props.uuid}_class`} value={0} />
+                <MultipleChoice
+                    question={`Select the week you wish to attend ${props.classes[course].duration > 1 ? `(note: this is a ${props.classes[course].duration} week long course)` : ""}`}
+                    name={`${props.uuid}_week`}
+                    type="radio"
+                    values={props.classes[course].available.map(val => {
+                        return [val.toString(), `Week ${val}`];
+                    })}
+                    required
+                />
+            </>}
         </>
     )
 }

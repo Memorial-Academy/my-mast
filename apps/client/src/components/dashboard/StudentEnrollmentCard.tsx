@@ -28,7 +28,7 @@ export default function StudentEnrollmentCard({
             >
                 <div className="bi-fold">
                     <div>
-                        <p><b>Course:</b> {course.name}</p>
+                        {program.courses.length > 1 ? <p><b>Course:</b> {course.name}</p> : <></>}
                         <p><b>Location:</b> {program.location.loc_type == "physical" ? program.location.common_name : "Virtual (links will be sent out at a later date)"}</p>
                     </div>
                     <div>
