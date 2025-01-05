@@ -1,6 +1,6 @@
 "use client";
-import "@/styles/card.css";
-import { MouseEventHandler, ReactNode } from "react";
+import "../styles/card.css";
+import React, { MouseEventHandler, ReactNode } from "react";
 
 type CardProps = {
     header: string,
@@ -12,7 +12,7 @@ type CardProps = {
     }
 }
 
-export default function Card(props: CardProps) {
+export function Card(props: CardProps) {
     return (
         <div className="card">
             <h4>{props.header}</h4>

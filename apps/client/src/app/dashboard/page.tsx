@@ -1,7 +1,7 @@
 import ParentDashboard from "@/components/dashboard/ParentDashboard";
 import { Metadata } from "next";
 import { headers } from "next/headers";
-import { authorizeSession } from "../lib/auth";
+import authorizeSession from "@mymast/utils/authorize_session";
 import VolunteerDashboard from "@/components/dashboard/VolunteerDashboard";
 
 export const metadata: Metadata = {

@@ -1,5 +1,5 @@
 import React from "react";
-import getTimestamp from "@/app/lib/convert_timestamp";
+import getTimestamp from "@mymast/utils/convert_timestamp";
 import EnrollButton from "./EnrollButton";
 
 type ProgramInfoProps = {

@@ -1,6 +1,5 @@
 "use server";
-
-import { authorizeSession } from "./auth";
+import authorizeSession from "@mymast/utils/authorize_session";
 
 // Handlers for parent enrolling a student
 // initial verification of enrollment data

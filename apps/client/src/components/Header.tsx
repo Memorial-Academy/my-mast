@@ -1,7 +1,7 @@
 import React from "react";
 import "@/styles/header.css";
 import LogoutButton from "./auth/LogoutButton";
-import { authorizeSession } from "@/app/lib/auth";
+import authorizeSession from "@mymast/utils/authorize_session";
 
 type HeaderProps = {
     homeLink: string,
