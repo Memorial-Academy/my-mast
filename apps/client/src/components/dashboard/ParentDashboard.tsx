@@ -1,4 +1,4 @@
-import StudentEnrollmentCard from "./StudentEnrollmentCard"
+import EnrollmentCard from "./EnrollmentCard"
 
 type ParentDashboardProps = {
     uuid: string
@@ -25,17 +25,19 @@ export default async function ParentDashboard(props: ParentDashboardProps) {
                 return (
                     <div className="" key={student.uuid}>
                         <h3>{student.name.first}'s Enrollments</h3>
-                        {student.enrollments.map(async enrollment => {
+                        {student.enrollments.length > 0 ? student.enrollments.map(async (enrollment, index) => {
                             const program: ProgramData = await (await fetch(`${process.env.NEXT_PUBLIC_API_URL}/app/program/${enrollment.program}`)).json()
 
                             return (
-                                <StudentEnrollmentCard
+                                <EnrollmentCard
+                                    key={`${student.name.first}_${index}`}
                                     program={program}
                                     course={program.courses[enrollment.course]}
                                     week={enrollment.week}
+                                    type="parent"
                                 />
                             )
-                        })}
+                        }) : <p>{student.name.first} is currently not enrolled in any programs. <a href="/programs">Get enrolled in some programs today!</a></p>}
                     </div>
                 )
             })}

@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import Popup from "../Popup";
-import convertTimestamp from "@/app/lib/convert_timestamp";
+import convertTimestamp from "@mymast/utils/convert_timestamp";
 
 type EnrollmentCardScheduleProps = {
     course: Course,

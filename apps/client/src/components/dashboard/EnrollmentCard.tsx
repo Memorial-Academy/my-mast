@@ -1,18 +1,19 @@
 "use client";
-import Card from "../Card";
+import { Card } from "@mymast/ui";
 import EnrollmentCardSchedule from "./EnrollmentCardSchedule"
 import Popup from "../Popup";
 import { useState } from "react";
 
-type StudentEnrollmentCardProps = {
+type EnrollmentCardProps = {
     program: ProgramData,
     course: Course,
-    week: number
+    week: number,
+    type: "volunteer" | "parent"
 }
 
-export default function StudentEnrollmentCard({
-    program, course, week
-}: StudentEnrollmentCardProps) {
+export default function EnrollmentCard({
+    program, course, week, type
+}: EnrollmentCardProps) {
     const [popupActive, setPopupActive] = useState(false);
     
     return (

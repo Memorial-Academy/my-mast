@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import ProgramInfo from "@/components/program_signup/ProgramInfo";
-import { authorizeSession } from "@/app/lib/auth";
+import authorizeSession from "@mymast/utils/authorize_session";
 
 type Params = Promise<{
     signup: string,
