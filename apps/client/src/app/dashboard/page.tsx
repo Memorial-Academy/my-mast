@@ -1,7 +1,8 @@
 import ParentDashboard from "@/components/dashboard/ParentDashboard";
 import { Metadata } from "next";
-import { cookies, headers } from "next/headers";
+import { headers } from "next/headers";
 import { authorizeSession } from "../lib/auth";
+import VolunteerDashboard from "@/components/dashboard/VolunteerDashboard";
 
 export const metadata: Metadata = {
     title: "Dashboard | MyMAST"
@@ -23,7 +24,7 @@ export default async function Page() {
         <>
             <h2>Welcome, {userData.name.first}!</h2>
             {userRole == "parent" && <ParentDashboard uuid={session.uuid} token={session.token} />}
-            {userRole == "volunteer" && <p>hi</p>}
+            {userRole == "volunteer" && <VolunteerDashboard uuid={session.uuid} token={session.token} /> }
         </>
     )
 }

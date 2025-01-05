@@ -15,7 +15,7 @@ type StudentEnrollmentPopupProps = {
     program: ProgramData
 }
 
-export function StudentEnrollmentPopup(props: StudentEnrollmentPopupProps) {
+export default function StudentEnrollmentPopup(props: StudentEnrollmentPopupProps) {
     const [page, setPage] = useState(1);
     const [enrollmentSections, setEnrollmentSections] = useState<Array<React.ReactNode>>([]);
     const [enrollment, setEnrollment] = useState<Array<StudentEnrollmentInformation>>([]);
@@ -28,7 +28,9 @@ export function StudentEnrollmentPopup(props: StudentEnrollmentPopupProps) {
                     setPage(2);
                     setEnrollment(await studentEnrollment(data));
                 }}
-                style={{display: `${page == 1 ? "block" : "none"}`}}
+                style={{
+                    display: `${page == 1 ? "block" : "none"}`
+                }}
             >
                 <MultipleChoice
                     question="Select the students you wish to enroll."
@@ -59,7 +61,7 @@ export function StudentEnrollmentPopup(props: StudentEnrollmentPopupProps) {
                 {enrollmentSections}
                 {enrollmentSections.length > 0 ? <input type="submit" value="Next" /> : <></>}
             </form>
-            {page == 2 ? <>
+            {page == 2 && <>
                 <h3>Confirm your enrollment details</h3>
                 <ul>
                     {enrollment.map(info => {
@@ -91,7 +93,9 @@ export function StudentEnrollmentPopup(props: StudentEnrollmentPopupProps) {
                 </p>
                 <p><a href="https://memorialacademy.org/donate" target="_blank" rel="noopener">Click here</a> to make a tax-deductible donation (link will open in a new tab).</p>
 
-                <input type="button" value="Back" onClick={() => {setPage(1)}} />
+                <input type="button" value="Back" onClick={() => {
+                    setPage(1);
+                }} />
                 <input type="submit" value="Submit" onClick={async () => {
                     let status = await submitStudentEnrollment(enrollment, props.program.id);
                     if (status) {
@@ -101,8 +105,8 @@ export function StudentEnrollmentPopup(props: StudentEnrollmentPopupProps) {
                     }
                 }}/>
                 <p>{confirmation}</p>
-            </> : <></>}
-            {page == 3 ? <>
+            </>}
+            {page == 3 && <>
                 <h3>All done!</h3>
                 <p>
                     Thanks for enrolling in {props.program.name}! We're looking forward to having&nbsp;
@@ -124,7 +128,7 @@ export function StudentEnrollmentPopup(props: StudentEnrollmentPopupProps) {
                 <p>
                     Check your <Link href="/dashboard">parent dashboard</Link> to see more information about this enrollment. Additionally, you should receive a confirmation email in a few minutes. Please note that sometimes our emails get mark as spammed, or get blocked by certain email providers. Regardless, your MyMAST parent dashboard will display all the necessary information about your enrollment!
                 </p>
-            </> : <></>}
+            </>}
         </>
     )
 }

@@ -2,7 +2,8 @@
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import Popup from "../Popup";
-import { StudentEnrollmentPopup } from "./StudentEnrollmentPopup";
+import StudentEnrollmentPopup from "./StudentEnrollmentPopup";
+import VolunteerEnrollmentPopup from "./VolunteerEnrollmentPopup";
 
 type EnrollButtonProps = {
     signupType: "enroll" | "volunteer",
@@ -60,7 +61,7 @@ export default function EnrollButton(props: EnrollButtonProps) {
                         students={props.students}
                         program={props.program}
                     />
-                </> : <></>}
+                </> : <VolunteerEnrollmentPopup program={props.program} />}
             </Popup>
         </>
     )

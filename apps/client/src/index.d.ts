@@ -39,8 +39,9 @@ type ProgramData = {
 
 type Course = {
     name: string,
-    duration: number    // Duration in number of weeks
-    available: Array<number>    // Weeks during which a new sessions begin (students are able to enroll)
+    duration: number,   // Duration in number of weeks
+    available: Array<number>,   // Weeks during which a new sessions begin (students are able to enroll)
+    id: number
 }
 
 type Student = {
@@ -68,4 +69,11 @@ type StudentEnrollmentInformation = {
     id: string,
     class: number,
     week: number
+}
+
+type VolunteerSignupInformation = {
+    weeks: Array<number>,
+    courses: Array<number>,
+    instructor: boolean,
+    skills: string
 }
