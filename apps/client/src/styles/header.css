@@ -1,8 +1,10 @@
 header {
     padding: 1vh 2vw;
+    display: grid;
+    grid-template-columns: 40% 60%;
 }
 
-header a {
+header a.title {
     text-decoration: none;
     display: flex;
     flex-direction: row;
@@ -11,6 +13,23 @@ header a {
 }
 
 header img {
-    width: 7rem;
+    width: 6rem;
     border-radius: 25px;
+}
+
+header nav {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+header nav a {
+    font-size: 1.1rem;
+    color: black;
+    text-decoration: none;
+}
+
+header nav a:hover {
+    text-decoration: underline;
 }

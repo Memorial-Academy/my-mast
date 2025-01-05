@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import ProgramInfo from "@/components/program_signup/ProgramInfo";
-import { cookies } from "next/headers";
+import { authorizeSession } from "@/app/lib/auth";
 
 type Params = Promise<{
     signup: string,
@@ -38,17 +38,16 @@ export default async function Page({params}: {params: Params}) {
     const data: ProgramData = await req.json();
 
     // Check whether a user is logged in
-    const cookieStore = cookies();
+    const authCookie = await authorizeSession();
 
     let session = {
         uuid: "",
         token: "",
         role: ""
     }
-    if (cookieStore.has("id")) {
-        let authCookie = JSON.parse(cookieStore.get("id")!.value)
-        session.uuid = authCookie[1];
-        session.token = authCookie[0];
+    if (authCookie) {
+        session.uuid = authCookie.uuid;
+        session.token = authCookie.token;
 
         session.role = await (await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/role/${session.uuid}`)).text()
 

@@ -40,7 +40,7 @@ h4 {
     font-weight: bold;
 }
 
-p, label, a, td, th, li {
+p, label, a, td, th, li, nav {
     font-size: 1rem;
     font-family: "Lato";
 }

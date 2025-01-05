@@ -37,3 +37,20 @@ export default async function authenticate(data: FormData, endpoint: string) {
         redirect("/dashboard");
     }
 }
+
+export async function authorizeSession() {
+    const cookieStore = cookies();
+
+    if (cookieStore.has("id")) {
+        let sessionCookie = JSON.parse(cookieStore.get("id")!.value)
+
+        let session = {
+            uuid: sessionCookie[1],
+            token: sessionCookie[0]
+        }
+
+        return session;
+    } else {
+        return;
+    }
+}
