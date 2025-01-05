@@ -266,13 +266,14 @@ Returns the information for all the students linked to that parent account.
 /* Status code 404 */
 ```
 
-### `/user/parent/newenrollment`
-This endpoint is only available to users with the `role` of `parent`.<br>
-Allows an authorized parent to add enrollments to any linked students.
+### `/user/<role>/newenrollment`
+`parent`: Allows an authorized parent to add enrollments to any linked students.
+`volunteer`: Allows an authorized volunteer to signup for a new program
 
 **Method:** `POST`
 
 **Request**
+`<role> == "parent"`
 ```javascript
 {
     token: string,  // User's session token
@@ -285,6 +286,20 @@ Allows an authorized parent to add enrollments to any linked students.
     }[]
 }
 ```
+`<role> == "volunteer"`
+```javascript
+{
+    token: string,  // User's session token
+    uuid: string    // User's UUID
+    program: string // program ID
+    data: {
+        weeks: number[],    // weeks volunteer is signing up for
+        courses: number[],  // course IDs volunteer is interested in
+        instructor: boolean,    // does the volunteer want to be an instructor
+        skills: string  // skills volunteer wishes to share
+    }
+}
+```
 
 **Respoonse**
 ```javascript
@@ -294,7 +309,7 @@ Allows an authorized parent to add enrollments to any linked students.
 /* Status code 403 */
 ```
 ``` javascript
-/* Status code 500 */
+/* Status code 404 */
 ```
 
 ## `/admin`

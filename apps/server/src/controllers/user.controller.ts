@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import ParentUser from "../models/users/parent.model";
 import VolunteerUser from "../models/users/volunteer.model";
 import StudentUser from "../models/users/student.model";
+import VolunteerSignup from "../models/application/volunteer_signups.model";
 
 function checkRole(correctRole: string, req: Request, res: Response) {
     if (req.params.role != correctRole) {
@@ -63,32 +64,52 @@ export async function getStudents(req: Request, res: Response) {
 }
 
 export async function newEnrollment(req: Request, res: Response) {
-    if (!checkRole("parent", req, res)) return;
-    
     const enrollmentData = req.body.data;
     
-    for (var enrollment of enrollmentData) {
-        let student = await StudentUser.findOne({uuid: enrollment.id})!;
+    if (req.params.role == "parent") {
+        for (var enrollment of enrollmentData) {
+            let student = await StudentUser.findOne({uuid: enrollment.id});
+    
+            if (!student) {
+                res.writeHead(404);
+                res.end(`Student "${enrollment.id}" does not exist`);
+                return;
+            }
+    
+            if (student.linkedParent != req.body.uuid) {
+                res.writeHead(403);
+                res.end(`Parent "${req.body.uuid}" is not linked to the student "${student.uuid}"`);
+                return;
+            }
+            
+            student.enrollments.push({
+                program: req.body.program,
+                course: enrollment.class,
+                week: enrollment.week
+            })
+    
+            student.save();
+        }
+    } else if (req.params.role == "volunteer") {
+        let volunteer = await VolunteerUser.findOne({uuid: req.body.uuid});
 
-        if (!student) {
-            res.writeHead(500);
-            res.end(`Student "${enrollment.id}" does not exist`);
+        if (!volunteer) {
+            res.writeHead(404);
+            res.end(`Volunteer "${req.body.uuid}" does not exist`);
             return;
         }
 
-        if (student.linkedParent != req.body.uuid) {
-            res.writeHead(403);
-            res.end(`Parent user "${req.body.uuid}" is not linked to the student user "${student.uuid}"`);
-            return;
-        }
-        
-        student.enrollments.push({
+        VolunteerSignup.create({
+            uuid: volunteer.uuid,
             program: req.body.program,
-            course: enrollment.class,
-            week: enrollment.week
+            courses: enrollmentData.courses,
+            weeks: enrollmentData.weeks,
+            instructorInterest: enrollmentData.instructor,
+            skills: enrollmentData.skills
         })
-
-        student.save();
+    } else {
+        res.writeHead(404);
+        res.end(`"${req.params.role}" is not a valid role`);
     }
 
     res.writeHead(200);
