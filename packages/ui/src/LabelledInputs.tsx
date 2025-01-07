@@ -10,6 +10,7 @@ type TextInputProps = {
     required?: boolean
     // protected?: boolean
     onChange?: ChangeEventHandler<HTMLInputElement>
+    defaultValue?: string
 }
 
 export function LabelledInput(props: TextInputProps) {
@@ -26,6 +27,7 @@ export function LabelledInput(props: TextInputProps) {
             name={props.name}
             id={"input_" + props.name}
             required={props.required ? true : false}
+            defaultValue={props.defaultValue}
         />)
     } else {
         elem = (<input
@@ -36,6 +38,7 @@ export function LabelledInput(props: TextInputProps) {
             className="labelled-input"
             required={props.required ? true : false}
             onChange={props.onChange}
+            defaultValue={props.defaultValue}
         />)
     }
     

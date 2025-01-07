@@ -385,6 +385,122 @@ Allows admins to create new programs to be published to MyMAST.
 /* Status code 400 */
 ```
 
+### `/admin/managedprograms`
+Returns the programs an admin is allowed to view/edit in the Admin Control Panel.
+
+**Method**: `POST`
+
+**Request:**
+```javascript
+{
+    token: string,  // User's session token
+    uuid: string    // User's UUID
+    // No endpoint specific data
+}
+```
+
+**Response:**
+```javascript
+{
+    id: string
+    name: string,
+    volunteering_hours: {
+        total: number,
+        weekly: number
+    }
+    location: {
+        loc_type: "virtual" | "physical"
+
+        // only present if loc_type == "physical"
+        common_name?: string,
+        address?: string,
+        city?: string,
+        state?: string,
+        zip?: string
+
+        // only present if loc_type == "virtual"
+        link?: string
+    },
+    schedule: {
+        dayCount: number,
+        date: number,
+        month: number,
+        year: number,
+        start: number,
+        end: number
+    }[][],
+    courses: {
+        id: number  // index of the course
+        name: string,
+        duration: number    // Duration in number of weeks
+        available: Array<number>    // Weeks during which a new sessions begin (students are able to enroll)
+    }[],
+    contact: {
+        name: {
+            first: string,
+            last: string
+        },
+        phone: string,
+        email: string
+    },
+    admins: string[],   // Array of UUIDs that are authorized to view/edit the program in MyMAST admin control panel
+    enrollments: {
+        volunteers: string[],   // enrollment IDs for volunteers
+        students: string[]  // enrollment IDs for students
+    }
+}
+```
+
+### `/admin/getuser`
+Allows an admin user to see information about another user. This is essentially a version of `/user/<role>/profile that can be accessed by any admin user, for a user of any given role.
+
+**Method**: `POST`
+
+**Request:**
+```javascript
+{
+    token: string,  // User's session token
+    uuid: string    // User's UUID
+    requested_uuid: string 
+}
+```
+
+**Response:**
+If the user's role is "`volunteer`"
+```javascript
+{
+    role: "parent",
+    profile: {
+            name: {
+            first: string,
+            last: string
+        },
+        email: string,
+        phone: string,
+        birthday: {
+            month: number,
+            day: number,
+            year: number
+        }
+    }
+}
+```
+If the user's role is "`parent`"
+```javascript
+{
+    role: "volunteer",
+    profile: {
+        name: {
+            first: string,
+            last: string
+        },
+        email: string,
+        phone: string,
+        linkedStudents: string[]    // Array of UUID's for the corresponding students linked to the parent account
+    }
+}
+```
+
 ## `/app`
 These are paths used by the application to retrieve/manage information related to the app's core functionality.
 

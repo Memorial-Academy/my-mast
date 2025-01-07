@@ -1,0 +1,52 @@
+.program-manager-nav {
+    position: absolute;
+    left: 0vw;
+    top: 12rem;
+    width: 35rem;
+    border: 3px solid black;
+    display: flex;
+    flex-direction: column;
+    padding: 0.8rem 0;
+    /* height: calc(100vh - 12rem - 1.6rem - 6px) */
+    min-height: 50vh;
+}
+
+.program-manager-nav > * {
+    padding: 0.5ch 1rem;
+}
+
+.program-manager-nav h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    text-decoration: underline solid black 2.5px;
+    ;
+}
+
+.program-manager-nav a, .program-manager-nav p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: black;
+    display: block;
+    width: calc(100% - 2rem);
+}
+
+.program-manager-nav b {
+    font-size: 1rem;
+}
+
+.program-manager-nav a {
+    text-decoration: none;
+}
+
+.program-manager-nav a:hover {
+    text-decoration: underline;
+    background-color: var(--gray);
+    color: white;
+}
+
+.program-manager-nav .active-link {
+    background-color: var(--light-gray);
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}

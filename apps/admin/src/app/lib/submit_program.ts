@@ -1,9 +1,9 @@
 "use server";
-import { cookies } from "next/headers";
+import sessionInfo from "@mymast/utils/authorize_session";
 import { redirect } from "next/navigation";
 
-export default async function SubmitNewProgram(programData: ProgramData) {
-    const authCookie = JSON.parse(cookies().get("id")!.value);
+export default async function SubmitNewProgram(programData: ProgramDataSubmitted) {
+    const authCookie = (await sessionInfo())!;
 
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/createprogram`, {
         method: "POST",
@@ -11,13 +11,15 @@ export default async function SubmitNewProgram(programData: ProgramData) {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            token: authCookie[0],
-            uuid: authCookie[1],
+            token: authCookie.token,
+            uuid: authCookie.uuid,
             data: programData
         })
     })
 
     if (res.status == 200) {
-        // redirect(`${process.env.NEXT_PUBLIC_MYMAST_URL}/programs/enroll/${await res.text()}`);
+        redirect(`${process.env.NEXT_PUBLIC_MYMAST_URL}/programs/enroll/${await res.text()}`);
+    } else {
+        return res.statusText;
     }
 }

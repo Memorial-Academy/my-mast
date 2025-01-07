@@ -19,7 +19,8 @@ const StudentUser = UserDB.model(
         enrollments: {type: [{
             program: { type: String, required: true },
             course: { type: Number, required: true },
-            week: { type: Number, required: true }
+            week: { type: Number, required: true },
+            id: { type: String, required: true }
         }], required: true, default: [] }
     })
 )

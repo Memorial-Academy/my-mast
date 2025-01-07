@@ -19,7 +19,10 @@ const Program = ApplicationDB.model(
             address: { type: String, required: false },
             city: { type: String, required: false },
             state: { type: String, required: false },
-            zip: { type: String, required: false }
+            zip: { type: String, required: false },
+
+            // only used if type == "virtual"
+            link: { type: String, required: false}
         }, required: true },
         schedule: { type: [[{
             dayCount: { type: Number, required: true },
@@ -42,7 +45,20 @@ const Program = ApplicationDB.model(
             },
             phone: { type: String, required: true },
             email: { type: String, required: true }
-        }, required: true }
+        }, required: true },
+        admins: { type: [String], required: true }, // UUIDs of users able to access the program from Admin Panel
+        enrollments: {
+            type: {
+                // Arrays of enrollment IDs
+                volunteers: [String],
+                students: [String]
+            },
+            required: true,
+            default: {
+                volunteers: [],
+                students: []
+            }
+        }
     })
 )
 

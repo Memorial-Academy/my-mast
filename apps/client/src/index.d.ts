@@ -34,7 +34,8 @@ type ProgramData = {
         },
         phone: string,
         email: string
-    }
+    },
+    admins: Array<string>,
 }
 
 type Course = {

@@ -6,12 +6,13 @@ type PhoneNumberInputProps = {
     name: string,
     id: string,
     required?: boolean,
+    defaultValue?: string
 }
 
 export default function PhoneNumberInput(props: PhoneNumberInputProps) {
     const matcher = new RegExp(/[0-9]/);
-    const [value, setValue] = useState("");
-    const [nums, setNums] = useState(new Array<string>);
+    const [value, setValue] = useState(props.defaultValue || "");
+    const [nums, setNums] = useState(props.defaultValue?.replace(/\(|\)|\s|-/g, "").split("") || new Array<string>);
 
     function update(key: string) {
         var temp = nums;

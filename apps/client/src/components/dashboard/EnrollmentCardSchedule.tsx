@@ -68,7 +68,7 @@ export default function EnrollmentCardSchedule(props: EnrollmentCardScheduleProp
                     setPopupActive(false);
                 }}
             >
-                <h3>Day-by-day schedule for {props.course.name}</h3>
+                <h3>Day-by-day schedule for {props.program.courses.length > 1 ? props.course.name : props.program.name}</h3>
                 <p>
                     {props.program.name}
                     {props.program.location.loc_type == "physical" ? ` @ ${props.program.location.common_name}` : "; hosted virtually"}

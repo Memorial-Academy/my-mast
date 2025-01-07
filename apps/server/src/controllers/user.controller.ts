@@ -3,6 +3,8 @@ import ParentUser from "../models/users/parent.model";
 import VolunteerUser from "../models/users/volunteer.model";
 import StudentUser from "../models/users/student.model";
 import VolunteerSignup from "../models/application/volunteer_signups.model";
+import { randomBytes } from "crypto";
+import Program from "../models/application/program.model";
 
 function checkRole(correctRole: string, req: Request, res: Response) {
     if (req.params.role != correctRole) {
@@ -63,8 +65,19 @@ export async function getStudents(req: Request, res: Response) {
     }
 }
 
+function generateEnrollmentID(uuid: string) {
+    return `${uuid}_e:${randomBytes(10).toString("hex")}`;
+}
+
 export async function newEnrollment(req: Request, res: Response) {
     const enrollmentData = req.body.data;
+    let program = await Program.findOne({id: req.body.program});
+
+    if (!program) {
+        res.writeHead(404);
+        res.end("No program found");
+        return;
+    }
     
     if (req.params.role == "parent") {
         for (var enrollment of enrollmentData) {
@@ -75,6 +88,8 @@ export async function newEnrollment(req: Request, res: Response) {
                 res.end(`Student "${enrollment.id}" does not exist`);
                 return;
             }
+
+            let enrollmentID = generateEnrollmentID(student.uuid);
     
             if (student.linkedParent != req.body.uuid) {
                 res.writeHead(403);
@@ -85,13 +100,17 @@ export async function newEnrollment(req: Request, res: Response) {
             student.enrollments.push({
                 program: req.body.program,
                 course: enrollment.class,
-                week: enrollment.week
+                week: enrollment.week,
+                id: enrollmentID
             })
     
             student.save();
+
+            program.enrollments.students.push(enrollmentID);
         }
     } else if (req.params.role == "volunteer") {
         let volunteer = await VolunteerUser.findOne({uuid: req.body.uuid});
+        let enrollmentID = generateEnrollmentID(req.body.uuid);
 
         if (!volunteer) {
             res.writeHead(404);
@@ -105,12 +124,20 @@ export async function newEnrollment(req: Request, res: Response) {
             courses: enrollmentData.courses,
             weeks: enrollmentData.weeks,
             instructorInterest: enrollmentData.instructor,
-            skills: enrollmentData.skills
+            skills: enrollmentData.skills,
+            id: enrollmentID
         })
+
+        volunteer.pendingAssignments.push(enrollmentID);
+        volunteer.save();
+        
+        program.enrollments.volunteers.push(enrollmentID);
     } else {
         res.writeHead(404);
         res.end(`"${req.params.role}" is not a valid role`);
     }
+
+    program.save();
 
     res.writeHead(200);
     res.end();

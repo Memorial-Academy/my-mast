@@ -11,12 +11,14 @@ AdminRouter.use(async (req: Request, res: Response, next: NextFunction) => {
         next();
     } else {
         res.writeHead(403);
-        res.end();
+        res.end("Forbidden. Not a valid session or admin");
         return;
     }
 })
 
 // Routes
 AdminRouter.post("/createprogram", Controller.createProgram);
+AdminRouter.post("/managedprograms", Controller.getManagedPrograms);
+AdminRouter.post("/getuser", Controller.getUser);
 
 export default AdminRouter;

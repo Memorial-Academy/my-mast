@@ -9,7 +9,8 @@ const VolunteerSignup = ApplicationDB.model(
         courses: { type: [Number], required: true}, // courses interested in volunteering for
         weeks: {type: [Number], required: true}, // weeks volunteering for
         instructorInterest: { type: Boolean, required: true },
-        skills: { type: String, required: false, default: "" }
+        skills: { type: String, required: false, default: "" },
+        id: { type: String, required: true }
     })
 )
 

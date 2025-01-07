@@ -7,7 +7,8 @@
         "outDir": "./dist/",
         "skipLibCheck": true,
         "allowSyntheticDefaultImports": true,
-        "jsx": "react"
+        "jsx": "react",
+        "moduleResolution": "bundler"
     },
     "exclude": ["node_modules", "dist"],
     "include": ["src"]

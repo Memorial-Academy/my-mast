@@ -1,6 +1,7 @@
 "use client";
 import "../styles/card.css";
 import React, { MouseEventHandler, ReactNode } from "react";
+import Link from "next/link";
 
 type CardProps = {
     header: string,
@@ -17,7 +18,7 @@ export function Card(props: CardProps) {
         <div className="card">
             <h4>{props.header}</h4>
             {props.children}
-            {props.actionLink && <a 
+            {props.actionLink && <Link 
                 className="action-link" 
                 href={props.actionLink.link || "#"}
                 onClick={e => {
@@ -26,7 +27,7 @@ export function Card(props: CardProps) {
                         props.actionLink.onClick(e)
                     }
                     return;
-            }}>{props.actionLink.text}</a>}
+            }}>{props.actionLink.text}</Link>}
         </div>
     )
 } 

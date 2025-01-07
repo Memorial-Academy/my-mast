@@ -7,12 +7,21 @@ import SubmitNewProgram from "@/app/lib/submit_program";
 
 // types inherited from @/index.d.ts
 
+type CreateProgramFormProps = {
+    contact?: {
+        first: string,
+        last: string,
+        phone: string,
+        email: string
+    }
+}
+
 function getFormData(data: FormData, key: string) {
     return data.get(key)?.toString();
 }
 
-export default function CreateProgramForm() {
-    const [programData, setProgramData] = useState<ProgramData>();
+export default function CreateProgramForm(props: CreateProgramFormProps) {
+    const [programData, setProgramData] = useState<ProgramDataSubmitted>();
     const [locationType, setLocationType] = useState("");
     const [page, setPage] = useState(1);
 
@@ -42,7 +51,7 @@ export default function CreateProgramForm() {
             }
         }
 
-        let data: ProgramData = {
+        let data: ProgramDataSubmitted = {
             name: getFormData(formData, "name")!,
             location: locationData,
             schedule: new Array<Array<Schedule>>,
@@ -121,7 +130,7 @@ export default function CreateProgramForm() {
         setProgramData(data);
     }
 
-    function submitProgram(form: FormData) {
+    async function submitProgram(form: FormData) {
         let confirmation = confirm(
             "WARNING!" +
             `\n\nYou are about to create a program entitled "${programData!.name}." Upon submission, this program will immediately be added to MyMAST's publicly accessible/searchable programs list, and users will be able to enroll.` + 
@@ -132,7 +141,10 @@ export default function CreateProgramForm() {
             return;
         }
 
-        SubmitNewProgram(programData!);
+        let status = await SubmitNewProgram(programData!);
+        if (status) {
+            alert(`ERROR. An error was encountered while creating the program:\n${status}`)
+        }
     }
 
     return (
@@ -210,6 +222,7 @@ export default function CreateProgramForm() {
                     placeholder="First Name"
                     name="contact_first_name"
                     required
+                    defaultValue={props.contact?.first}
                 />
                 <LabelledInput
                     question="Last Name"
@@ -217,6 +230,7 @@ export default function CreateProgramForm() {
                     placeholder="Last Name"
                     name="contact_last_name"
                     required
+                    defaultValue={props.contact?.last}
                 />
             </div>
             <div className="bi-fold">
@@ -226,11 +240,13 @@ export default function CreateProgramForm() {
                     placeholder="Email Address"
                     name="contact_email"
                     required
+                    defaultValue={props.contact?.email}
                 />
                 <LabelledInput
                     type="phone"
                     question="Phone Number"
                     name="contact_phone"
+                    defaultValue={props.contact?.phone}
                 />
             </div>
             
