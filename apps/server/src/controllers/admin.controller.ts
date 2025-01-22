@@ -198,7 +198,10 @@ export async function getStudentEnrollments(req: Request, res: Response) {
             })
 
             for (var student of students) {
-                let parent = await ParentUser.findOne({linkedStudents: student.uuid});
+                let parent = await ParentUser.findOne({uuid: student.linkedParent}, {
+                    "linkedStudents": 0,
+                    "_id": 0
+                });
         
                 studentParentPairs.push({
                     student,

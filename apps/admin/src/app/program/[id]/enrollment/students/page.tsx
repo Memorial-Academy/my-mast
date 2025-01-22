@@ -2,6 +2,7 @@ import { calculateAge } from "@mymast/utils/birthday";
 import getProgramData from "@/app/lib/get_program_data";
 import { Table } from "@mymast/ui";
 import authorizeSession from "@mymast/utils/authorize_session";
+import StudentNotesPopup from "@/components/program_manager/StudentNotesPopup";
 
 type Params = Promise<{
     id: string
@@ -60,21 +61,31 @@ export default async function Page({params}: {params: Params}) {
                 return (
                     <section key={course.courseID}>
                         <h3>Enrolled in "{data.courses[course.courseID].name}"</h3>
+                        {data.courses.length == 1 && <p>
+                            <b>This is the only course in this program.</b>
+                            &nbsp;Students will automatically be enrolled in this program.
+                        </p>}
                         <p>Course enrollments: {course.total}</p>
 
                         {/* Generate weekly sections */}
                         {course.data.map((week, index) => {
                             return <>
-                                <h4>Week {week.week}</h4>
+                                <h4>Week {week.week}{data.courses[course.courseID].duration > 1 && ` thru ${data.courses[course.courseID].duration + week.week}`}</h4>
+                                {data.courses[course.courseID].available.length == 1 && <p>
+                                    <b>This course is only available during this week.</b>
+                                    &nbsp;Students will automatically be enrolled in this week.
+                                </p>}
                                 <p>Enrollments: {week.enrollments.length}</p>
-
+                                
                                 <Table.Root columns={[
                                     "Name",
                                     "Birthday / Age",
                                     "Parent Name",
                                     "Parent Email",
-                                    "Parent Phone"
+                                    "Parent Phone",
+                                    "Notes"
                                 ]}>
+                                    {/* Individual rows for each student */}
                                     {week.enrollments.map(student => {
                                         let birthday = calculateAge(student.student.birthday);
 
@@ -83,55 +94,23 @@ export default async function Page({params}: {params: Params}) {
                                             `${birthday.birthdayString} (${birthday.years} years and ${birthday.months} months old)`,
                                             `${student.parent.name.first} ${student.parent.name.last}`,
                                             student.parent.email,
-                                            student.parent.phone
+                                            student.parent.phone,
+                                            <>
+                                                <StudentNotesPopup 
+                                                    notes={student.student.notes}
+                                                    name={student.student.name}
+                                                    parentName={student.parent.name}
+                                                    parentContact={{
+                                                        email: student.parent.email,
+                                                        phone: student.parent.phone
+                                                    }}
+                                                />
+                                            </>
                                         ]}/>
                                     })}
                                 </Table.Root>
                             </>
                         })}
-
-                        {/* Generate individual enrollment 
-                        {data.enrollments.students.length > 0 && courseEnrollments[course.id!].map(enrollment => {
-                            let student = enrollment.student;
-                            let age = calculateAge(student.birthday)
-                    
-                            return (
-                                <Card 
-                                    key={student.uuid}
-                                    header={`${student.name.first} ${student.name.last}`}
-                                >
-                                    <div className="bi-fold">
-                                        <div>
-                                            <p>
-                                                <b>Attending Week {enrollment.week}</b>
-                                            </p>
-                                            <p>
-                                                Birthday: {age.birthdayString} ({age.years} years  and {age.months} months old)
-                                            </p>
-                                            <p>
-                                                <b>Additional Info:</b>
-                                                <br/>
-                                                {student.notes || "N/A"}
-                                            </p>
-                                        </div>
-                                        <div>
-                                            <p>
-                                                <b>Parent Name:</b>&nbsp;
-                                                {enrollment.parent.name.first} {enrollment.parent.name.last}
-                                            </p>
-                                            <p>
-                                                <b>Parent Email:</b>&nbsp;
-                                                {enrollment.parent.email}
-                                            </p>
-                                            <p>
-                                                <b>Parent Phone:</b>&nbsp;
-                                                {enrollment.parent.phone}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </Card>
-                            )
-                        })} */}
                     </section>
                 )
             })}
