@@ -3,7 +3,8 @@
     "type": "module",
     "exports": {
         "./authorize_session": "./src/authorize_session.ts",
-        "./convert_timestamp": "./src/convert_timestamp.ts"
+        "./convert_timestamp": "./src/convert_timestamp.ts",
+        "./birthday": "./src/birthday.ts"
     },
     "dependencies": {
         "next": "^14.2.13"

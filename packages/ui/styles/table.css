@@ -1,0 +1,33 @@
+table {
+    width: 100%;
+}
+
+table, td, th {
+    border: 0px;
+    border-collapse: collapse;
+    text-align: center;
+}
+
+thead > tr {
+    border-bottom: 5px solid black;
+}
+
+tr {
+    border-bottom: 3px solid black;
+}
+
+thead th:not(:last-child) {
+    border-right: 2px solid black;
+}
+
+th {
+    font-weight: bold;
+}
+
+td, th {
+    padding: 1.3ch 0.8ch;
+}
+
+td:not(:last-child) {
+    border-right: 2px dotted black;
+}
