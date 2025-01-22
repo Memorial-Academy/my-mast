@@ -1,29 +1,22 @@
-import { Metadata } from "next";
 import authorizeSession from "@mymast/utils/authorize_session";
 import getTimestamp from "@mymast/utils/convert_timestamp";
+import getProgramData from "@/app/lib/get_program_data";
 
 type Params = Promise<{
-    signup: string,
     id: string
 }>
 
 export async function generateMetadata({params}: {params: Params}) {
-    const id = (await params).id;
-
-    const req = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/app/program/${id}`)
-    const data: ProgramData = await req.json();
-
+    const data = await getProgramData((await params).id);
+    
     return {
         title: `${data.name} - Program Manager | Admin Control Panel | Memorial Academy of Science and Technology`
     }
 }
 
 export default async function Page({params}: {params: Params}) {
-    const id = (await params).id;
+    const data = await getProgramData((await params).id);
     const auth = (await authorizeSession())!;
-
-    const req = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/app/program/${id}`)
-    const data: ProgramData = await req.json();
 
     return (
         <>
@@ -95,6 +88,7 @@ export default async function Page({params}: {params: Params}) {
             })}
 
             <h3>Administrative People</h3>
+            
             <h4>Primary Contact ("Program Director")</h4>
             <p>
                 <b>{data.contact.name.first} {data.contact.name.last}</b>
@@ -103,6 +97,7 @@ export default async function Page({params}: {params: Params}) {
                 <br/>
                 Phone: {data.contact.phone}
             </p>
+
             <h4>Directors</h4>
             {data.admins.map(async director => {
                 let req = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/getuser`, {
@@ -123,7 +118,6 @@ export default async function Page({params}: {params: Params}) {
 
                 let user = await req.json();
                 let profile = user.profile;
-                console.log(profile)
 
                 return <p key={director}>
                     <b>{profile.name.first} {profile.name.last}</b>

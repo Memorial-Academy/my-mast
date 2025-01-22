@@ -4,6 +4,7 @@ import { randomBytes } from "crypto";
 import AuthUser from "../models/auth/user.model";
 import VolunteerUser from "../models/users/volunteer.model";
 import ParentUser from "../models/users/parent.model";
+import StudentUser from "../models/users/student.model";
 
 function validateData(data: any, res: Response) {
     if (data) {
@@ -159,4 +160,64 @@ export async function getUser(req: Request, res: Response) {
         role: userInfo.role,
         profile
     }))
+}
+
+export async function getStudentEnrollments(req: Request, res: Response) {
+    // get data on the requested program
+    let programData = await Program.findOne({ id: req.body.program });
+
+    if (!programData) {
+        res.writeHead(404);
+        res.end(`Program "${req.body.program}" does not exist`);
+        return;
+    }
+
+    let data = [];  // this array 
+
+    // loop through all the courses for the program
+    for (var course of programData.courses) {
+        let courseEnrollments = {
+            courseID: course.id,
+            total: 0,
+            data: new Array()
+        };
+
+        // loop through each week of the course
+        for (var week of course.available) {
+            // get all students enrolled in the course for the specified week
+            let studentParentPairs = [];
+            let students = await StudentUser.find({
+                enrollments: { $elemMatch: {    // match all student users that are...
+                    program: req.body.program,  // enrolled in the requested program
+                    course: course.id,          // enrolled in the course found in `course`
+                    week: week                  // enrolled in the week found in `week`
+                }}
+            }, {
+                "enrollments": 0,
+                "_id": 0
+            })
+
+            for (var student of students) {
+                let parent = await ParentUser.findOne({linkedStudents: student.uuid});
+        
+                studentParentPairs.push({
+                    student,
+                    parent
+                })
+            }
+
+            let weeklyEnrollments = {
+                week: week,
+                enrollments: studentParentPairs
+            }
+            courseEnrollments.total += weeklyEnrollments.enrollments.length;
+            courseEnrollments.data.push(weeklyEnrollments);
+        }
+
+        // add course data to the general program data array
+        data.push(courseEnrollments);
+    }
+
+    res.writeHead(200);
+    res.end(JSON.stringify(data));
 }

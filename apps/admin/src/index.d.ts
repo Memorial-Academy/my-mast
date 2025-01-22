@@ -67,7 +67,38 @@ type ProgramDataSubmitted = {
 }
 
 type Course = {
+    id?: number,
     name: string,
     duration: number    // Duration in number of weeks
     available: Array<number>    // Weeks during which a new sessions begin (students are able to enroll)
+}
+
+type Student = {
+    name: {
+        first: string,
+        last: string
+    },
+    uuid: string,
+    birthday: {
+        day: number,
+        month: number,
+        year: number
+    },
+    notes?: string, // additional information provided by parent
+    linkedParent: string,   // parent's UUID
+    enrollments: {
+        program: string,
+        course: number,
+        week: number,
+        id: string
+    }[]
+}
+
+type Parent = {
+    name: {
+        first: string,
+        last: string,
+    },
+    email: string,
+    phone: string
 }

@@ -461,6 +461,7 @@ Allows an admin user to see information about another user. This is essentially 
 {
     token: string,  // User's session token
     uuid: string    // User's UUID
+    // Endpoint specific
     requested_uuid: string 
 }
 ```
@@ -469,9 +470,9 @@ Allows an admin user to see information about another user. This is essentially 
 If the user's role is "`volunteer`"
 ```javascript
 {
-    role: "parent",
+    role: "volunteer",
     profile: {
-            name: {
+        name: {
             first: string,
             last: string
         },
@@ -488,7 +489,7 @@ If the user's role is "`volunteer`"
 If the user's role is "`parent`"
 ```javascript
 {
-    role: "volunteer",
+    role: "parent",
     profile: {
         name: {
             first: string,
@@ -499,6 +500,57 @@ If the user's role is "`parent`"
         linkedStudents: string[]    // Array of UUID's for the corresponding students linked to the parent account
     }
 }
+```
+
+### `/admin/enrollments/students`
+Allows an admin user to see student enrollments for a program.
+
+**Method**: `POST`
+
+**Request:**
+```javascript
+{
+    token: string,  // User's session token
+    uuid: string    // User's UUID
+    // Endpoint specific
+    program: string // program ID
+}
+```
+
+**Response:**
+```javascript
+// The returned object is an array. Each item in the array represents a course for the program
+{
+    courseID: number,   // ID for the course
+    total: number,  // total enrollments in the course
+    data: { // array of all weeks
+        week: number    // week number for the listed enrollments
+        enrollments: {  // array of all enrollments for that week, in student & parent pairs
+            student: {
+                name: {
+                    first: string,
+                    last: string
+                },
+                uuid: string,
+                birthday: {
+                    day: number,
+                    month: number,
+                    year: number
+                },
+                notes?: string, // additional information provided by parent
+                linkedParent: string    // parent's UUID
+            },
+            parent: {
+                name: {
+                    first: string,
+                    last: string
+                },
+                email: string,
+                phone: string,
+            }
+        }[]
+    }[]
+}[]
 ```
 
 ## `/app`

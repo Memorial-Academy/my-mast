@@ -20,5 +20,6 @@ AdminRouter.use(async (req: Request, res: Response, next: NextFunction) => {
 AdminRouter.post("/createprogram", Controller.createProgram);
 AdminRouter.post("/managedprograms", Controller.getManagedPrograms);
 AdminRouter.post("/getuser", Controller.getUser);
+AdminRouter.post("/enrollments/students", Controller.getStudentEnrollments);
 
 export default AdminRouter;
