@@ -19,6 +19,7 @@
     z-index:1000;
     padding: 2.5vh 3vw;
     overflow: auto;
+    text-align: left;
 }
 
 .popup-close {

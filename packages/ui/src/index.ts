@@ -5,3 +5,4 @@ export * from "./inputs/MultipleChoiceInput";
 export * from "./inputs/LabelledDropdown";
 export * from "./Card";
 export * from "./Table";
+export * from "./Popup";

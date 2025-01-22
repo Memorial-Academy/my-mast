@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import "@/styles/popup.css";
+import "../styles/popup.css";
 
 type PopupProps = {
     active: boolean,
@@ -8,7 +8,7 @@ type PopupProps = {
     onClose: Function
 }
 
-export default function Popup(props: PopupProps) {
+export function Popup(props: PopupProps) {
     function wrapperClick(e: React.MouseEvent<HTMLElement>) {
         if ((e.target as HTMLElement).className == "popup-wrapper") {
             props.onClose();

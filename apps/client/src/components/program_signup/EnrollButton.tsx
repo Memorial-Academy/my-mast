@@ -1,7 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-import Popup from "../Popup";
+import { Popup } from "@mymast/ui";
 import StudentEnrollmentPopup from "./StudentEnrollmentPopup";
 import VolunteerEnrollmentPopup from "./VolunteerEnrollmentPopup";
 

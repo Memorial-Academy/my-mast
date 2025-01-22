@@ -1,7 +1,7 @@
 "use client";
 import { Card } from "@mymast/ui";
 import EnrollmentCardSchedule from "./EnrollmentCardSchedule"
-import Popup from "../Popup";
+import { Popup } from "@mymast/ui";
 import { useState } from "react";
 
 type EnrollmentCardProps = {
