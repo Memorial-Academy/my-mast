@@ -25,16 +25,8 @@ form#signup {
 }
 
 #auth input[type="submit"] {
-    font-size: 1rem;
-    font-family: "Play";
-    letter-spacing: 0.12ch;
-    background-color: var(--background-dark-white);
     width: calc(40% - 0.6ch); /* 0.6ch padding per side */
     margin: 3% 30%;
-}
-
-#auth input[type="submit"]:hover {
-    background-color: rgb(205,205,205);
 }
 
 #auth h2 {

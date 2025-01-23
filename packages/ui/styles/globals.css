@@ -1,4 +1,5 @@
 @import url(./inputs.css);
+@import url(./buttons.css);
 
 :root, body {
     --background-white: rgb(230,230,230);
@@ -73,6 +74,15 @@ input[type="checkbox"], input[type="radio"] {
 .tri-fold {
     display: grid;
     grid-template-columns: 32.5% 32.5% 32.5%;
+    gap: 1%;
+}
+
+.flex-row-resize {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
     gap: 1%;
 }
 

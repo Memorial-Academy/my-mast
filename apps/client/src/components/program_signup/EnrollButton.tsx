@@ -50,7 +50,11 @@ export default function EnrollButton(props: EnrollButtonProps) {
 
     return (
         <>
-            <button title={text} onClick={signupHandler}>
+            <button 
+                className="big-button"
+                title={text} 
+                onClick={signupHandler}
+            >
                 {text}
             </button>
             <Popup active={popupActive} onClose={() => {setPopupActive(false)}}>

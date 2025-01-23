@@ -14,3 +14,12 @@ export async function getProgram(req: Request, res: Response) {
         res.end("No program found");
     }
 }
+
+export async function getAllPrograms(req: Request, res: Response) {
+    const programs = await Program.find({}, {
+        "_id": 0
+    });
+
+    res.writeHead(200);
+    res.end(JSON.stringify(programs));
+}
