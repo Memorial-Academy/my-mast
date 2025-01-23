@@ -594,6 +594,9 @@ See URL
         city?: string,
         state?: string,
         zip?: string
+
+        // only present if type == "virtual"
+        link?: string
     },
     schedule: {
         dayCount: number,
@@ -606,7 +609,7 @@ See URL
     courses: {
         name: string,
         duration: number    // Duration in number of weeks
-        available: Array<number>    // Weeks during which a new sessions begin (students are able to enroll)
+        available: number[] // Weeks during which a new sessions begin (students are able to enroll)
     }[],
     contact: {
         name: {
@@ -624,4 +627,59 @@ See URL
 ```
 ```javascript
 /* Status code 404 */
+```
+
+### `/app/programs`
+Returns an array of all programs
+**Method:** `GET`
+
+**Request:**<br>
+No parameters
+
+**Response:**
+```javascript
+/* Status code 200 */
+{
+    id: string,
+    name: string,
+    program_type: "stempark" | "letscode",
+    location: {
+        loc_type: "virtual" | "physical"
+
+        // only present if type == "physical"
+        common_name?: string,
+        address?: string,
+        city?: string,
+        state?: string,
+        zip?: string
+
+        // only present if type == "virtual"
+        link?: string
+    },
+    schedule: {
+        dayCount: number,
+        date: number,
+        month: number,
+        year: number,
+        start: number,
+        end: number
+    }[][],
+    courses: {
+        name: string,
+        duration: number    // Duration in number of weeks
+        available: number[] // Weeks during which a new sessions begin (students are able to enroll)
+    }[],
+    contact: {
+        name: {
+            first: string,
+            last: string
+        },
+        phone: string,
+        email: string
+    },
+    volunteering_hours: {
+        total: number,
+        weekly: number[]
+    }
+}[]
 ```

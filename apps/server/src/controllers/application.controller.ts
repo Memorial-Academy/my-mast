@@ -3,7 +3,8 @@ import Program from "../models/application/program.model";
 
 export async function getProgram(req: Request, res: Response) {
     const program = await Program.findOne({id: req.params.id}, {
-        "_id": 0
+        "_id": 0,
+        "enrollments": 0
     });
 
     if (program) {
@@ -17,7 +18,8 @@ export async function getProgram(req: Request, res: Response) {
 
 export async function getAllPrograms(req: Request, res: Response) {
     const programs = await Program.find({}, {
-        "_id": 0
+        "_id": 0,
+        "enrollments": 0
     });
 
     res.writeHead(200);
