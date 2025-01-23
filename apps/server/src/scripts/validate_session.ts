@@ -1,9 +1,9 @@
 import UserSession from "../models/auth/session.model";
 import VolunteerUser from "../models/users/volunteer.model";
 
-export default async function validateSession(uuid: string, token: string, role: string) {
+export default async function validateSession(uuid: string, token: string, role?: string) {
     // ensure valid role
-    if (!(role == "volunteer" || role == "parent")) {
+    if (role && !(role == "volunteer" || role == "parent" || role == "student")) {
         return false;
     }
 

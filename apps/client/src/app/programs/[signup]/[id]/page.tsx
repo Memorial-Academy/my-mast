@@ -49,7 +49,16 @@ export default async function Page({params}: {params: Params}) {
         session.uuid = authCookie.uuid;
         session.token = authCookie.token;
 
-        session.role = await (await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/role/${session.uuid}`)).text()
+        session.role = await (await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/role`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                uuid: authCookie.uuid,
+                token: authCookie.token
+            })
+        })).text()
 
         if ((session.role == "parent" && signupType != "enroll") || (session.role == "volunteer" && signupType != "volunteer")) {
             redirect(`/programs/${session.role == "parent" ? "enroll" : "volunteer"}/${id}`);
@@ -80,6 +89,12 @@ export default async function Page({params}: {params: Params}) {
 
     return (
         <>
+            {/* "You're an admin!" notice */}
+            {data.admins.indexOf(session.uuid) != -1 && <p>
+                <b>You're an administrator for this program!</b>
+                &nbsp;Visit the MyMAST Admin Control Panel to manage this course.
+            </p>}
+
             <ProgramInfo 
                 data={data} 
                 signupType={signupType}

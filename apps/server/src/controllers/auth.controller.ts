@@ -8,6 +8,7 @@ import UserSession from "../models/auth/session.model.js";
 import PasswordResetRequest from "../models/auth/password_reset.model.js";
 import { validateEmail, validatePhoneNumber } from "../scripts/input_validation.js";
 import StudentUser from "../models/users/student.model.js";
+import validateSession from "../scripts/validate_session.js";
 
 function authenticationError(res: Response, err: string | Error) {
     console.error(err);
@@ -285,7 +286,13 @@ export async function initiatePasswordReset(req: Request, res: Response) {
 }
 
 export async function adminCheck(req: Request, res: Response) {
-    const user = await VolunteerUser.findOne({uuid: req.body});
+    if (!validateSession(req.body.uuid, req.body.token)) {
+        res.writeHead(403);
+        res.end();
+        return;
+    }
+
+    const user = await VolunteerUser.findOne({uuid: req.body.uuid});
     if (user && user.admin) {
         res.writeHead(200);
     } else {
@@ -295,7 +302,13 @@ export async function adminCheck(req: Request, res: Response) {
 }
 
 export async function getRole(req: Request, res: Response) {
-    let user = await AuthUser.findOne({uuid: req.params.uuid}, {
+    if (!validateSession(req.body.uuid, req.body.token)) {
+        res.writeHead(403);
+        res.end();
+        return;
+    }
+    
+    let user = await AuthUser.findOne({uuid: req.body.uuid}, {
         "role": 1,
     })
 

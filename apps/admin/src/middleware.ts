@@ -1,16 +1,23 @@
+import sessionInfo from "@mymast/utils/authorize_session";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function middleware(request: NextRequest) {
     try {
-        if(request.cookies.has("id")) {
-            let sessionCookie = JSON.parse(request.cookies.get("id")!.value);
+        if (request.cookies.has("id")) {
+            let sessionCookie = (await sessionInfo())!;
             let session = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/getsession`, {
                 method: "POST",
-                body: sessionCookie[0] // token
+                body: sessionCookie.token // token
             });
             let adminCheck = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/admincheck`, {
                 method: "POST",
-                body: sessionCookie[1] // uuid
+                body: JSON.stringify({
+                    uuid: sessionCookie.uuid,
+                    token: sessionCookie.token
+                }),
+                headers: {
+                    "Content-Type": "application/json"
+                }
             });
             // console.log(session.status, adminCheck.status);
 

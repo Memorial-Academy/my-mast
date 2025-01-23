@@ -146,8 +146,11 @@ Returns 200 if a UUID is linked to a user with administrator permissions, return
 **Method:** `POST`
 
 **Request:**
-```
-<uuid>
+```javascript
+{
+    uuid: string,   // user's UUID
+    token: string   // valid session token
+}
 ```
 
 **Response:**
@@ -155,20 +158,31 @@ Returns 200 if a UUID is linked to a user with administrator permissions, return
 /* Status code 200 */
 ```
 ```javascript
+/* Status code 403 */
+```
+```javascript
 /* Status code 404 */
 ```
 
-### `/auth/role/<uuid>`
+### `/auth/role`
 Returns the role of the provided UUID
 
-**Method:** `GET`
+**Method:** `POST`
 
 **Request:**<br>
-See URL
+```javascript
+{
+    uuid: string,   // user's UUID
+    token: string   // valid session token
+}
+```
 
 **Response:**
 ```
 <role>
+```
+```javascript
+/* Status code 403 */
 ```
 
 ## `/user/<role>`
