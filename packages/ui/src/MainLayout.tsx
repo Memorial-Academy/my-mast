@@ -1,10 +1,13 @@
-import React from "react";
+import React, { Suspense } from "react";
 import "../styles/globals.css"
+import { Loading } from "./Loading";
 
 export function Layout({children}: {children: React.ReactNode}) {
     return (
         <body>
-            {children}
+            <Suspense fallback={<Loading/>}>
+                {children}
+            </Suspense>
         </body>
     )
 }

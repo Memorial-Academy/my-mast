@@ -54,7 +54,7 @@ export default function ProgramInfo(props: ProgramInfoProps) {
                 </p>
             </div>
             <div>
-                <h2>{data.name}</h2>
+                <h2 className="program-title">{data.name}</h2>
 
                 <h3>Schedule</h3>
                 {schedule}

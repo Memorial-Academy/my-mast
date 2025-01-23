@@ -6,3 +6,4 @@ export * from "./inputs/LabelledDropdown";
 export * from "./Card";
 export * from "./Table";
 export * from "./Popup";
+export * from "./Loading";
