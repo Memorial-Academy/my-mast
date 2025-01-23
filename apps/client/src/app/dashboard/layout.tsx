@@ -11,8 +11,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     <h1>Memorial Academy of<br/>Science and Technology</h1>
                 </a>
             </nav> */}
-            <Header homeLink="/dashboard"/>
-            <main>
+            <Header />
+            <main className="dashboard">
                 {children}
             </main>
         </>

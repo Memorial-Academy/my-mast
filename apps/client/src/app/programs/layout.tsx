@@ -5,7 +5,7 @@ import "@/styles/enroll.css";
 export default function Layout({children}: {children: ReactNode}) {
     return (
         <>
-            <Header homeLink="/programs" />
+            <Header />
             <main>
                 {children}
             </main>

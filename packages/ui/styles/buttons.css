@@ -16,7 +16,7 @@ button.big-button, a.big-button {
     font-size: 1.2rem;
     font-family: "Play";
     font-weight: bold;
-    letter-spacing: 0.25ch;
+    letter-spacing: 0.2ch;
     padding: 1.5rem 3rem;
     border-radius: 30px;
     border: 3px solid var(--light-blue);
