@@ -3,7 +3,7 @@ import ParentUser from "../models/users/parent.model";
 import VolunteerUser from "../models/users/volunteer.model";
 import StudentUser from "../models/users/student.model";
 import VolunteerSignup from "../models/application/volunteer_signups.model";
-import { randomBytes } from "crypto";
+import { randomBytes, sign } from "crypto";
 import Program from "../models/application/program.model";
 
 function checkRole(correctRole: string, req: Request, res: Response) {
@@ -79,7 +79,7 @@ export async function newEnrollment(req: Request, res: Response) {
         return;
     }
     
-    if (req.params.role == "parent") {
+    if (req.params.role == "parent") {  // Create new enrollments for students (via a parent account)
         for (var enrollment of enrollmentData) {
             let student = await StudentUser.findOne({uuid: enrollment.id});
     
@@ -108,7 +108,7 @@ export async function newEnrollment(req: Request, res: Response) {
 
             program.enrollments.students.push(enrollmentID);
         }
-    } else if (req.params.role == "volunteer") {
+    } else if (req.params.role == "volunteer") { // Create new enrollment for volunteers
         let volunteer = await VolunteerUser.findOne({uuid: req.body.uuid});
         let enrollmentID = generateEnrollmentID(req.body.uuid);
 
@@ -141,4 +141,56 @@ export async function newEnrollment(req: Request, res: Response) {
 
     res.writeHead(200);
     res.end();
+}
+
+export async function getAssignments(req: Request, res: Response) {
+    if (!checkRole("volunteer", req, res)) return;
+
+    const volunteer = await VolunteerUser.findOne({uuid: req.body.uuid}, {
+        "pendingAssignments": 1,
+        "assignments": 1,
+        "_id": 0
+    });
+
+    if (!volunteer) {
+        res.writeHead(404);
+        res.end(`User "${req.body.uuid}" does not exist.`);
+        return;
+    }
+
+    let pendingAssignments = [];
+
+    for (let pa of volunteer.pendingAssignments) {
+        let signup = await VolunteerSignup.findOne({id: pa});
+
+        if (!signup) {
+            res.writeHead(500);
+            res.end(`User "${req.body.uuid}" has not signed-up for a program using enrollment ID "${pa}"`);
+            return;
+        }
+
+        let hours = 0;
+
+        let weeklyHourAllowance = (await Program.findOne({id: signup.program}, {
+            "volunteering_hours": 1
+        }))!.volunteering_hours.weekly
+
+        signup.weeks.forEach(week => {
+            hours += weeklyHourAllowance[week - 1];
+        })
+
+        pendingAssignments.push({
+            program: signup.program,
+            courses: signup.courses,
+            weeks: signup.weeks,
+            instructor: signup.instructorInterest,
+            hours: hours
+        })
+    }
+
+    res.end(JSON.stringify({
+        pending: pendingAssignments,
+        assignments: volunteer.assignments
+    }));
+    return;
 }

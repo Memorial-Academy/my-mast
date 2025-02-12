@@ -148,7 +148,7 @@ export default function VolunteerEnrollmentPopup(props: VolunteerEnrollmentPopup
                             question="List any of your skills, qualifications, experiences, etc. that you want us to know about! (Don't write an essay, just write a list)"
                             name="skills"
                             type="text"
-                            placeholder="Brag about yourself here"
+                            placeholder="Brag about yourself here (optional)"
                             required={enrollment.instructor}
                         />
                         {props.program.courses.length > 1 && props.program.schedule.length > 1 && 

@@ -110,9 +110,9 @@ export default function StudentEnrollmentPopup(props: StudentEnrollmentPopupProp
                 <h3>All done!</h3>
                 <p>
                     Thanks for enrolling in {props.program.name}! We're looking forward to having&nbsp;
-                    {enrollment.map((val, index) => {
+                    {enrollment.map((enrolledStudent, index) => {
                         for (var student of props.students) {
-                            if (student.uuid == val.id) {
+                            if (student.uuid == enrolledStudent.id) {
                                 if (index == enrollment.length - 1) {
                                     return student.name.first + " ";
                                 } else if (index == enrollment.length - 2) {

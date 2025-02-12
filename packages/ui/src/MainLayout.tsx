@@ -5,9 +5,9 @@ import { Loading } from "./Loading";
 export function Layout({children}: {children: React.ReactNode}) {
     return (
         <body>
-            <Suspense fallback={<Loading/>}>
+            {/* <Suspense fallback={<Loading/>}> */}
                 {children}
-            </Suspense>
+            {/* </Suspense> */}
         </body>
     )
 }
