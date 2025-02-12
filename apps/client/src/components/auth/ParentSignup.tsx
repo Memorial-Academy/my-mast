@@ -75,7 +75,7 @@ function StudentInformation({count}: {count: number}) {
             />
             <LabelledInput
                 type="date"
-                question={`${personalization} Birthday`}
+                question={`${personalization} Date of Birth`}
                 placeholder="Birthday"
                 required
                 name={`student${count}_birthday`}

@@ -13,7 +13,7 @@ export default function VolunteerSignupPage() {
                 name="school"
             />
             <LabelledInput 
-                question="Birthday"
+                question="Date of Birth"
                 type="date"
                 required
                 name="birthday"

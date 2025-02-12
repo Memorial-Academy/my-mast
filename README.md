@@ -46,3 +46,8 @@ The `config` directory provides the config files utilized to correctly configure
 
 #### `apps/client/.env`
 - `NEXT_PUBLIC_API_URL`: the URL to be used by the application to connect to the API server (ex: localhost:5000)
+
+#### `apps/admin/.env`
+#### `apps/client/.env`
+- `NEXT_PUBLIC_API_URL`: the URL to be used by the application to connect to the API server (ex: localhost:5000)
+- `NEXT_PUBLIC_MYMAST_URL`: the URL to connect to the MyMAST `client`

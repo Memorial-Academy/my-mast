@@ -70,7 +70,7 @@ export default async function Page({params}: {params: Params}) {
                         {/* Generate weekly sections */}
                         {course.data.map((week, index) => {
                             return <>
-                                <h4>Week {week.week}{data.courses[course.courseID].duration > 1 && ` thru ${data.courses[course.courseID].duration + week.week}`}</h4>
+                                <h4>Week {week.week}{data.courses[course.courseID].duration > 1 && ` thru ${data.courses[course.courseID].duration + week.week - 1}`}</h4>
                                 {data.courses[course.courseID].available.length == 1 && <p>
                                     <b>This course is only available during this week.</b>
                                     &nbsp;Students will automatically be enrolled in this week.
