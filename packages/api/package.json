@@ -1,0 +1,11 @@
+{
+    "name": "@mymast/api",
+    "type": "module",
+    "exports": {
+        ".": "./src/index.ts"
+    },
+    "devDependencies": {
+        "@types/node": "^22.10.5",
+        "typescript": "^5.7.2"
+    }
+}
