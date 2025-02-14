@@ -1,42 +1,26 @@
 "use client";
 import React, { useState } from "react";
-import { LabelledDropdown, LabelledInput, MultipleChoice } from "@mymast/ui";
+import { IncreaseableInputSection, LabelledDropdown, LabelledInput, MultipleChoice } from "@mymast/ui";
 
 export default function CreateCourse({schedule}: {schedule: Schedule[][]}) {
     const [courseCount, setCourseCount] = useState(1);
 
-    let elems = [];
-
-    for (var i = 0; i < courseCount; i++) {
-        elems.push(
-            <CourseCard num={i + 1} key={`course${i + 1}`} scheduleWeeks={schedule} />
-        )
-    }
-
     return (
         <>
             <p>Total courses: {courseCount == 1 ? `${courseCount} (Single curriculum)` : courseCount}</p>
-            {elems}
-            <p>
-                <a href="#" 
-                    onClick={(e) => {
-                        e.preventDefault();
-                        setCourseCount(courseCount + 1)
-                    }
-                }>+ Add course</a>
-                &nbsp;&nbsp;
-                {courseCount > 1 ? <a href="#" 
-                    onClick={(e) => {
-                        e.preventDefault();
-                        setCourseCount(courseCount - 1)
-                    }
-                }>- Remove course</a> : <></>}
-            </p>
+            <IncreaseableInputSection
+                sectionName="course"
+                element={CourseCard}
+                elementProps={{
+                    scheduleWeeks: schedule
+                }}
+                countTracker={setCourseCount}
+            />
         </>
     )
 }
 
-function CourseCard({num, scheduleWeeks}: {num: number, scheduleWeeks: Schedule[][]}) {
+function CourseCard({count, scheduleWeeks}: {count: number, scheduleWeeks: Schedule[][]}) {
     const [title, setTitle] = useState(""); 
     const [duration, setDuration] = useState(1); 
 
@@ -54,13 +38,13 @@ function CourseCard({num, scheduleWeeks}: {num: number, scheduleWeeks: Schedule[
 
     return (
         <>
-            <p><b>{title ? `"${title}"` : `Unnamed Course ${num}`}</b></p>
+            <p><b>{title ? `"${title}"` : `Unnamed Course ${count}`}</b></p>
             <LabelledInput 
                 question="Course Name"
                 required
                 type="text"
                 placeholder="Name"
-                name={`course${num}_name`}
+                name={`course${count}_name`}
                 onChange={(e) => {
                     setTitle(e.target.value);
                 }}
@@ -68,7 +52,7 @@ function CourseCard({num, scheduleWeeks}: {num: number, scheduleWeeks: Schedule[
             <div className="bi-fold">
                 <LabelledDropdown
                     question="Duration"
-                    name={`course${num}_duration`}
+                    name={`course${count}_duration`}
                     values={durationOpts}
                     required
                     onChange={e => {
@@ -78,7 +62,7 @@ function CourseCard({num, scheduleWeeks}: {num: number, scheduleWeeks: Schedule[
                 <MultipleChoice
                     question="Enrollment available during..."
                     required
-                    name={`course${num}_enrollment_options`}
+                    name={`course${count}_enrollment_options`}
                     values={enrollmentAvailable}
                     type="checkbox"
                 />

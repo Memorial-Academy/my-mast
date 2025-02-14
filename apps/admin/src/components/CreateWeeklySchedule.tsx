@@ -1,37 +1,19 @@
 "use client";
-import { LabelledDropdown, LabelledInput } from "@mymast/ui";
+import { IncreaseableInputSection, LabelledDropdown, LabelledInput } from "@mymast/ui";
 import { useState, ChangeEvent } from "react";
 
 // Wrapper for all of it
 export default function CreateWeeklySchedule({}) {
     const [weeks, setWeeks] = useState(1);
-    let elems = [];
-
-    for (var i = 0; i < weeks; i++) {
-        elems.push(
-            <WeeklySchedule weekNumber={i + 1} key={`week_${i+1}`} />
-        )
-    }
 
     return (
         <>
             <p>Total weeks: {weeks}</p>
-            {elems}
-            <p>
-                <a href="#" 
-                    onClick={(e) => {
-                        e.preventDefault();
-                        setWeeks(weeks + 1)
-                    }
-                }>+ Add week</a>
-                &nbsp;&nbsp;
-                {weeks > 1 ? <a href="#" 
-                    onClick={(e) => {
-                        e.preventDefault();
-                        setWeeks(weeks - 1)
-                    }
-                }>- Remove week</a> : <></>}
-            </p>
+            <IncreaseableInputSection 
+                sectionName="week"
+                element={WeeklySchedule}
+                countTracker={setWeeks}
+            />
         </>
     )
 }
@@ -50,35 +32,17 @@ type WeeklySchedule = {
     endTime: number
 }
 
-export function WeeklySchedule({weekNumber}: {weekNumber: number}) {
-    const [days, setDays] = useState(1);
-    let elems = [];
-
-    for (var i = 0; i < days; i++) {
-        elems.push(
-            <DailySchedule weekNumber={weekNumber} dayNumber={i + 1} key={`week${weekNumber}_day${i + 1}`}/>
-        )
-    }
-
+export function WeeklySchedule({count}: {count: number}) {
     return (
         <>
-            <p><b>Week {weekNumber}</b></p>
-            {elems}
-            <p>
-                {days < 7 ? <a href="#" 
-                    onClick={(e) => {
-                        e.preventDefault();
-                        setDays(days + 1)
-                    }
-                }>+ Add day</a> : <></>}
-                &nbsp;&nbsp;
-                {days > 1 ? <a href="#" 
-                    onClick={(e) => {
-                        e.preventDefault();
-                        setDays(days - 1)
-                    }
-                }>- Remove day</a> : <></>}
-            </p>
+            <p><b>Week {count}</b></p>
+            <IncreaseableInputSection
+                sectionName="day"
+                element={DailySchedule}
+                elementProps={{
+                    weekNumber: count
+                }}
+            />
         </>
     )
 }
@@ -86,7 +50,7 @@ export function WeeklySchedule({weekNumber}: {weekNumber: number}) {
 //Types for the daily schedule elements
 type DailyScheduleProps = {
     weekNumber: number,
-    dayNumber: number
+    count: number
 }
 
 function DailySchedule(props: DailyScheduleProps) {
@@ -101,9 +65,9 @@ function DailySchedule(props: DailyScheduleProps) {
     return (
         <div className="tri-fold">
             <LabelledInput
-                question={`Day ${props.dayNumber}`}
+                question={`Day ${props.count}`}
                 type="date"
-                name={`week${props.weekNumber}_day${props.dayNumber}_date`}
+                name={`week${props.weekNumber}_day${props.count}_date`}
                 placeholder="Start"
                 required
             />
@@ -116,7 +80,7 @@ function DailySchedule(props: DailyScheduleProps) {
                     setStart(num);
                     validateTimes(num, end);
                 }}
-                name={`week${props.weekNumber}_day${props.dayNumber}_start`}
+                name={`week${props.weekNumber}_day${props.count}_start`}
             />
             <LabelledDropdown
                 question="End Time"
@@ -127,7 +91,7 @@ function DailySchedule(props: DailyScheduleProps) {
                     setEnd(num);
                     validateTimes(start, num);
                 }}
-                name={`week${props.weekNumber}_day${props.dayNumber}_end`}
+                name={`week${props.weekNumber}_day${props.count}_end`}
             />
         </div>
     )

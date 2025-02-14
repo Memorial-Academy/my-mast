@@ -1,15 +1,8 @@
 "use client";
-import { LabelledInput } from "@mymast/ui";
+import { IncreaseableInputSection, LabelledInput } from "@mymast/ui";
 import { useState } from "react";
 
 export default function ParentSignupPage() {
-    const [studentCount, setStudentCount] = useState(1);
-
-    let inputs = [];
-    for (var i = 1; i <= studentCount; i++) {
-        inputs.push(<StudentInformation count={i} key={"student" + i} />)
-    }
-
     return (
         <>
             <input readOnly className="signup-role-tracker" value="parent" title="role" name="role" />
@@ -20,22 +13,10 @@ export default function ParentSignupPage() {
                 <br/>
                 Note: you will be able to enroll individual students into programs; you can always change these details later!
             </p>
-            {inputs}
-            <p>
-                <a href="#" 
-                    onClick={(e) => {
-                        e.preventDefault();
-                        setStudentCount(studentCount + 1)
-                    }
-                }>+ Add student</a>
-                &nbsp;&nbsp;
-                {studentCount > 1 ? <a href="#" 
-                    onClick={(e) => {
-                        e.preventDefault();
-                        setStudentCount(studentCount - 1)
-                    }
-                }>- Remove student</a> : <></>}
-            </p>
+            <IncreaseableInputSection 
+                sectionName="student"
+                element={StudentInformation}
+            />
         </>
     )
 }
