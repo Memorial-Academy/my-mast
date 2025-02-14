@@ -1,13 +1,14 @@
 import authorizeSession from "@mymast/utils/authorize_session";
 import getTimestamp from "@mymast/utils/convert_timestamp";
-import getProgramData from "@/app/lib/get_program_data";
+import API from "@/app/lib/APIHandler";
+import { redirect } from "next/navigation";
 
 type Params = Promise<{
     id: string
 }>
 
 export async function generateMetadata({params}: {params: Params}) {
-    const data = await getProgramData((await params).id);
+    const data = await API.Application.getProgram((await params).id);
     
     return {
         title: `${data.name} - Program Manager | Admin Control Panel | Memorial Academy of Science and Technology`
@@ -15,8 +16,9 @@ export async function generateMetadata({params}: {params: Params}) {
 }
 
 export default async function Page({params}: {params: Params}) {
-    const data = await getProgramData((await params).id);
-    const auth = (await authorizeSession())!;
+    const data = await API.Application.getProgram((await params).id);
+
+    const auth = (await authorizeSession())!;    
 
     return (
         <>

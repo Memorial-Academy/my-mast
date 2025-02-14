@@ -13,7 +13,7 @@ export default async function Page() {
     const userRole = headers().get("X-UserRole") as "volunteer" | "parent" | "student";
     const session = (await authorizeSession())!
 
-    const userData = await API.User.profile(userRole, session.uuid, session.token);
+    const userData= await API.User.profile(userRole, session.uuid, session.token);
     
     return (
         <>

@@ -1,5 +1,5 @@
 import { Card } from "@mymast/ui";
-import EnrollmentCard from "./EnrollmentCard";
+import API from "@/app/lib/APIHandler";
 
 type VolunteerDashboardProps = {
     uuid: string
@@ -7,21 +7,7 @@ type VolunteerDashboardProps = {
 }
 
 export default async function VolunteerDashboard(props: VolunteerDashboardProps) {
-    const signupsReq = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/volunteer/assignments`, {
-        method: "POST",
-        body: JSON.stringify({
-            uuid: props.uuid,
-            token: props.token
-        }),
-        headers: {
-            "Content-Type": "application/json"
-        }
-    });
-
-    const signups: {
-        pending: Array<any>,
-        assignments: Array<any>
-    } = await signupsReq.json();
+    const signups = await API.User.getVolunteerAssignments(props.uuid, props.token);
 
     return (
         <>
@@ -40,8 +26,8 @@ export default async function VolunteerDashboard(props: VolunteerDashboardProps)
                     <br/>
                     We rarely cancel volunteer signups. If your signup appears here for an extended length of time, that's ok! You are still signed up to volunteer and will receive information on your signup. Email <a href="mailto:volunteer@memorialacademy.org">volunteer@memorialacademy.org</a> if you have any concerns, are your signup still displays here less than one week before the program begins.
                 </p>
-                {signups.pending.map(async (pendingAssignment, index) => {
-                    const program: ProgramData = await (await fetch(`${process.env.NEXT_PUBLIC_API_URL}/app/program/${pendingAssignment.program}`)).json()
+                {signups.pending.map(async (pendingAssignment) => {
+                    const program = await API.Application.getProgram(pendingAssignment.program);
 
                     return <Card
                         key={program.id}
@@ -52,9 +38,23 @@ export default async function VolunteerDashboard(props: VolunteerDashboardProps)
                                 <p>Thanks for signing up to volunteer at {program.name}!</p>
                                 <p>
                                     <b>Signup Information</b>
-                                    <br/>
-                                    You requested to volunteer for ...
                                 </p>
+                                    {program.courses.length > 1 && <>
+                                        <p>You requested to volunteer for:</p>
+                                        <ul>
+                                            {pendingAssignment.courses.map((course) => {
+                                                return <li>{program.courses[course].name}</li>
+                                            })}
+                                        </ul>
+                                        <p>Note: while requests are taken into account when assigning volunteers to courses, the final decision will be based on a combination of students in each course, volunteer availability, reported skills, instructor interest, and more. Requests do not guarantee an assignment to specific courses.</p>
+                                    </>}
+                                <p>You signed up to volunteer for the following week{program.schedule.length > 1 ? "s" : ""}:</p>
+                                <ul>
+                                    {pendingAssignment.weeks.map((week) => {
+                                        return <li>Week {week} ({program.schedule[week - 1][0].month}/{program.schedule[week - 1][0].date}/{program.schedule[week - 1][0].year} - {program.schedule[week - 1].at(-1)!.month}/{program.schedule[week - 1].at(-1)!.date}/{program.schedule[week - 1].at(-1)!.year})</li>
+                                    })}
+                                </ul>
+                                {pendingAssignment.instructor && <p>You indicated you are interested in being an instructor for this course. If needed, your program director may assign you this role in a specific course and contact you about extra duties as part of this role.</p>}
                                 <p>
                                     Your signup is currently waiting to be finalized by a program director. Once finalized, you'll be able to access a full schedule for your assigned course/week, in addition to other information. For now, please refer to the <a href={`/programs/volunteer/${program.id}`}>signup page</a> for more information on this signup.
                                 </p>

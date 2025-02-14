@@ -5,9 +5,9 @@ export const GET = {
         })
     
         if (req.status != 200) {
-            return {
+            throw {
                 code: req.status,
-                error_msg: await req.text()
+                msg: await req.text()
             }
         }
     

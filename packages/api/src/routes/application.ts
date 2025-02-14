@@ -8,9 +8,9 @@ export default class Application {
         this.url = APIUrl
     }
     
-    // /app/getprogram/<program_id>
+    // /app/program/<program_id>
     async getProgram(id: string): Promise<Program> {
-        return await Fetch.GET.json(this.url, "getprogram", id);
+        return await Fetch.GET.json(this.url, "program", id);
     }
     
     // /app/programs

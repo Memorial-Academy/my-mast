@@ -8,8 +8,8 @@ export default class APIHandler {
     readonly Application: Application;
 
     constructor(APIUrl: string) {
-        this.Auth = new Auth(APIUrl);
-        this.User = new User(APIUrl);
-        this.Application = new Application(APIUrl);
+        this.Auth = new Auth(APIUrl + "/auth");
+        this.User = new User(APIUrl + "/user");
+        this.Application = new Application(APIUrl + "/app");
     }
 }

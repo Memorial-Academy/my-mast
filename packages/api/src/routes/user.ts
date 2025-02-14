@@ -34,7 +34,7 @@ export default class User {
     )> {
         let data;
         try {
-             data = await Fetch.POST.json(this.url, `user/${role}/profile`, {
+             data = await Fetch.POST.json(this.url, `${role}/profile`, {
                 token: token,
                 uuid: uuid
             })
@@ -53,8 +53,9 @@ export default class User {
         linkedParent: string,
         enrollments: ConfirmedEnrollment[]
     }[]> {
-        return await Fetch.POST.json(this.url, "user/parent/students", {
-
+        return await Fetch.POST.json(this.url, "parent/students", {
+            uuid,
+            token
         })
     }
 
@@ -68,8 +69,8 @@ export default class User {
             course: number,
             week: number
         }[]
-    ): Promise<null | FetchError> {
-        return await Fetch.POST.json(this.url, "user/parent/newenrollment", {
+    ): Promise<null> {
+        return await Fetch.POST.json(this.url, "parent/newenrollment", {
             uuid,
             token,
             program,
@@ -82,7 +83,7 @@ export default class User {
         pending: PendingVolunteerAssignment[],
         assignments: ConfirmedVolunteerAssignment[]
     }> {
-        return await Fetch.POST.json(this.url, "user/volunteer/assignments", {
+        return await Fetch.POST.json(this.url, "volunteer/assignments", {
             uuid,
             token
         })

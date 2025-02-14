@@ -15,10 +15,15 @@ Student accounts are linked directly to the parent's account (and must be create
 Volunteers will be able to create accounts to sign up for programs, track their hours, and receive instructions, student information, and instructional information directly from their dashboard.
 
 ## Development
-This is a monorepo for the three central components of MyMAST:
+This is a monorepo for the three central components of MyMAST (in the `apps` directory):
 - `server`: Express.js application providing an API to access/modify data related to the application
 - `client`: Next.js application serving content to end users (students, volunteers, and parents)
 - `admin`: Next.js application providing access to the administrative controls of MyMAST infrastructure
+
+In addition, the projects uses three internal packages (in the `packages` directory):
+- `ui`: UI elements shared across the frontend apps
+- `utils`: scripts/utility functions that are shared between frontend apps
+- `api`: API handler with typed functions calling endpoints on the `server` app to provide type-safe API calls on the frontend apps
 
 The project utilizes PNPM as the package manager, with Turborepo as a monorepo manager.
 
@@ -45,9 +50,8 @@ The `config` directory provides the config files utilized to correctly configure
 - `MAIL_PASSWORD`: password to connect to mail server
 
 #### `apps/client/.env`
-- `NEXT_PUBLIC_API_URL`: the URL to be used by the application to connect to the API server (ex: localhost:5000)
+- `NEXT_PUBLIC_API_URL`: the URL to be used by the application to connect to the API server (ex: https://localhost:5000)
 
 #### `apps/admin/.env`
-#### `apps/client/.env`
-- `NEXT_PUBLIC_API_URL`: the URL to be used by the application to connect to the API server (ex: localhost:5000)
+- `NEXT_PUBLIC_API_URL`: the URL to be used by the application to connect to the API server (ex: https://localhost:5000)
 - `NEXT_PUBLIC_MYMAST_URL`: the URL to connect to the MyMAST `client`

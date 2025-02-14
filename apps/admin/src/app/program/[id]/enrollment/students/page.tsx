@@ -1,15 +1,15 @@
 import { calculateAge } from "@mymast/utils/birthday";
-import getProgramData from "@/app/lib/get_program_data";
 import { Table } from "@mymast/ui";
 import authorizeSession from "@mymast/utils/authorize_session";
 import StudentNotesPopup from "@/components/program_manager/StudentNotesPopup";
+import API from "@/app/lib/APIHandler";
 
 type Params = Promise<{
     id: string
 }>
 
 export async function generateMetadata({params}: {params: Params}) {
-    const data = await getProgramData((await params).id);
+    const data = await API.Application.getProgram((await params).id);
 
     return {
         title: `Enrolled Students - ${data.name} - Program Manager | Admin Control Panel | Memorial Academy of Science and Technology`
@@ -17,7 +17,8 @@ export async function generateMetadata({params}: {params: Params}) {
 }
 
 export default async function Page({params}: {params: Params}) {
-    const data = await getProgramData((await params).id);
+    const data = await API.Application.getProgram((await params).id);
+
     const auth = (await authorizeSession())!;
 
     // get student enrollment data

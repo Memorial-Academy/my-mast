@@ -2,6 +2,8 @@ import "@/styles/program_manager.css"
 import ProgramManagerNav from "@/components/program_manager/Nav";
 import { ReactNode } from "react";
 import getProgramData from "@/app/lib/get_program_data";
+import API from "@/app/lib/APIHandler";
+import { redirect } from "next/navigation";
 
 type Params = Promise<{
     signup: string,
@@ -17,7 +19,13 @@ type Params = Promise<{
 // }
 
 export default async function Layout({params, children}: {params: Params, children: ReactNode}) {
-    const data = await getProgramData((await params).id);
+    let data;
+    try {
+        data = await API.Application.getProgram((await params).id);
+    } catch(e) {
+        console.log("Invalid ID!")
+        redirect("/404")
+    }
 
     return (
         <>
