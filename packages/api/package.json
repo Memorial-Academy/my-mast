@@ -2,8 +2,10 @@
     "name": "@mymast/api",
     "type": "module",
     "exports": {
-        ".": "./src/index.ts"
+        ".": "./src/index.ts",
+        "./Types": "./types/index.d.ts"
     },
+    "types": "./src/index.ts",
     "devDependencies": {
         "@types/node": "^22.10.5",
         "typescript": "^5.7.2"

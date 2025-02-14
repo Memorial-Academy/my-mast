@@ -23,6 +23,7 @@ export default function StudentEnrollmentPopup(props: StudentEnrollmentPopupProp
 
     return (
         <>
+            {/* FORM PAGE 1 */}
             <form 
                 action={async (data) => {
                     setPage(2);
@@ -61,6 +62,8 @@ export default function StudentEnrollmentPopup(props: StudentEnrollmentPopupProp
                 {enrollmentSections}
                 {enrollmentSections.length > 0 ? <input type="submit" value="Next" /> : <></>}
             </form>
+
+            {/* FORM PAGE 2 */}
             {page == 2 && <>
                 <h3>Confirm your enrollment details</h3>
                 <ul>
@@ -106,6 +109,8 @@ export default function StudentEnrollmentPopup(props: StudentEnrollmentPopupProp
                 }}/>
                 <p>{confirmation}</p>
             </>}
+
+            {/* FORM PAGE 3 */}
             {page == 3 && <>
                 <h3>All done!</h3>
                 <p>

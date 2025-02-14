@@ -3,22 +3,17 @@ import { Metadata } from "next";
 import { headers } from "next/headers";
 import authorizeSession from "@mymast/utils/authorize_session";
 import VolunteerDashboard from "@/components/dashboard/VolunteerDashboard";
+import API from "../lib/APIHandler";
 
 export const metadata: Metadata = {
     title: "Dashboard | MyMAST"
 }
 
 export default async function Page() {
-    const userRole = headers().get("X-UserRole");
+    const userRole = headers().get("X-UserRole") as "volunteer" | "parent" | "student";
     const session = (await authorizeSession())!
 
-    const userData = await (await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/${userRole}/profile`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(session)
-    })).json();
+    const userData = await API.User.profile(userRole, session.uuid, session.token);
     
     return (
         <>

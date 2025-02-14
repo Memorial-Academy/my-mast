@@ -1,4 +1,4 @@
-type FetchError = {
+export type FetchError = {
     code: number,
-    error_msg: string
+    msg: string
 }

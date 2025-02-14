@@ -45,6 +45,9 @@ importers:
 
   apps/client:
     dependencies:
+      '@mymast/api':
+        specifier: workspace:*
+        version: link:../../packages/api
       '@mymast/ui':
         specifier: workspace:*
         version: link:../../packages/ui

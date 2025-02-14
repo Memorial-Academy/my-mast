@@ -21,9 +21,14 @@ const VolunteerUser = UserDB.model(
         pendingAssignments: { type: [String], required: true, default: [] },   // assignments yet to be finalized by program director
         assignments: [{     // enrollments that have been finalized by the program director
             program: { type: String, required: true },
-            course: { type: Number, required: true },
-            week: { type: Number, required: true },
-            instructor: { type: Boolean, required: false, default: false },
+            commitments: {
+                type: [{
+                    course: { type: Number, required: true },
+                    week: { type: Number, required: true },
+                    instructor: { type: Boolean, required: false, default: false },
+                }],
+                required: true
+            },
             id: { type: String, required: true }
         }],
         // enrollments not yet finalized are stored in the `volunteersignups` collection in the `application` database

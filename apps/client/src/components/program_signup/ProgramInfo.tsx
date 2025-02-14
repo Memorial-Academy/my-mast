@@ -1,9 +1,10 @@
 import React from "react";
 import getTimestamp from "@mymast/utils/convert_timestamp";
 import EnrollButton from "./EnrollButton";
+import { Program } from "@mymast/api/Types";
 
 type ProgramInfoProps = {
-    data: ProgramData,
+    data: Program,
     signupType: string,
     user: {
         uuid: string

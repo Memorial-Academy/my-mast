@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import ProgramInfo from "@/components/program_signup/ProgramInfo";
 import authorizeSession from "@mymast/utils/authorize_session";
+import API from "@/app/lib/APIHandler";
 
 type Params = Promise<{
     signup: string,
@@ -28,14 +29,19 @@ export async function generateMetadata({params, searchParams}: GenerateMetadataP
 export default async function Page({params}: {params: Params}) {
     const id = (await params).id;
     const signupType = (await params).signup;
-    const req = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/app/program/${id}`);
-    let students = [];  // filled with information of students later
+    let students: {
+        name: {
+            first: string,
+            last: string
+        },
+        uuid: string
+    }[] = [];  // filled with information of students later
 
-    if (["volunteer", "enroll"].indexOf(signupType) == -1 || req.status != 200) {
+    if (["volunteer", "enroll"].indexOf(signupType) == -1) {
         redirect("/programs");
     }
 
-    const data: ProgramData = await req.json();
+    const data = await API.Application.getProgram(id);
 
     // Check whether a user is logged in
     const authCookie = await authorizeSession();
@@ -66,19 +72,10 @@ export default async function Page({params}: {params: Params}) {
 
         // get information about students
         if (signupType == "enroll") {
-            const studentInfo = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/parent/students`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    token: session.token,
-                    uuid: session.uuid
-                })
-            })
+            const studentInfo = await API.User.parentGetStudents(session.uuid, session.token);
             
 
-            students = (await studentInfo.json()).map((student: Student) => {
+            students = studentInfo.map((student) => {
                 return {
                     name: student.name,
                     uuid: student.uuid

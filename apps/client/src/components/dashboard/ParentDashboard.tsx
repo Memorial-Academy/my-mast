@@ -1,3 +1,4 @@
+import API from "@/app/lib/APIHandler"
 import EnrollmentCard from "./EnrollmentCard"
 
 type ParentDashboardProps = {
@@ -6,16 +7,7 @@ type ParentDashboardProps = {
 }
 
 export default async function ParentDashboard(props: ParentDashboardProps) {
-    const students: Array<Student> = await (await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/parent/students`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            uuid: props.uuid,
-            token: props.token,
-        })
-    })).json()
+    const students = await API.User.parentGetStudents(props.uuid, props.token);
 
     return (
         <>

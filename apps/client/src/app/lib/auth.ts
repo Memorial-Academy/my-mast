@@ -33,7 +33,6 @@ export default async function authenticate(data: FormData, endpoint: string) {
             secure: true,
             sameSite: "strict"
         })
-        console.log("redirecting");
         redirect("/dashboard");
     }
 }
