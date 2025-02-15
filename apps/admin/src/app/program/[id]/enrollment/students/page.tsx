@@ -21,30 +21,8 @@ export default async function Page({params}: {params: Params}) {
 
     const auth = (await authorizeSession())!;
 
-    // get student enrollment data
-    const req = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/enrollments/students`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            uuid: auth.uuid,
-            token: auth.token,
-            program: data.id
-        })
-    })
-
-    const enrollmentData: Array<{
-        courseID: number,
-        total: number,
-        data: Array<{
-            week: number,
-            enrollments: Array<{
-                student: Student,
-                parent: Parent
-            }>
-        }>
-    }> = await req.json();
+    // get student enrollment info
+    const enrollmentData = await API.Admin.getEnrolledStudents(auth.uuid, auth.token, data.id)
 
     let enrollmentTotal = 0;
 

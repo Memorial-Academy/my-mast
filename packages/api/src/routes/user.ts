@@ -1,6 +1,6 @@
 import * as Fetch from "../fetcher";
-import type { FullName, Birthday, ConfirmedEnrollment, PendingVolunteerAssignment, ConfirmedVolunteerAssignment } from "../../types/user";
-import { FetchError } from "../../types/error";
+import type { FullName, Birthday, PendingVolunteerAssignment, ConfirmedVolunteerAssignment } from "../../types/user";
+import { UserTypes } from "../../types/userTypes";
 
 export default class User {
     private url = "https://localhost:5000"
@@ -22,7 +22,7 @@ export default class User {
             name: FullName,
             email: string,
             phone: string,
-            linkedStudents: string[]    // Array of student UUID's
+            linkedStudents: string[]    
         //student role
         } : {
             // TODO: implement properly
@@ -45,14 +45,7 @@ export default class User {
     }
 
     // /user/parent/students
-    async parentGetStudents(uuid: string, token: string): Promise<{
-        name: FullName,
-        notes: string | null,
-        uuid: string,
-        birthday: Birthday,
-        linkedParent: string,
-        enrollments: ConfirmedEnrollment[]
-    }[]> {
+    async parentGetStudents(uuid: string, token: string): Promise<UserTypes.Student[]> {
         return await Fetch.POST.json(this.url, "parent/students", {
             uuid,
             token

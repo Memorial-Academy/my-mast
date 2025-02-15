@@ -1,7 +1,7 @@
 import authorizeSession from "@mymast/utils/authorize_session";
 import getTimestamp from "@mymast/utils/convert_timestamp";
 import API from "@/app/lib/APIHandler";
-import { redirect } from "next/navigation";
+import { UserTypes } from "@mymast/api/Types";
 
 type Params = Promise<{
     id: string
@@ -102,23 +102,7 @@ export default async function Page({params}: {params: Params}) {
 
             <h4>Directors</h4>
             {data.admins.map(async director => {
-                let req = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/getuser`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        uuid: auth.uuid,
-                        token: auth.token,
-                        requested_uuid: director
-                    })
-                });
-
-                if (!req.ok) {
-                    return <></>;
-                }
-
-                let user = await req.json();
+                let user = await API.Admin.getUser<UserTypes.Volunteer>(auth.uuid, auth.token, director);
                 let profile = user.profile;
 
                 return <p key={director}>

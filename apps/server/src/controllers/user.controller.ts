@@ -3,7 +3,7 @@ import ParentUser from "../models/users/parent.model";
 import VolunteerUser from "../models/users/volunteer.model";
 import StudentUser from "../models/users/student.model";
 import VolunteerSignup from "../models/application/volunteer_signups.model";
-import { randomBytes, sign } from "crypto";
+import { randomBytes } from "crypto";
 import Program from "../models/application/program.model";
 
 function checkRole(correctRole: string, req: Request, res: Response) {

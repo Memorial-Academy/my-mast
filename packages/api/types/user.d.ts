@@ -9,6 +9,7 @@ export type Birthday = {
     year: number
 }
 
+// for student users
 export type ConfirmedEnrollment = {
     program: string,
     course: number,
@@ -16,6 +17,7 @@ export type ConfirmedEnrollment = {
     id: string
 }
 
+// for volunteers
 export type PendingVolunteerAssignment = {
     program: string,
     courses: number[],
