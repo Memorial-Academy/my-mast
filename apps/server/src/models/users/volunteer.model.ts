@@ -5,16 +5,22 @@ const VolunteerUser = UserDB.model(
     "Volunteers",
     new Schema({
         name: {
-            first: { type: String, required: true },
-            last: { type: String, required: true },
+            type: {
+                first: { type: String, required: true },
+                last: { type: String, required: true },
+            },
+            required: true
         },
         email: { type: String, required: true },
         uuid: { type: String, required: true },
         phone: { type: String, required: true },
         birthday: {
-            month: { type: Number, required: true },
-            day: { type: Number, required: true },
-            year: { type: Number, required: true }
+            type: {
+                month: { type: Number, required: true },
+                day: { type: Number, required: true },
+                year: { type: Number, required: true }
+            },
+            required: true
         },
         school: { type: String, required: true },
         admin: {type: Boolean, default: false},

@@ -5,6 +5,7 @@ import AuthUser from "../models/auth/user.model";
 import VolunteerUser from "../models/users/volunteer.model";
 import ParentUser from "../models/users/parent.model";
 import StudentUser from "../models/users/student.model";
+import VolunteerSignup from "../models/application/volunteer_signups.model";
 
 function validateData(data: any, res: Response) {
     if (data) {
@@ -223,4 +224,35 @@ export async function getStudentEnrollments(req: Request, res: Response) {
 
     res.writeHead(200);
     res.end(JSON.stringify(data));
+}
+
+export async function getVolunteerSignups(req: Request, res: Response) {
+    // get all pending assignments
+    let pendingAssignmentsData = await VolunteerSignup.find({program: req.body.program});
+
+    let pendingVolunteers = []
+
+    for (let pa of pendingAssignmentsData) {
+        pendingVolunteers.push({
+            volunteer: await VolunteerUser.findOne({uuid: pa.uuid}, {
+                "assignments": 0,
+                "pendingAssignments": 0,
+                "_id": 0,
+                "admin": 0
+            }),
+            signup: pa
+        })
+    }
+
+    // get confirmed assignments
+    // TODO: implement
+
+
+    res.writeHead(200);
+    res.end(JSON.stringify({
+        total: {
+            pending: pendingVolunteers.length
+        },
+        pendingAssignments: pendingVolunteers
+    }))
 }

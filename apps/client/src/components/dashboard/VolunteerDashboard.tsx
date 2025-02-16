@@ -24,7 +24,7 @@ export default async function VolunteerDashboard(props: VolunteerDashboardProps)
                 <p>
                     When signing up to volunteer for MAST, program directors will review your signup first to ensure there are no problems with your signup. In programs with multiple courses and/or weeks, program directors may also assign you to specific courses and/or specific weeks.
                     <br/>
-                    We rarely cancel volunteer signups. If your signup appears here for an extended length of time, that's ok! You are still signed up to volunteer and will receive information on your signup. Email <a href="mailto:volunteer@memorialacademy.org">volunteer@memorialacademy.org</a> if you have any concerns, are your signup still displays here less than one week before the program begins.
+                    We rarely cancel volunteer signups. If your signup appears here for an extended length of time, that's ok! You are still signed up to volunteer and will receive information on your signup. Email <a href="mailto:volunteer@memorialacademy.org">volunteer@memorialacademy.org</a> if you have any concerns, or your signup still displays here less than one week before the program begins.
                 </p>
                 {signups.pending.map(async (pendingAssignment) => {
                     const program = await API.Application.getProgram(pendingAssignment.program);
@@ -63,6 +63,12 @@ export default async function VolunteerDashboard(props: VolunteerDashboardProps)
                             <div>
                                 <p>
                                     <b>Location:</b> {program.location.common_name}
+                                    <br/>
+                                    {program.location.loc_type == "physical" ? <>
+                                        {program.location.address}
+                                        <br/>
+                                        {program.location.city}, {program.location.state} {program.location.zip}
+                                    </> : <>{program.location.link || "Virtual classroom link will be released soon!"}</>}
                                 </p>
                                 <p>
                                     <b>Program Director</b> (Questions? This is the person to contact!)

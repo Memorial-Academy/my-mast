@@ -1,4 +1,4 @@
-import { FullName } from "../../types";
+import { FullName, PendingVolunteerAssignment } from "../../types";
 import { Program } from "../../types/application";
 import { UserTypes } from "../../types/userTypes";
 import * as Fetch from "../fetcher";
@@ -49,7 +49,7 @@ export default class Admin {
         data: {
             week: number,
             enrollments: {
-                student: UserTypes.Student,
+                student: Omit<UserTypes.Student, "enrollments">,
                 parent: {
                     name: FullName,
                     email: string,
@@ -59,6 +59,27 @@ export default class Admin {
         }[]
     }[]> {
         return await Fetch.POST.json(this.url, "enrollments/students", {
+            uuid,
+            token,
+            program: program_id
+        })
+    }
+
+    async getEnrolledVolunteers(
+        uuid: string,
+        token: string,
+        program_id: string
+    ): Promise<{
+        total: {
+            pending: number,
+            confirmed: number
+        },
+        pendingAssignments: {
+            volunteer: Omit<UserTypes.Volunteer, "admin" & "assignments" & "pendingAssignments">
+            signup: PendingVolunteerAssignment
+        }[]
+    }> {
+        return await Fetch.POST.json(this.url, "enrollments/volunteers", {
             uuid,
             token,
             program: program_id
