@@ -24,15 +24,18 @@ export type PendingVolunteerAssignment = {
     weeks: number[],
     instructorInterest: boolean,
     hours: number ,
-    skills?: string
+    skills?: string,
+    id: string  // Enrollment ID
 }
 
 export type ConfirmedVolunteerAssignment = {
     program: string,
-    commitments: {
-        week: number,
-        course: number,
-        instructor: boolean
-    }[],
+    commitments: VolunteeringCommitment[],
     id: string
+}
+
+export type VolunteeringCommitment = {
+    week: number,
+    course: number,
+    instructor: boolean
 }

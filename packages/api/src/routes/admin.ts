@@ -1,4 +1,4 @@
-import { FullName, PendingVolunteerAssignment } from "../../types";
+import { FullName, PendingVolunteerAssignment, VolunteeringCommitment } from "../../types";
 import { Program } from "../../types/application";
 import { UserTypes } from "../../types/userTypes";
 import * as Fetch from "../fetcher";
@@ -83,6 +83,24 @@ export default class Admin {
             uuid,
             token,
             program: program_id
+        })
+    }
+
+    async confirmVolunteer(
+        uuid: string,
+        token: string,
+        volunteer_uuid: string,
+        program_id: string,
+        signupData: VolunteeringCommitment[],
+        enrollment_id: string,
+    ) {
+        await Fetch.POST.json(this.url, "confirmvolunteer", {
+            uuid,
+            token,
+            volunteer: volunteer_uuid,
+            program: program_id,
+            data: signupData,
+            enrollment: enrollment_id
         })
     }
 }

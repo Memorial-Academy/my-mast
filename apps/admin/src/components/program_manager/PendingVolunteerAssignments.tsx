@@ -88,6 +88,10 @@ export default function PendingVolunteerAssignments(props: PendingVolunteerAssig
                                 additionalNotes: signup.signup.skills,
                                 instructor: signup.signup.instructorInterest
                             }}
+                            enrollment={{
+                                id: signup.signup.id,
+                                volunteerID: signup.volunteer.uuid
+                            }}
                         />
                     </Card>
                 )

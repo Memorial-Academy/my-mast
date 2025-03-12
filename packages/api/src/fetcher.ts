@@ -35,7 +35,11 @@ export const POST = {
             }
         }
     
-        return await req.json();
+        try {
+            return await req.json();
+        } catch(e) {
+            return;
+        }
     },
     text: async (url: string, endpoint: string, data: string): Promise<any> => {
         let req = await fetch(`${url}/${endpoint}`, {

@@ -22,5 +22,6 @@ AdminRouter.post("/managedprograms", Controller.getManagedPrograms);
 AdminRouter.post("/getuser", Controller.getUser);
 AdminRouter.post("/enrollments/students", Controller.getStudentEnrollments);
 AdminRouter.post("/enrollments/volunteers", Controller.getVolunteerSignups);
+AdminRouter.post("/confirmvolunteer", Controller.confirmVolunteerAssignment);
 
 export default AdminRouter;

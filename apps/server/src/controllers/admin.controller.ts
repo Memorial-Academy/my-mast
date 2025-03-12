@@ -256,3 +256,34 @@ export async function getVolunteerSignups(req: Request, res: Response) {
         pendingAssignments: pendingVolunteers
     }))
 }
+
+export async function confirmVolunteerAssignment(req: Request, res: Response) {
+    // delete pending signup
+    // do this first to avoid edge cases where assignment is pending and confirmed
+    const deletion = VolunteerSignup.deleteOne({id: req.body.enrollment});
+
+    // find volunteer
+    const volunteer = await VolunteerUser.findOne({uuid: req.body.volunteer});
+
+    if (!volunteer) {
+        res.writeHead(404);
+        res.end(`Volunteer "${req.body.volunteer}" does not exist.`);
+        return;
+    }
+
+    // update volunteer assignment
+    volunteer.assignments.push({
+        program: req.body.program,
+        commitments: req.body.data,
+        id: req.body.enrollment
+    })
+
+    volunteer.save();
+    console.log("saved")
+
+    deletion.finally(() => {
+        console.log("deleted")
+        res.writeHead(200);
+        res.end();
+    })
+}
