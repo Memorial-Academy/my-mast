@@ -27,11 +27,6 @@ type AssignVolunteerPopupProps = {
 
 export default function AssignVolunteerPopup(props: AssignVolunteerPopupProps) {
     const [active, setActive] = useState(false);
-    const [data, setData] = useState<{
-        week: number,
-        course: number,
-        instructor: boolean
-    }[]>([])
 
     let template = [];
     for (let week = 1; week <= props.program.schedule.length; week++) {

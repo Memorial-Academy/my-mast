@@ -1,6 +1,7 @@
 import authorizeSession from "@mymast/utils/authorize_session";
 import API from "@/app/lib/APIHandler";
 import PendingVolunteerAssignments from "@/components/program_manager/PendingVolunteerAssignments";
+import ConfirmedVolunteerAssignments from "@/components/program_manager/ConfirmedVolunteers";
 
 type Params = Promise<{
     id: string
@@ -24,7 +25,7 @@ export default async function Page({params}: {params: Params}) {
     return (
         <>
             <h2>Volunteer signups for {data.name}</h2>
-            <p>Total signups: {enrollmentData.total.pending}</p>
+            <p>Total signups: {enrollmentData.total.pending + enrollmentData.total.confirmed}</p>
             <p>
                 <b>Go to...</b>
                 <br/>
@@ -34,14 +35,20 @@ export default async function Page({params}: {params: Params}) {
             </p>
 
             {/* PENDING ASSIGNMENTS */}
+            <h2 id="pending">Pending Assignments</h2>
+            <p><b>Total pending signups:</b> {enrollmentData.total.pending}</p>
             <PendingVolunteerAssignments
                 program={data}
                 assignments={enrollmentData.pendingAssignments}
-                total={enrollmentData.total.pending}
             />
 
             {/* CONFIRMED ASSIGNMENTS */}
             <h2 id="confirmed">Confirmed</h2>
+            <p><b>Total confirmed signups:</b> {enrollmentData.total.confirmed}</p>
+            <ConfirmedVolunteerAssignments
+                program={data}
+                assignments={enrollmentData.confirmedAssignments}
+            />
         </>
     )
 }

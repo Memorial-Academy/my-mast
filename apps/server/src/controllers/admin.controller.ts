@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Program from "../models/application/program.model";
-import { randomBytes } from "crypto";
+import { randomBytes, sign } from "crypto";
 import AuthUser from "../models/auth/user.model";
 import VolunteerUser from "../models/users/volunteer.model";
 import ParentUser from "../models/users/parent.model";
@@ -246,14 +246,45 @@ export async function getVolunteerSignups(req: Request, res: Response) {
 
     // get confirmed assignments
     // TODO: implement
+    let confirmedAssignments = await VolunteerUser.find({
+        assignments: { 
+            $elemMatch: {
+                program: req.body.program
+            }
+        }
+    });
 
+    let confirmedVolunteers = [];
+
+    for (let volunteer of confirmedAssignments) {
+        // get specific signup object
+        let signup;
+
+        for (let assignment of volunteer.assignments) {
+            if (assignment.program == req.body.program) {
+                signup = assignment;
+            }
+        }
+
+        confirmedVolunteers.push({
+            volunteer: await VolunteerUser.findOne({uuid: volunteer.uuid}, {
+                "assignments": 0,
+                "pendingAssignments": 0,
+                "_id": 0,
+                "admin": 0
+            }),
+            signup: signup
+        })
+    }
 
     res.writeHead(200);
     res.end(JSON.stringify({
         total: {
-            pending: pendingVolunteers.length
+            pending: pendingVolunteers.length,
+            confirmed: confirmedVolunteers.length
         },
-        pendingAssignments: pendingVolunteers
+        pendingAssignments: pendingVolunteers,
+        confirmedAssignments: confirmedVolunteers
     }))
 }
 
@@ -277,6 +308,10 @@ export async function confirmVolunteerAssignment(req: Request, res: Response) {
         commitments: req.body.data,
         id: req.body.enrollment
     })
+
+    // remove pending assignment from volunteer
+    let removeIndex = volunteer.pendingAssignments.indexOf(req.body.enrollment);
+    volunteer.pendingAssignments.splice(removeIndex, 1);
 
     volunteer.save();
     console.log("saved")

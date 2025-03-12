@@ -164,9 +164,7 @@ export async function getAssignments(req: Request, res: Response) {
         let signup = await VolunteerSignup.findOne({id: pa});
 
         if (!signup) {
-            res.writeHead(500);
-            res.end(`User "${req.body.uuid}" has not signed-up for a program using enrollment ID "${pa}"`);
-            return;
+            break;
         }
 
         let hours = 0;

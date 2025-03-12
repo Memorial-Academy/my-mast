@@ -4,7 +4,6 @@ import { calculateAge } from "@mymast/utils/birthday";
 import AssignVolunteerPopup from "./AssignVolunteerPopup";
 
 type PendingVolunteerAssignmentsProps = {
-    total: number,
     program: Program,
     assignments: {
         signup: PendingVolunteerAssignment,
@@ -15,8 +14,6 @@ type PendingVolunteerAssignmentsProps = {
 export default function PendingVolunteerAssignments(props: PendingVolunteerAssignmentsProps) {
     return (
         <>
-            <h2 id="pending">Pending Assignments</h2>
-            <p><b>Total pending signups:</b> {props.total}</p>
             {props.assignments.map(signup => {
                 let age = calculateAge(signup.volunteer.birthday);
 

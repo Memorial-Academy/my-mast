@@ -1,4 +1,4 @@
-import { FullName, PendingVolunteerAssignment, VolunteeringCommitment } from "../../types";
+import { ConfirmedVolunteerAssignment, FullName, PendingVolunteerAssignment, VolunteeringCommitment } from "../../types";
 import { Program } from "../../types/application";
 import { UserTypes } from "../../types/userTypes";
 import * as Fetch from "../fetcher";
@@ -77,6 +77,10 @@ export default class Admin {
         pendingAssignments: {
             volunteer: Omit<UserTypes.Volunteer, "admin" & "assignments" & "pendingAssignments">
             signup: PendingVolunteerAssignment
+        }[],
+        confirmedAssignments: {
+            volunteer: Omit<UserTypes.Volunteer, "admin" & "assignments" & "pendingAssignments">
+            signup: ConfirmedVolunteerAssignment
         }[]
     }> {
         return await Fetch.POST.json(this.url, "enrollments/volunteers", {
