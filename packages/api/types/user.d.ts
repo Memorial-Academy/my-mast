@@ -31,7 +31,8 @@ export type PendingVolunteerAssignment = {
 export type ConfirmedVolunteerAssignment = {
     program: string,
     commitments: VolunteeringCommitment[],
-    id: string
+    id: string,
+    hours: number
 }
 
 export type VolunteeringCommitment = {

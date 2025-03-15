@@ -35,7 +35,8 @@ const VolunteerUser = UserDB.model(
                 }],
                 required: true
             },
-            id: { type: String, required: true }
+            id: { type: String, required: true },
+            hours: {type: Number, required: true, default: 0}
         }],
         // enrollments not yet finalized are stored in the `volunteersignups` collection in the `application` database
         skills: { type: String, required: false, default: "" }

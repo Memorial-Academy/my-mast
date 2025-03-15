@@ -5,7 +5,7 @@ import API from "@/app/lib/APIHandler";
 export default function PendingVolunteerAssignmentsSection({signups}: {signups: PendingVolunteerAssignment[]}) {
     return (
         <>
-            {signups && <>
+            {signups.length > 0 && <>
                 {/* heading and section explanation */}
                 <h3>Pending Assignments</h3>
                 <p>
@@ -19,7 +19,7 @@ export default function PendingVolunteerAssignmentsSection({signups}: {signups: 
                     const program = await API.Application.getProgram(pendingAssignment.program);
 
                     return <Card
-                        key={program.id}
+                        key={pendingAssignment.id}
                         header={program.name}
                     >
                         <div className="bi-fold">
@@ -28,15 +28,17 @@ export default function PendingVolunteerAssignmentsSection({signups}: {signups: 
                                 <p>
                                     <b>Signup Information</b>
                                 </p>
-                                    {program.courses.length > 1 && <>
-                                        <p>You requested to volunteer for:</p>
-                                        <ul>
-                                            {pendingAssignment.courses.map((course) => {
-                                                return <li>{program.courses[course].name}</li>
-                                            })}
-                                        </ul>
-                                        <p>Note: while requests are taken into account when assigning volunteers to courses, the final decision will be based on a combination of students in each course, volunteer availability, reported skills, instructor interest, and more. Requests do not guarantee an assignment to specific courses.</p>
-                                    </>}
+                                {/* requested courses */}
+                                {program.courses.length > 1 && <>
+                                    <p>You requested to volunteer for:</p>
+                                    <ul>
+                                        {pendingAssignment.courses.map((course) => {
+                                            return <li>{program.courses[course].name}</li>
+                                        })}
+                                    </ul>
+                                    <p>Note: while requests are taken into account when assigning volunteers to courses, the final decision will be based on a combination of students in each course, volunteer availability, reported skills, instructor interest, and more. Requests do not guarantee an assignment to specific courses.</p>
+                                </>}
+                                {/* signed up weeks */}
                                 <p>You signed up to volunteer for the following week{program.schedule.length > 1 ? "s" : ""}:</p>
                                 <ul>
                                     {pendingAssignment.weeks.map((week) => {
