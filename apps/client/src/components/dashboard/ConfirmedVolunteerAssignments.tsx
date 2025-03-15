@@ -68,6 +68,26 @@ export default function ConfirmedVolunteerAssignmentsSection({signups}: {signups
                                         </p>
                                     })}
                                 </div>
+
+                                {/* Location */}
+                                <p><b>Location</b></p>
+                                <p>
+                                    {program.location.loc_type == "physical" && <>
+                                        <ins>{program.location.common_name}</ins>
+                                        <br/>
+                                        {program.location.address}
+                                        <br/>
+                                        {program.location.city}, {program.location.state} {program.location.zip}
+                                    </>}
+                                    {program.location.loc_type == "virtual" && <>
+                                        <ins>Virtual</ins>
+                                        <br/>
+                                        {program.location.link ? 
+                                            <span>Link: <a href={program.location.link}>{program.location.link}</a></span>
+                                        :   <span>Link will be published shortly before the program begins.</span>
+                                        }
+                                    </>}
+                                </p>
                             </div>
                             <div>
                                 <p><b>Volunteering Hours</b></p>
