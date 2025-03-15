@@ -34,6 +34,7 @@ async function generateSession(uuid: string, role: string) {
 }
 
 export async function loginHandler(req: Request, res: Response) {
+    let genericMessage = "Could not login. Please ensure you're using the correct email and password.";
     if (!validateEmail(req.body.email)) {
         authenticationError(res, "Please enter a valid email address.");
         return;
@@ -46,7 +47,7 @@ export async function loginHandler(req: Request, res: Response) {
     // Account does not exist
     if (!user) {
         res.writeHead(401);
-        res.end("Could not login. Make sure the email and password are correct.");
+        res.end(genericMessage);
         return;
     }
 
@@ -61,7 +62,7 @@ export async function loginHandler(req: Request, res: Response) {
             res.end(JSON.stringify(session));
         } else {
             res.writeHead(403);
-            res.end();
+            res.end(genericMessage);
         }
     })
 }
@@ -82,7 +83,7 @@ export function logoutHandler(req: Request, res: Response) {
 export function signupHandler(req: Request, res: Response) {
     // Ensure ToS and Privacy agreement
     if (req.body.agreement != "agree") {
-        authenticationError(res, "Agree to Terms of Service and Privacy Policy");
+        authenticationError(res, "Please agree to the Terms of Service and Privacy Policy");
         return;
     }
     if (!validateEmail(req.body.email)) {

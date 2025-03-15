@@ -8,6 +8,7 @@ export default function Home() {
     const [formMessage, setFormMessage] = useState("");
 
     async function formSubmissionHandler(data: FormData) {
+        setFormMessage(""); // blank message on every login attempt
         const status = await Authenticate(data, "/auth/login");
         
         if (status) {
