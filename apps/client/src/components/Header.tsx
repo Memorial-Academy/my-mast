@@ -7,6 +7,25 @@ import Link from "next/link";
 export default async function Header() {
     let session = await authorizeSession();
 
+    let adminCheck = false;
+
+    if (session) {
+        let res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/admincheck`, {
+            method: "POST",
+            body: JSON.stringify({
+                uuid: session.uuid,
+                token: session.token
+            }),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+
+        if (res.status == 200) {
+            adminCheck = true;
+        }
+    }
+
     return (
         <header>
             <Link href={session ? "/dashboard" : "/programs"} className="title">
@@ -18,6 +37,10 @@ export default async function Header() {
                 </h1>
             </Link>
             {session && <nav>
+                {adminCheck && <>
+                    <Link href={process.env.NEXT_PUBLIC_ADMIN_URL || "admin.memorialacademy.org"}>Admin Control Panel</Link>
+                    <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
+                </>}
                 <Link href="/programs">Programs</Link>
                 <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
                 <Link href="/account">Account</Link>

@@ -1,4 +1,4 @@
-button, input[type="submit"] {
+button, input[type="submit"], input[type="button"] {
     font-size: 1rem;
     font-family: "Play";
     letter-spacing: 0.12ch;

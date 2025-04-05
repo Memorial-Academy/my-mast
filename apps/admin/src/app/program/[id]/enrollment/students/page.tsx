@@ -38,7 +38,7 @@ export default async function Page({params}: {params: Params}) {
             {/* Create sections for each course */}
             {enrollmentData.map(course => {
                 return (
-                    <section key={course.courseID}>
+                    <section key={course.courseID} className="enrollment-section" >
                         <h3>Enrolled in "{data.courses[course.courseID].name}"</h3>
                         {data.courses.length == 1 && <p>
                             <b>This is the only course in this program.</b>
@@ -88,6 +88,7 @@ export default async function Page({params}: {params: Params}) {
                                         ]}/>
                                     })}
                                 </Table.Root>
+
                             </>
                         })}
                     </section>

@@ -17,7 +17,7 @@ export default async function ConfirmedVolunteerAssignments(props: ConfirmedVolu
             {props.program.schedule.map((signup, index) => {
                 let weeklyTotal = 0;
                 return (
-                    <>
+                    <section className="enrollment-section" key={`week_${index}`}>
                         <h3>Week {index + 1}</h3>
                         <p><b>Signups:</b> {weeklyTotal}</p>
 
@@ -63,7 +63,7 @@ export default async function ConfirmedVolunteerAssignments(props: ConfirmedVolu
                                 </>
                             )
                         })}
-                    </>
+                    </section>
                 )
             })}
         </>

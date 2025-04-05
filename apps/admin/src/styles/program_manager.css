@@ -1,3 +1,4 @@
+/* NAVBAR */
 .program-manager-nav {
     position: absolute;
     left: 0vw;
@@ -49,4 +50,10 @@
     color: white;
     text-decoration: none;
     font-weight: bold;
+}
+
+/* PAGE SPECIFIC STYLES */
+.enrollment-section {
+    padding-bottom: 25px;
+    border-bottom: 6px solid black;
 }

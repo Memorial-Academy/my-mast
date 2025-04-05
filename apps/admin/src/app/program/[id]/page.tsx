@@ -2,6 +2,7 @@ import authorizeSession from "@mymast/utils/authorize_session";
 import getTimestamp from "@mymast/utils/convert_timestamp";
 import API from "@/app/lib/APIHandler";
 import { UserTypes } from "@mymast/api/Types";
+import { Card } from "@mymast/ui";
 
 type Params = Promise<{
     id: string
@@ -63,31 +64,35 @@ export default async function Page({params}: {params: Params}) {
                 <b>This program only offers one course.</b>&nbsp;
                 When enrolling, this course will automatically be selected. Course information is listed below to allow an overview of the offered enrollment option.
             </p>}
-            {data.courses.map(course => {
-                return (
-                    <>
-                        <h4>"{course.name}"</h4>
-                        <p>
-                            <b>Course duration:</b>&nbsp;
-                            {course.duration} week{course.duration > 1 ? "s" : ""}
-                        </p>
-                        <p>
-                            <b>Enrollment availability:</b>
-                            &nbsp;week{course.available.length > 1 ? "s" : ""}
-                            &nbsp;
-                            {course.available.length > 1 ? course.available.map((week, index) => {
-                                if (course.available.length - 1 == index) {
-                                    return `and ${week}`;
-                                } else if (course.available.length - 2 == index) {
-                                    return `${week} `;
-                                } else {
-                                    return `${week}, `;
-                                }
-                            }) : course.available[0]}
-                        </p>
-                    </>
-                )
-            })}
+            <div className="tri-fold">
+                {data.courses.map(course => {
+                    return (
+                        <Card
+                            key={course.name}
+                            header={`${course.name}`}
+                        >
+                            <p>
+                                <b>Course duration:</b>&nbsp;
+                                {course.duration} week{course.duration > 1 ? "s" : ""}
+                            </p>
+                            <p>
+                                <b>Enrollment availability:</b>
+                                &nbsp;week{course.available.length > 1 ? "s" : ""}
+                                &nbsp;
+                                {course.available.length > 1 ? course.available.map((week, index) => {
+                                    if (course.available.length - 1 == index) {
+                                        return `and ${week}`;
+                                    } else if (course.available.length - 2 == index) {
+                                        return `${week} `;
+                                    } else {
+                                        return `${week}, `;
+                                    }
+                                }) : course.available[0]}
+                            </p>
+                        </Card>
+                    )
+                })}
+            </div>
 
             <h3>Administrative People</h3>
             
