@@ -1,11 +1,12 @@
 import { Request, Response } from "express";
 import Program from "../models/application/program.model";
-import { randomBytes, sign } from "crypto";
+import { randomBytes } from "crypto";
 import AuthUser from "../models/auth/user.model";
 import VolunteerUser from "../models/users/volunteer.model";
 import ParentUser from "../models/users/parent.model";
 import StudentUser from "../models/users/student.model";
 import VolunteerSignup from "../models/application/volunteer_signups.model";
+import Attendance from "../models/application/attendance.model";
 
 function validateData(data: any, res: Response) {
     if (data) {
@@ -306,7 +307,8 @@ export async function confirmVolunteerAssignment(req: Request, res: Response) {
     volunteer.assignments.push({
         program: req.body.program,
         commitments: req.body.data,
-        id: req.body.enrollment
+        id: req.body.enrollment,
+        hours: 0
     })
 
     // remove pending assignment from volunteer

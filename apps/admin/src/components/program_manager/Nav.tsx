@@ -11,7 +11,7 @@ export default function ProgramManagerNav({id, name}: {id: string, name: string}
     return (
         <nav className="program-manager-nav">
             <h2>Program Manager: {name}</h2>
-                <IDContext.Provider value={id}>
+            <IDContext.Provider value={id}>
                 <NavLink
                     link=""
                     text="Information"
@@ -24,6 +24,15 @@ export default function ProgramManagerNav({id, name}: {id: string, name: string}
                 <NavLink
                     link="enrollment/volunteers"
                     text="Volunteers"
+                />
+                <p><b>Attendance & Hours</b></p>
+                <NavLink
+                    link="attendance/students"
+                    text="Student Attendance"
+                />
+                <NavLink
+                    link="attendance/volunteers"
+                    text="Volunteer Attendance & Hours"
                 />
             </IDContext.Provider>
         </nav>
