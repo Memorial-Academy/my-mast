@@ -104,7 +104,7 @@ export function NewPassword({token}: {token: string}) {
                 setCompleted(true);
                 setTimeout(() => {
                     Router.replace("/");
-                }, 10000)
+                }, 7000)
             }
         } else {
             setMessage("Passwords do not match");

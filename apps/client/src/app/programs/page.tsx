@@ -53,6 +53,7 @@ export default async function Page() {
                                 return <span key={"week" + index}>
                                     <b>Week {index + 1}:</b>&nbsp;
                                     {week[0].month}/{week[0].date}/{week[0].year} - {week.at(-1)!.month}/{week.at(-1)!.date}/{week.at(-1)!.year}
+                                    <br/>
                                 </span>
                             })}
 

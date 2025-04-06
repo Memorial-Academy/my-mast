@@ -5,6 +5,8 @@ import StudentUser from "../models/users/student.model";
 import VolunteerSignup from "../models/application/volunteer_signups.model";
 import { randomBytes } from "crypto";
 import Program from "../models/application/program.model";
+import { Templates } from "../scripts/pug_handler";
+import { sendMail } from "../scripts/mailer";
 
 function checkRole(correctRole: string, req: Request, res: Response) {
     if (req.params.role != correctRole) {
@@ -69,9 +71,10 @@ function generateEnrollmentID(uuid: string) {
     return `${uuid}_e:${randomBytes(10).toString("hex")}`;
 }
 
-export async function newEnrollment(req: Request, res: Response) {
+export async function newEnrollment(req: Request, res: Response) {  // for students and parents
     const enrollmentData = req.body.data;
     let program = await Program.findOne({id: req.body.program});
+    let schedule = await Program.findOne({id: req.body.program})
 
     if (!program) {
         res.writeHead(404);
@@ -80,6 +83,8 @@ export async function newEnrollment(req: Request, res: Response) {
     }
     
     if (req.params.role == "parent") {  // Create new enrollments for students (via a parent account)
+        let parent = await ParentUser.findOne({uuid: req.body.uuid});
+        
         for (var enrollment of enrollmentData) {
             let student = await StudentUser.findOne({uuid: enrollment.id});
     
@@ -107,6 +112,55 @@ export async function newEnrollment(req: Request, res: Response) {
             student.save();
 
             program.enrollments.students.push(enrollmentID);
+
+            let emailThread = new Promise(resolve => {
+                let course = program.courses[enrollment.class];
+
+                // get location information
+                let location;
+                if (program.location.loc_type == "virtual") {
+                    location = {
+                        type: "virtual"
+                    }
+                } else {
+                    location = {
+                        type: "physical",
+                        address: `${program.location.address}, ${program.location.city}, ${program.location.state} ${program.location.zip}`,
+                        name: program.location.common_name
+                    }
+                }
+
+                // determine session
+                let start = enrollment.week - 1;
+                let end = start + (course.duration - 1);
+
+                let schedule = program.schedule.map(week => week.toObject());
+                let startWeek = Array.from(Object.values(schedule[start])) as any;
+                let sessionStr = `Week ${start + 1} (${startWeek[0].month}/${startWeek[0]?.date} - ${startWeek[startWeek.length - 1]?.month}/${startWeek[startWeek.length - 1].date})`;
+                if (start != end) {
+                    let endWeek = Array.from(Object.values(schedule[end])) as any;
+                    sessionStr += ` thru Week ${end + 1} (${endWeek[0]?.month}/${endWeek[0]?.date} - ${endWeek[endWeek.length - 1]?.month}/${endWeek[endWeek.length - 1].date})`
+                }
+
+                let confirmationEmail = Templates.StudentEnrollment({
+                    parent: parent?.name.first,
+                    student: {
+                        first: student.name.first,
+                        last: student.name.last
+                    },
+                    program: program.name,
+                    course: course.name,
+                    location: location,
+                    session: sessionStr,
+                    email: program.program_type == "stempark" ? "stempark@memorialacademy.org" : "letscode@memorialacademy.org"
+                })
+
+                sendMail(
+                    parent!.email!,
+                    `Enrollment Confirmation - ${student.name.first} ${student.name.last} - ${program.name}`,
+                    confirmationEmail
+                )
+            })
         }
     } else if (req.params.role == "volunteer") { // Create new enrollment for volunteers
         let volunteer = await VolunteerUser.findOne({uuid: req.body.uuid});

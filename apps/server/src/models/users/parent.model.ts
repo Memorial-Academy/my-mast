@@ -5,13 +5,16 @@ const ParentUser = UserDB.model(
     "Parents",
     new Schema ({
         name: {
-            first: String,
-            last: String,
+            type: {
+                first: { type: String, required: true},
+                last: { type: String, required: true},
+            },
+            required: true
         },
-        email: String,
-        uuid: String,
-        phone: String,
-        linkedStudents: [String]
+        email: { type: String, required: true },
+        uuid: { type: String, required: true },
+        phone: { type: String, required: true },
+        linkedStudents: { type: [String], required: true, default: [] }
     })
 )
 

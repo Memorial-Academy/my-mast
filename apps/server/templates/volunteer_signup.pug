@@ -1,0 +1,29 @@
+p Hello #{volunteer.first}!
+p Thanks for volunteering at #{program}, we're excited to have you join us! Information regarding your signup is below:
+ul 
+    li Volunteer name: #{volunteer.first} #{volunteer.last}
+    li Requested to volunteer for #{courses}
+    li Volunteering for #{weeks}
+    if location.type == "virtual"
+        li 
+            | Location: Virtual
+            br
+            | Links to join the virtual classroom will be available on MyMAST and sent out via email a few days before the program begins.
+    else
+        li Location: #{location.name} #{location.address}
+    if instructor
+        li You have requested to be an instructor!
+
+if pending_notice 
+    p Please note that the program you've signed up for contains multiple courses. While we gurantee you will have a task every week you volunteer for, please note that the program director for your program will assign tasks based on what you requested, any skills/additional information you provided, and the number of students in each class. Once your assignments have been finalized by your program director, they will be visible in your MyMAST dashboard, and you'll receive an email.
+
+p To find more information about your signup, make sure to check your MyMAST dashboard. On MyMAST, you'll be able to track your volunteering hours and find detailed schedules, contact information, and location information relating to your signup.
+p 
+    | If you have any questions or concerns, please don't hesitate to contact us at 
+    a(href=`mailto:${email}`) #{email}
+    | .
+
+p 
+    | Sincerely,
+    br
+    | The Memorial Academy of Science and Technology

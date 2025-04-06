@@ -1,4 +1,5 @@
 import * as Nodemailer from "nodemailer";
+import Mail from "nodemailer/lib/mailer";
 require("dotenv").config();
 
 const transporter = Nodemailer.createTransport({
@@ -12,8 +13,32 @@ const transporter = Nodemailer.createTransport({
     }
 })
 
-transporter.on("idle", () => {console.log("success")})
+transporter.on("idle", () => {console.log("Nodemailer connected successfully")})
 
-export function sendMail() {
-    
+let pendingEmails: Mail.Options[] = new Array<Mail.Options>();
+
+export function sendMail(
+    to: string,
+    subject: string,
+    content: string,
+) {
+    pendingEmails.push({
+        from: "notifications@memorialacademy.org",
+        to: to,
+        subject: subject,
+        html: content
+    })
 }
+
+
+setInterval(() => {
+    if (pendingEmails.length > 0) {
+        let email = pendingEmails.shift()!;
+        console.log("sending email with subject " + email.subject);
+
+        transporter.sendMail(email, (err, info) => {
+            if (err) console.error(err);
+            else console.log("sent");
+        })
+    }
+}, 5000)

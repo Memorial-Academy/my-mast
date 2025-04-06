@@ -9,6 +9,8 @@ import PasswordResetRequest from "../models/auth/password_reset.model.js";
 import { validateEmail, validatePhoneNumber } from "../scripts/input_validation.js";
 import StudentUser from "../models/users/student.model.js";
 import validateSession from "../scripts/validate_session.js";
+import { Templates } from "../scripts/pug_handler.js";
+import { sendMail } from "../scripts/mailer.js";
 
 function authenticationError(res: Response, err: string | Error) {
     console.error(err);
@@ -260,8 +262,10 @@ export async function resetPassword(req: Request, res: Response) {
 export async function initiatePasswordReset(req: Request, res: Response) {
     res.writeHead(200);
 
+    let user = await AuthUser.findOne({email: req.body});
+
     // check user exists
-    if (!await AuthUser.findOne({email: req.body})) {
+    if (!user) {
         console.log("Password reset request for unknown user: " + req.body);
         res.end();
         return;
@@ -281,8 +285,29 @@ export async function initiatePasswordReset(req: Request, res: Response) {
             token: token
         });
     }
+    
+    // send email
+    let emailThread = new Promise(async resolve => {
+        let profile;
+        if (user.role == "parent") {
+            profile = await ParentUser.findOne({uuid: user.uuid})!;
+        } else {
+            profile = await VolunteerUser.findOne({uuid: user.uuid})!;
+        }
 
-    console.log(token)
+        let resetEmail = Templates.PasswordReset({
+            user: profile?.name.first,
+            email: user.email,
+            link: `${process.env.MYMAST_URL}/forgot_password?t=${token}`
+        })
+
+        sendMail(
+            user.email,
+            `Reset Your MyMAST Password`,
+            resetEmail
+        )
+    })
+
     res.end();
 }
 

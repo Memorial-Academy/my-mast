@@ -5,8 +5,11 @@ const StudentUser = UserDB.model(
     "Students",
     new Schema ({
         name: {
-            first: { type: String, required: true },
-            last: { type: String, required: true },
+            type: {
+                first: { type: String, required: true},
+                last: { type: String, required: true},
+            },
+            required: true
         },
         uuid: { type: String, required: true },
         birthday: { type: {

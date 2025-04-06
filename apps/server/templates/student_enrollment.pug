@@ -1,0 +1,24 @@
+p Hello #{parent}!
+p Thanks for singing up for #{program}; we're excited to have your student, #{student.first}, join us! This email confirms your enrollment. The details of your enrollment are below:
+ul 
+    li Student Name: #{student.first} #{student.last}
+    li Attending for #{session}
+    li Participating in #{course}
+    if location.type == "virtual"
+        li 
+            | Location: Virtual
+            br
+            | Links to join the virtual classroom will be available on MyMAST and sent out via email a few days before the program begins.
+    else
+        li Location: #{location.name} #{location.address}
+
+p To find more information about your student's enrollment, make sure to check your MyMAST dashboard. On MyMAST, you'll be able to find detailed schedules, contact information, and location information relating to your signup.
+p 
+    | If you have any questions or concerns, please don't hesitate to contact us at 
+    a(href=`mailto:${email}`) #{email}
+    | .
+
+p 
+    | Sincerely,
+    br
+    | The Memorial Academy of Science and Technology

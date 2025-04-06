@@ -6,8 +6,8 @@ const VolunteerUser = UserDB.model(
     new Schema({
         name: {
             type: {
-                first: { type: String, required: true },
-                last: { type: String, required: true },
+                first: { type: String, required: true},
+                last: { type: String, required: true},
             },
             required: true
         },
