@@ -5,7 +5,7 @@ header {
     grid-template-columns: 30% 70%;
 }
 
-header a {
+header a, header p {
     display:flex;
     flex-direction: row;
     align-items: center;

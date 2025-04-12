@@ -1,7 +1,7 @@
 import authorizeSession from "@mymast/utils/authorize_session";
 import API from "@/app/lib/APIHandler";
 import PendingVolunteerAssignments from "@/components/program_manager/PendingVolunteerAssignments";
-import ConfirmedVolunteerAssignments from "@/components/program_manager/ConfirmedVolunteers";
+import { ConfirmedVolunteerAssignmentsByWeek } from "@/components/program_manager/ConfirmedVolunteers";
 
 type Params = Promise<{
     id: string
@@ -45,7 +45,7 @@ export default async function Page({params}: {params: Params}) {
             {/* CONFIRMED ASSIGNMENTS */}
             <h2 id="confirmed">Confirmed</h2>
             <p><b>Total confirmed signups:</b> {enrollmentData.total.confirmed}</p>
-            <ConfirmedVolunteerAssignments
+            <ConfirmedVolunteerAssignmentsByWeek
                 program={data}
                 assignments={enrollmentData.confirmedAssignments}
             />

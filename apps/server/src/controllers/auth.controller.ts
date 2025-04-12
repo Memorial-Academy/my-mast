@@ -296,7 +296,7 @@ export async function initiatePasswordReset(req: Request, res: Response) {
         }
 
         let resetEmail = Templates.PasswordReset({
-            user: profile?.name.first,
+            user: profile!.name.first,
             email: user.email,
             link: `${process.env.MYMAST_URL}/forgot_password?t=${token}`
         })
@@ -319,8 +319,9 @@ export async function adminCheck(req: Request, res: Response) {
     }
 
     const user = await VolunteerUser.findOne({uuid: req.body.uuid});
-    if (user && user.admin) {
+    if (user && user.admin != 0) {
         res.writeHead(200);
+        res.end(user.admin.toString());
     } else {
         res.writeHead(404);
     }

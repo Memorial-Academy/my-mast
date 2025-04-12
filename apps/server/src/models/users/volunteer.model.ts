@@ -23,7 +23,7 @@ const VolunteerUser = UserDB.model(
             required: true
         },
         school: { type: String, required: true },
-        admin: {type: Boolean, default: false},
+        admin: {type: Number, default: 0 },
         pendingAssignments: { type: [String], required: true, default: [] },   // assignments yet to be finalized by program director
         assignments: [{     // enrollments that have been finalized by the program director
             program: { type: String, required: true },

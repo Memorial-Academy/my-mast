@@ -1,4 +1,4 @@
-import { calculateAge } from "@mymast/utils/birthday";
+import calculateAge from "@mymast/utils/birthday";
 import { Table } from "@mymast/ui";
 import authorizeSession from "@mymast/utils/authorize_session";
 import StudentNotesPopup from "@/components/program_manager/StudentNotesPopup";

@@ -19,10 +19,11 @@ export async function middleware(request: NextRequest) {
                     "Content-Type": "application/json"
                 }
             });
-            // console.log(session.status, adminCheck.status);
 
             if (session.status == 200 && adminCheck.status == 200) {
-                return NextResponse.next();
+                const headers = new Headers(request.headers);
+                headers.set("X-AdminLevel", await adminCheck.text());
+                return NextResponse.next({headers: headers});
             } else {
                 throw "Invalid session or admin credentials";
             }
@@ -30,11 +31,7 @@ export async function middleware(request: NextRequest) {
             throw "No session cookie";
         }
     } catch(e) {
-        return NextResponse.redirect(new URL("/403", request.url), {
-            // headers: {
-            //     "Set-Cookie": "id=null; expires=Thu, 01 Jan 1970 00:00:00 GMT"
-            // }
-        });
+        return NextResponse.redirect(new URL("/403", request.url));
     }
 }
 

@@ -84,11 +84,12 @@ export default function ConfirmedVolunteerAssignmentsSection({signups}: {signups
                                         <br/>
                                         {program.location.link ? 
                                             <span>Link: <a href={program.location.link}>{program.location.link}</a></span>
-                                        :   <span>Link will be published shortly before the program begins.</span>
+                                        :   <span>A link to join the virtual classroom will be published shortly before the program begins.</span>
                                         }
                                     </>}
                                 </p>
                             </div>
+                            {/* Volunteering hours and contact info */}
                             <div>
                                 <p><b>Volunteering Hours</b></p>
                                 <p>
@@ -105,7 +106,7 @@ export default function ConfirmedVolunteerAssignmentsSection({signups}: {signups
                                     <br/>
                                     Email: <a href={`mailto:${program.contact.email}`}>{program.contact.email}</a>
                                     <br/>
-                                    Phone: {program.contact.phone}
+                                    Phone: <a href={`tel:${program.contact.phone}`}>{program.contact.phone}</a>
                                 </p>
                             </div>
                         </div>

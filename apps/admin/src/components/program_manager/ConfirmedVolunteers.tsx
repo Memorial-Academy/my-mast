@@ -9,12 +9,12 @@ type ConfirmedVolunteerAssignmentsProps = {
     }[]
 }
 
-export default async function ConfirmedVolunteerAssignments(props: ConfirmedVolunteerAssignmentsProps) {
+export async function ConfirmedVolunteerAssignmentsByWeek(props: ConfirmedVolunteerAssignmentsProps) {
     
     
     return (
         <>
-            {props.program.schedule.map((signup, index) => {
+            {props.program.schedule.map((weeklySchedule, index) => {
                 let weeklyTotal = 0;
                 return (
                     <section className="enrollment-section" key={`week_${index}`}>

@@ -2,6 +2,7 @@ import { Card } from "@mymast/ui";
 import sessionInfo from "@mymast/utils/authorize_session";
 import { Metadata } from "next";
 import Link from "next/link";
+import { hasPermssion, PERMISSIONS } from "./lib/permissions";
 
 export const metadata: Metadata = {
     title: "Admin Control Panel | Memorial Academy of Science and Technology",
@@ -53,7 +54,7 @@ export default async function Home() {
                 )
             })}
             {programs.length == 0 && <p>You don't manage any programs currently.</p>}
-            <p><Link href="/new_program">+ Add a program</Link></p>
+            {hasPermssion(PERMISSIONS.DIRECTOR) && <p><Link href="/new_program">+ Add a program</Link></p>}
         </>
     );
 }

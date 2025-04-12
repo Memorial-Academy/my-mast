@@ -1,6 +1,6 @@
 import { PendingVolunteerAssignment, Program, UserTypes } from "@mymast/api/Types";
 import { Card } from "@mymast/ui";
-import { calculateAge } from "@mymast/utils/birthday";
+import calculateAge from "@mymast/utils/birthday";
 import AssignVolunteerPopup from "./AssignVolunteerPopup";
 
 type PendingVolunteerAssignmentsProps = {

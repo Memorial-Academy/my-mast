@@ -12,7 +12,7 @@ export async function middleware(request: NextRequest) {
 
             if (session.status == 200) {
                 const headers = new Headers(request.headers);
-                headers.set("X-UserRole", (await session.json()).role)
+                headers.set("X-UserRole", (await session.json()).role);
                 return NextResponse.next({
                     request: {headers}
                 });
