@@ -1,37 +1,37 @@
-"use client";
 import { Card } from "@mymast/ui";
 import EnrollmentCardSchedule from "./EnrollmentCardSchedule"
-import { Popup } from "@mymast/ui";
-import { useState } from "react";
+import { Program } from "@mymast/api/Types";
 
 type EnrollmentCardProps = {
-    program: ProgramData,
+    program: Program,
     course: Course,
-    week: number,
-    type: "volunteer" | "parent"
+    week: number
 }
 
-export default function EnrollmentCard({
-    program, course, week, type
-}: EnrollmentCardProps) {
-    const [popupActive, setPopupActive] = useState(false);
-    
+export default function EnrollmentCard({ program, course, week }: EnrollmentCardProps) {
     return (
         <>
             <Card 
                 header={program.name}
-                actionLink={{
-                    text: "Manage enrollment ->",
-                    onClick: () => {
-                        setPopupActive(true);
-                    }
-                }}
             >
-                <div className="bi-fold">
+                <div className="tri-fold">
+                    {/* Basic course info */}
                     <div>
                         {program.courses.length > 1 ? <p><b>Course:</b> {course.name}</p> : <></>}
-                        <p><b>Location:</b> {program.location.loc_type == "physical" ? program.location.common_name : "Virtual (links will be sent out at a later date)"}</p>
+                        <p>
+                            <b>Location:</b>&nbsp;
+                            {program.location.loc_type == "physical" ? 
+                                <>
+                                    {program.location.common_name}
+                                    <br/>
+                                    {program.location.address}
+                                    <br/>
+                                    {program.location.city}, {program.location.state} {program.location.zip}
+                                </>
+                            : "Virtual (links will be sent out at a later date)"}
+                        </p>
                     </div>
+                    {/* Schedule */}
                     <div>
                         <p><b>Attending: </b> {course.duration > 1 ?
                             `Weeks ${week} - ${week + course.duration - 1}` : `Week ${week}`
@@ -42,16 +42,16 @@ export default function EnrollmentCard({
                             week={week}
                         />
                     </div>
+                    {/* Contact */}
+                    <p>
+                        <b>Questions?</b> Contact the program director, {program.contact.name.first} {program.contact.name.last}!
+                        <br/>
+                        Email: <a href={`mailto:${program.contact.email}`}>{program.contact.email}</a>
+                        <br/>
+                        Phone: <a href={`tel:${program.contact.phone}`}>{program.contact.phone}</a>
+                    </p>
                 </div>
             </Card>
-            <Popup
-                active={popupActive}
-                onClose={() => {
-                    setPopupActive(false);
-                }}
-            >
-                <p>WIP</p>
-            </Popup>
         </>
     )
 }

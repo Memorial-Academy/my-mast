@@ -4,7 +4,7 @@ type Birthday = {
     day: number
 }
 
-export function calculateAge(birthday: Birthday) {
+export default function calculateAge(birthday: Birthday) {
     let birthdayStr = `${birthday.month}/${birthday.day}/${birthday.year}`;
     let birthdayEpoch = new Date(birthdayStr);
     let today = new Date();

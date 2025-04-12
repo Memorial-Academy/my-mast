@@ -2,10 +2,10 @@ import { Program } from "../../types/application";
 import * as Fetch from "../fetcher";
 
 export default class Application {
-    private url = "https://localhost:5000"
+    private url = "https://localhost:5000";
     
     constructor(APIUrl: string) {
-        this.url = APIUrl
+        this.url = APIUrl;
     }
     
     // /app/program/<program_id>

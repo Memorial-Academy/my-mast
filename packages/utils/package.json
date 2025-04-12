@@ -4,10 +4,12 @@
     "exports": {
         "./authorize_session": "./src/authorize_session.ts",
         "./convert_timestamp": "./src/convert_timestamp.ts",
-        "./birthday": "./src/birthday.ts"
+        "./birthday": "./src/birthday.ts",
+        "./time_strings": "./src/time_strings.ts"
     },
     "dependencies": {
-        "next": "^14.2.13"
+        "next": "^14.2.13",
+        "@mymast/api": "workspace:*"
     },
     "devDependencies": {
         "@types/node": "^22.10.5",

@@ -1,94 +1,47 @@
-"use client";
-import { useState } from "react";
-import { Popup } from "@mymast/ui";
-import convertTimestamp from "@mymast/utils/convert_timestamp";
+import React, { ReactNode } from "react";
+import { Course, Program } from "@mymast/api/Types";
+import { longDateString, shortDateString, startEndTimesString } from "@mymast/utils/time_strings";
 
 type EnrollmentCardScheduleProps = {
     course: Course,
-    program: ProgramData,
+    program: Program,
     week: number
 }
 
-type ScheduleArray = {
-    date: {
-        month: number,
-        day: number,
-        year: number
-    },
-    time: {
-        start: string,
-        end: string
-    }
-}
-
 export default function EnrollmentCardSchedule(props: EnrollmentCardScheduleProps) {
-    const [popupActive, setPopupActive] = useState(false);
+    let schedules: Array<ReactNode> = [];
 
-    let schedule: Array<{
-        week: number
-        schedule: Array<ScheduleArray>
-     }> = []
-
+    // starting at the first week of enrollment, get the schedule for all weeks of enrollment
     for (let week = props.week - 1; week + 1 < props.week + props.course.duration; week++) {
-        let weeklySchedule: Array<ScheduleArray> = [];
-        for (let day of props.program.schedule[week]) {
-            weeklySchedule.push({
-                date: {
-                    month: day.month,
-                    day: day.date,
-                    year: day.year
-                },
-                time: {
-                    start: convertTimestamp(day.start),
-                    end: convertTimestamp(day.end)
-                }
-            }) 
+        let dates: Array<ReactNode> = [];
+
+        // get the schedule for each day of the week
+        let weekSchedule = props.program.schedule[week]
+        for (let day of weekSchedule) {
+            dates.push(
+                <>
+                    <span>
+                        {shortDateString(day)}: {startEndTimesString(day.start, day.end)}
+                    </span>
+                    <br/>
+                </>
+            )
         }
-        schedule.push({
-            week: week + 1,
-            schedule: weeklySchedule
-        })
+
+        schedules.push(
+            <p>
+                <b>Week {week + 1} Schedule</b>
+                &nbsp;({longDateString(weekSchedule[0])} to {longDateString(weekSchedule.at(-1)!)})
+                <br/>
+                {dates}
+            </p>
+        )
     }
 
     return (
         <>
-            <p>
-                <b>Schedule:</b>&nbsp;
-                {schedule[0].schedule[0].date.month}/{schedule[0].schedule[0].date.day}/{schedule[0].schedule[0].date.year} - 
-                {schedule.at(-1)!.schedule.at(-1)!.date.month}/{schedule.at(-1)!.schedule.at(-1)!.date.day}/{schedule.at(-1)!.schedule.at(-1)!.date.year}
-                <br/>
-                <a href="#" onClick={e => {
-                    e.preventDefault();
-                    setPopupActive(true);
-                }}>Click for a detailed scheduled</a>
-            </p>
-            <Popup
-                active={popupActive}
-                onClose={() => {
-                    setPopupActive(false);
-                }}
-            >
-                <h3>Day-by-day schedule for {props.program.courses.length > 1 ? props.course.name : props.program.name}</h3>
-                <p>
-                    {props.program.name}
-                    {props.program.location.loc_type == "physical" ? ` @ ${props.program.location.common_name}` : "; hosted virtually"}
-                </p>
-                {schedule.map(week => {
-                    return (
-                        <p key={`week-${week.week}`}>
-                            <b>Week {week.week}</b>
-                            {week.schedule.map(day => {
-                                return (
-                                    <span key={`${week.week}-${day.date.month}/${day.date.day}/${day.date.year}`}>
-                                        <br/>
-                                        {day.date.month}/{day.date.day}/{day.date.year}: {day.time.start} - {day.time.end}
-                                    </span>
-                                )
-                            })}
-                        </p>
-                    )
-                })}
-            </Popup>
+            {schedules}
         </>
     )
+
 }
