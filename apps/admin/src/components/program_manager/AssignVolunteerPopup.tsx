@@ -28,13 +28,32 @@ type AssignVolunteerPopupProps = {
 export default function AssignVolunteerPopup(props: AssignVolunteerPopupProps) {
     const [active, setActive] = useState(false);
 
-    let template = [];
+    let coursesPerWeek = new Array<{
+        week: number,
+        courses: Course[]
+    }>();
     for (let week = 1; week <= props.program.schedule.length; week++) {
-        template.push({
+        coursesPerWeek.push({
             week: week,
-            course: -1,
-            instructor: 0
+            courses: []
         })
+    }
+
+    for (let course of props.program.courses) {
+        for (let week of course.available) {
+            let arr = coursesPerWeek[week - 1].courses;
+            if (arr.indexOf(course) != -1) continue; // ensure no duplicate courses
+
+            // no duplicates, so add course to that week
+            coursesPerWeek[week - 1].courses.push(course);
+
+            // extend multi-week courses across multiple weeks
+            if (course.duration > 1) {
+                for (var extension = 1; extension < course.duration; extension++) {
+                    coursesPerWeek[week - 1 + extension].courses.push(course);
+                }
+            }
+        }
     }
 
     return (
@@ -65,7 +84,10 @@ export default function AssignVolunteerPopup(props: AssignVolunteerPopupProps) {
                 <p><b>Requested courses:</b></p>
                 <ul>
                     {props.signup.courses.map(course => {
-                        return <li>{props.program.courses[course].name}</li>
+                        return <li>
+                            {props.program.courses[course].name}
+                            {props.program.courses[course].duration > 1 && ` (${props.program.courses[course].duration} weeks long)`}
+                        </li>
                     })}
                 </ul>
 
@@ -87,38 +109,34 @@ export default function AssignVolunteerPopup(props: AssignVolunteerPopupProps) {
                             "Instructor Access?"
                         ]}
                     >
-                        {props.program.schedule.map((week, index) => {
-                            if (!props.signup.weeks.includes(index + 1)) {
-                                return <></>
-                            }
-
+                        {coursesPerWeek.map(week => {
                             return (
-                                <Table.Row 
+                                <Table.Row
                                     data={[
-                                        <p>Week {index + 1}</p>,
+                                        <p>Week {week.week}</p>,
                                         <select 
-                                            title={`Course assignment for week ${index + 1}`} 
-                                            name={`assignment_week${index + 1}`}
+                                            title={`Course assignment for week ${week.week}`} 
+                                            name={`assignment_week${week.week}`}
                                         >
-                                            {props.program.courses.map(course => {
-                                                if (course.available.includes(index + 1)) {
-                                                    return <option value={course.id}>{course.name}</option>
-                                                }
+                                            {week.courses.map(course => {
+                                                return (
+                                                    <option value={course.id}>{course.name}</option>
+                                                )
                                             })}
                                         </select>,
                                         <>
                                             <input 
                                                 type="checkbox" 
                                                 value="true"
-                                                name={`instructor_week${index + 1}`}
-                                                id={`instructor_week${index + 1}`}
-                                                title={`Instructor interest for week ${index + 1}`}
+                                                name={`instructor_week${week.week}`}
+                                                id={`instructor_week${week.week}`}
+                                                title={`Instructor interest for week ${week.week}`}
                                             />
-                                            <label htmlFor={`instructor_week${index + 1}`}>Yes</label>
+                                            <label htmlFor={`instructor_week${week.week}`}>Yes</label>
                                         </>
                                     ]}
                                 />
-                            )
+                                )
                         })}
                     </Table.Root>
                     <br/>
