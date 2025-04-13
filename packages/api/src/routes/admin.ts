@@ -11,10 +11,11 @@ export default class Admin {
     }
 
     // /admin/managedprograms
-    async getManagedPrograms(uuid: string, token: string): Promise<Program[]> {
+    async getManagedPrograms(uuid: string, token: string, requested_uuid?: string): Promise<Program[]> {
         return await Fetch.POST.json(this.url, "managedprograms", {
             uuid,
-            token
+            token,
+            requested_uuid
         })
     }
 
@@ -106,5 +107,25 @@ export default class Admin {
             data: signupData,
             enrollment: enrollment_id
         })
+    }
+
+    async getUserByEmail<T extends UserTypes.Volunteer | UserTypes.Student | UserTypes.Parent>(
+        uuid: string,
+        token: string,
+        emailToSearch: string
+    ): Promise<
+        T extends UserTypes.Volunteer ? {
+            role: "volunteer",
+            profile: UserTypes.Volunteer
+        } : T extends UserTypes.Parent ? {
+            role: "parent",
+            profile: UserTypes.Parent
+        } : {}
+    > {
+        return await Fetch.POST.json(this.url, "getuserbyemail", {
+            uuid,
+            token,
+            email: emailToSearch
+        });
     }
 }

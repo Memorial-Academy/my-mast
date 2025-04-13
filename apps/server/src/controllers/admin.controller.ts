@@ -7,6 +7,7 @@ import ParentUser from "../models/users/parent.model";
 import StudentUser from "../models/users/student.model";
 import VolunteerSignup from "../models/application/volunteer_signups.model";
 import Attendance from "../models/application/attendance.model";
+import { permissionCheck, PERMISSIONS } from "../scripts/admin_permissions";
 
 function validateData(data: any, res: Response) {
     if (data) {
@@ -19,6 +20,8 @@ function validateData(data: any, res: Response) {
 }
 
 export function createProgram(req: Request, res: Response) {
+    if (!permissionCheck(res, PERMISSIONS.DIRECTOR)) return;
+
     const submitted = req.body.data;
 
     // Check all required information categories are provided
@@ -122,7 +125,10 @@ export function createProgram(req: Request, res: Response) {
 }
 
 export async function getManagedPrograms(req: Request, res: Response) {
-    let programs = await Program.find({admins: req.body.uuid}, {
+    let requestedUUIDPresent = Object.keys(req.body).indexOf("requested_uuid") > -1;
+    if (requestedUUIDPresent && !permissionCheck(res, PERMISSIONS.DIRECTOR)) return;
+
+    let programs = await Program.find({admins: (requestedUUIDPresent ? req.body.requested_uuid : req.body.uuid)}, {
         "_id": 0
     });
     
@@ -323,4 +329,57 @@ export async function confirmVolunteerAssignment(req: Request, res: Response) {
         res.writeHead(200);
         res.end();
     })
+}
+
+export async function getUserByEmail(req: Request, res: Response) {
+    if (!permissionCheck(res, PERMISSIONS.DIRECTOR)) return;
+
+    let user = await AuthUser.findOne({email: req.body.email});
+
+    if (!user) {
+        res.writeHead(404);
+        res.end(`User with email address "${req.params.email}" does not exist.`)
+        return;
+    }
+
+    if (user.role == "volunteer") {
+        let profile = await VolunteerUser.findOne({uuid: user.uuid}, {
+            "admin": 0,
+            "pendingAssignments": 0,
+            "assignments": 0,
+            "_id": 0
+        });
+        res.writeHead(200);
+        res.end(JSON.stringify({
+            role: "volunteer",
+            profile: profile
+        }));
+    } else {
+        let profile = await ParentUser.findOne({uuid: user.uuid}, {
+            "_id": 0
+        });
+        res.writeHead(200);
+        res.end(JSON.stringify({
+            role: "parent",
+            profile: profile
+        }));
+    }
+}
+
+export async function addProgramAdmin(req: Request, res: Response) {
+    if (!permissionCheck(res, PERMISSIONS.DIRECTOR)) return;
+
+    let program = await Program.findOne({id: req.body.program});
+
+    if (!program) {
+        res.writeHead(403);
+        res.end(`Program "${req.body.program}" does not exist`);
+        return;
+    }
+
+    program.admins.push(req.body.new_uuid);
+    program.save();
+
+    res.writeHead(200);
+    res.end();
 }

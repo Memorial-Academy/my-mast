@@ -16,9 +16,9 @@ export async function validateAdmin(uuid: string) {
     // the only users who should have the ability to have admin priviledges are volunteers
     const user = await VolunteerUser.findOne({uuid: uuid});
 
-    if (user && user.admin != 0) {
-        return true;
+    if (user && user.admin > 0) {
+        return user.admin;
     } else {
-        return false;
+        return 0;
     }
 }

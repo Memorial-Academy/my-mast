@@ -23,7 +23,9 @@ export async function middleware(request: NextRequest) {
             if (session.status == 200 && adminCheck.status == 200) {
                 const headers = new Headers(request.headers);
                 headers.set("X-AdminLevel", await adminCheck.text());
-                return NextResponse.next({headers: headers});
+                return NextResponse.next({request: {
+                    headers: headers
+                }});
             } else {
                 throw "Invalid session or admin credentials";
             }

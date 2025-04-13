@@ -7,8 +7,8 @@ export default async function sessionInfo() {
         let sessionCookie = JSON.parse(cookieStore.get("id")!.value)
 
         let session = {
-            uuid: sessionCookie[1],
-            token: sessionCookie[0]
+            uuid: sessionCookie[1] as string,
+            token: sessionCookie[0] as string
         }
 
         return session;
