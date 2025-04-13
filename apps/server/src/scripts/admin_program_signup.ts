@@ -8,7 +8,7 @@ export default async function adminProgramSignup(uuid: string, programID: string
     let user = (await VolunteerUser.findOne({id: uuid}))!;
 
     let courses = program.courses.map((course, index) => {
-        return index;
+        return course.id;
     })
 
     let weeks = program.schedule.map((week, index) => {
@@ -16,6 +16,7 @@ export default async function adminProgramSignup(uuid: string, programID: string
     })
 
     let enrollmentID = generateEnrollmentID(uuid);
+    program.enrollments.volunteers.push(enrollmentID);
 
     VolunteerSignup.create({
         uuid: uuid,
@@ -31,8 +32,7 @@ export default async function adminProgramSignup(uuid: string, programID: string
     } else {
         user.pendingAssignments = [enrollmentID];
     }
-    user.save();
 
-    program.enrollments.volunteers.push(enrollmentID);
+    user.save();
     program.save();
 }

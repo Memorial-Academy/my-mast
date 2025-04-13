@@ -2,6 +2,7 @@
 import sessionInfo from "@mymast/utils/authorize_session";
 import API from "./APIHandler";
 import { UserTypes, FetchError } from "@mymast/api/Types";
+import { revalidatePath } from "next/cache";
 
 export type SearchForVolunteerReturn = UserTypes.Volunteer | 404 | 409;
 
@@ -41,6 +42,7 @@ export async function searchForVolunteer(email: string, programID: string): Prom
 
 export async function addDirector(program: string, new_admin_uuid: string) {
     let auth = (await sessionInfo())!;
+    revalidatePath(`/program/${program}`);
     
     return await API.Admin.addProgramAdmin(auth.uuid, auth.token, program, new_admin_uuid);
 }
