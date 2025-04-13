@@ -8,6 +8,7 @@ import StudentUser from "../models/users/student.model";
 import VolunteerSignup from "../models/application/volunteer_signups.model";
 import Attendance from "../models/application/attendance.model";
 import { permissionCheck, PERMISSIONS } from "../scripts/admin_permissions";
+import adminProgramSignup from "../scripts/admin_program_signup";
 
 function validateData(data: any, res: Response) {
     if (data) {
@@ -107,18 +108,17 @@ export function createProgram(req: Request, res: Response) {
         admins: [
             req.body.uuid
         ],
+        enrollments: {
+            students: [],
+            volunteers: []
+        },
         active: {
-            type: {
-                volunteer: Boolean,
-                student: Boolean,
-            },
-            required: true,
-            default: {
-                volunteer: true,
-                student: true
-            }
+            student: true,
+            volunteer: true
         }
     })
+
+    adminProgramSignup(req.body.uuid, id);
 
     res.writeHead(200);
     res.end(id);
@@ -369,16 +369,41 @@ export async function getUserByEmail(req: Request, res: Response) {
 export async function addProgramAdmin(req: Request, res: Response) {
     if (!permissionCheck(res, PERMISSIONS.DIRECTOR)) return;
 
+    // ensure the user has correct admin permissions (3 if not already set lower)
+    let user = await VolunteerUser.findOne({uuid: req.body.new_uuid});
+
+    if (!user) {
+        res.writeHead(403);
+        res.end(`User "${req.body.new_uuid}" does not exist.`);
+        return;
+    }
+
+    let originalAdminValue = user.admin;
+    if (user.admin == 0) {
+        user.admin = 3;
+    };
+
+    // update directors for the program
     let program = await Program.findOne({id: req.body.program});
 
     if (!program) {
+        user.admin = originalAdminValue;
+        user.save();
         res.writeHead(403);
         res.end(`Program "${req.body.program}" does not exist`);
         return;
     }
 
     program.admins.push(req.body.new_uuid);
+
+    // update db records
+    user.save();
     program.save();
+
+    // create volunteering signup for the new director (if they aren't already signed up)
+    if (program.enrollments.volunteers.indexOf(req.body.new_uuid) == -1) {
+        adminProgramSignup(req.body.new_uuid, req.body.program);
+    }
 
     res.writeHead(200);
     res.end();

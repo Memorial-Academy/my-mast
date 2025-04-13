@@ -128,4 +128,18 @@ export default class Admin {
             email: emailToSearch
         });
     }
+
+    async addProgramAdmin(
+        uuid: string,
+        token: string,
+        program: string,
+        new_admin_uuid: string
+    ) {
+        return await Fetch.POST.json(this.url, "addadmin", {
+            uuid,
+            token,
+            program,
+            new_uuid: new_admin_uuid
+        })
+    }
 }

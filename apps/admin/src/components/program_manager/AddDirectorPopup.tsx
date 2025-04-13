@@ -1,7 +1,7 @@
 "use client";
 import { LabelledInput, Popup } from "@mymast/ui";
 import { useState } from "react";
-import { searchForVolunteer, SearchForVolunteerReturn } from "@/app/lib/add_admin";
+import { addDirector, searchForVolunteer, SearchForVolunteerReturn } from "@/app/lib/add_admin";
 import calculateAge from "@mymast/utils/birthday";
 
 type AddDirectorProps = {
@@ -74,8 +74,9 @@ export default function AddDirectorPopup({programName, programID}: AddDirectorPr
                     <input 
                         type="button"
                         value="Confirm"
-                        onClick={() => {
+                        onClick={async () => {
                             setPopupActive(false);
+                            await addDirector(programID, user.uuid);
                             window.location.reload();
                         }}
                     />

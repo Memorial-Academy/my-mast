@@ -50,15 +50,26 @@ const Program = ApplicationDB.model(
         enrollments: {
             type: {
                 // Arrays of enrollment IDs
-                volunteers: [String],
-                students: [String]
+                volunteers: { type: [String], required: true },
+                students: { type: [String], required: true }
             },
             required: true,
             default: {
                 volunteers: [],
                 students: []
             }
-        }
+        },
+        active: {   // whether the program is still accepting enrollments or not
+            type: {
+                volunteer: { type: Boolean, required: true },
+                student: { type: Boolean, required: true },
+            },
+            required: true,
+            default: {
+                volunteer: true,
+                student: true
+            }
+        },
     })
 )
 

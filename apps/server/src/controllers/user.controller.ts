@@ -67,7 +67,7 @@ export async function getStudents(req: Request, res: Response) {
     }
 }
 
-function generateEnrollmentID(uuid: string) {
+export function generateEnrollmentID(uuid: string) {
     return `${uuid}_e:${randomBytes(10).toString("hex")}`;
 }
 
@@ -117,7 +117,11 @@ export async function newEnrollment(req: Request, res: Response) {  // for stude
                 let course = program.courses[enrollment.class];
 
                 // get location information
-                let location;
+                let location: {
+                    type: "virtual" | "physical",
+                    address?: string,
+                    name?: string
+                };
                 if (program.location.loc_type == "virtual") {
                     location = {
                         type: "virtual"
@@ -125,8 +129,8 @@ export async function newEnrollment(req: Request, res: Response) {  // for stude
                 } else {
                     location = {
                         type: "physical",
-                        address: `${program.location.address}, ${program.location.city}, ${program.location.state} ${program.location.zip}`,
-                        name: program.location.common_name
+                        address: `${program.location.address!}, ${program.location.city!}, ${program.location.state!} ${program.location.zip!}`,
+                        name: program.location.common_name! || ""
                     }
                 }
 
@@ -143,7 +147,7 @@ export async function newEnrollment(req: Request, res: Response) {  // for stude
                 }
 
                 let confirmationEmail = Templates.StudentEnrollment({
-                    parent: parent?.name.first,
+                    parent: parent!.name.first,
                     student: {
                         first: student.name.first,
                         last: student.name.last
@@ -182,7 +186,11 @@ export async function newEnrollment(req: Request, res: Response) {  // for stude
             id: enrollmentID
         })
 
-        volunteer.pendingAssignments.push(enrollmentID);
+        if (volunteer.pendingAssignments) {
+            volunteer.pendingAssignments.push(enrollmentID);
+        } else {
+            volunteer.pendingAssignments = [enrollmentID];
+        }
         volunteer.save();
         
         program.enrollments.volunteers.push(enrollmentID);
