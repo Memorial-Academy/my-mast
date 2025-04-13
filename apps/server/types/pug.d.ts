@@ -14,9 +14,9 @@ type StudentEnrollmentLocals = {
     session: string,
     course: string,
     location: {
-        name: string,
+        name?: string,
         type: "virtual" | "physical",
-        address: string
+        address?: string
     },
     email: string   // contact email
 }
@@ -27,7 +27,7 @@ type VolunteerEnrollmentLocals = {
         last: string
     },
     program: string,
-    courses: string
+    courses: string,
     weeks: string,
     instructor: boolean,
     pending_notice: boolean,
@@ -40,6 +40,6 @@ type VolunteerEnrollmentLocals = {
 
 // Compile templates to html
 type CompilableTemplate = (locals: any) => string;
-type PasswordResetTemplate = CompilableTemplate & ((locals: PasswordResetLocals) => string);
-type StudentEnrollmentTemplate = CompilableTemplate & ((locals: StudentEnrollmentLocals) => string);
-type VolunteerEnrollmentTemplate = CompilableTemplate & ((locals: VolunteerEnrollmentLocals) => string);
+type PasswordResetTemplate = ((locals: PasswordResetLocals) => string);
+type StudentEnrollmentTemplate = ((locals: StudentEnrollmentLocals) => string);
+type VolunteerEnrollmentTemplate = ((locals: VolunteerEnrollmentLocals) => string);
