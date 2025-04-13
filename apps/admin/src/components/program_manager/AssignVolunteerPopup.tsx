@@ -84,7 +84,7 @@ export default function AssignVolunteerPopup(props: AssignVolunteerPopupProps) {
                 <p><b>Requested courses:</b></p>
                 <ul>
                     {props.signup.courses.map(course => {
-                        return <li>
+                        return <li key={props.program.courses[course].id + "_requestedcourses"}>
                             {props.program.courses[course].name}
                             {props.program.courses[course].duration > 1 && ` (${props.program.courses[course].duration} weeks long)`}
                         </li>
@@ -93,14 +93,15 @@ export default function AssignVolunteerPopup(props: AssignVolunteerPopupProps) {
 
                 <p><b>Interested in being an instructor?</b> {props.signup.instructor ? "Yes" : "No"}</p>
                 
-                <form action={data => {
-                    submitVolunteerAssignments(
+                <form action={async data => {
+                    setActive(false);
+                    await submitVolunteerAssignments(
                         data, 
                         props.program.id,
                         props.enrollment.volunteerID,
                         props.enrollment.id
                     );
-                    setActive(false);
+                    window.location.reload();
                 }}>
                     <Table.Root
                         columns={[
@@ -112,6 +113,7 @@ export default function AssignVolunteerPopup(props: AssignVolunteerPopupProps) {
                         {coursesPerWeek.map(week => {
                             return (
                                 <Table.Row
+                                    key={`week_${week.week}`}
                                     data={[
                                         <p>Week {week.week}</p>,
                                         <select 
@@ -120,7 +122,10 @@ export default function AssignVolunteerPopup(props: AssignVolunteerPopupProps) {
                                         >
                                             {week.courses.map(course => {
                                                 return (
-                                                    <option value={course.id}>{course.name}</option>
+                                                    <option 
+                                                        value={course.id}
+                                                        key={course.id}
+                                                    >{course.name}</option>
                                                 )
                                             })}
                                         </select>,

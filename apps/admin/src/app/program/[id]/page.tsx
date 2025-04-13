@@ -107,20 +107,27 @@ export default async function Page({params}: {params: Params}) {
             </p>
 
             <h4>Directors</h4>
-            {data.admins.map(async director => {
-                let user = await API.Admin.getUser<UserTypes.Volunteer>(auth.uuid, auth.token, director);
-                let profile = user.profile;
+            <div className="tri-fold">
+                {data.admins.map(async director => {
+                    let user = await API.Admin.getUser<UserTypes.Volunteer>(auth.uuid, auth.token, director);
+                    let profile = user.profile;
 
-                return <p key={director}>
-                    <b>{profile.name.first} {profile.name.last}</b>
-                    <br/>
-                    Email: {profile.email}
-                    <br/>
-                    Phone: {profile.phone}
-                    <br/>
-                    School: {profile.school}
-                </p>
-            })}
+                    return (
+                        <Card
+                            header={`${profile.name.first} ${profile.name.last}`}
+                            key={director}
+                        >
+                            <p>
+                                <b>Email:</b> {profile.email}
+                                <br/>
+                                <b>Phone:</b> {profile.phone}
+                                <br/>
+                                <b>School:</b> {profile.school}
+                            </p>
+                        </Card>
+                    )
+                })}
+            </div>
             <AddDirectorPopup
                 programName={data.name}
                 programID={data.id}

@@ -1,5 +1,6 @@
-import { ConfirmedVolunteerAssignment, Program, UserTypes } from "@mymast/api/Types"
+import { ConfirmedVolunteerAssignment, Course, Program, UserTypes } from "@mymast/api/Types"
 import { Table } from "@mymast/ui"
+import { Fragment } from "react"
 
 type ConfirmedVolunteerAssignmentsProps = {
     program: Program,
@@ -9,31 +10,86 @@ type ConfirmedVolunteerAssignmentsProps = {
     }[]
 }
 
+type SignupsPerCourse = {
+    course: Course,
+    courseTotal: number,
+    volunteers: UserTypes.Volunteer[],
+    instructors: boolean[]
+}
+
 export async function ConfirmedVolunteerAssignmentsByWeek(props: ConfirmedVolunteerAssignmentsProps) {
+    let signups = new Array<{
+        week: number,
+        weeklyTotal: number,
+        courses: SignupsPerCourse[],
+    }>()
     
+    // setup signups array for each week
+    for (var week = 1; week <= props.program.schedule.length; week++) {
+        let weeklySignups = {
+            week: week,
+            weeklyTotal: 0,
+            courses: new Array<SignupsPerCourse>(props.program.courses.length)
+        }
+
+        signups.push(weeklySignups);
+    }
+
+    // add courses to each week
+    for (var course of props.program.courses) {
+        for (var week of course.available) {
+            if (signups[week - 1].courses.indexOf({
+                course: course,
+                courseTotal: 0,
+                volunteers: new Array<UserTypes.Volunteer>(),
+                instructors: new Array<boolean>()
+            }) != -1) continue;
+
+            signups[week - 1].courses.splice(course.id, 0, {
+                course: course,
+                courseTotal: 0,
+                volunteers: new Array<UserTypes.Volunteer>(),
+                instructors: new Array<boolean>()
+            })
+
+            if (course.duration > 1) {
+                for (var extension = 1; extension < course.duration; extension++) {
+                    signups[week - 1 + extension].courses.splice(course.id, 0, {
+                        course: course,
+                        courseTotal: 0,
+                        volunteers: new Array<UserTypes.Volunteer>(),
+                        instructors: new Array<boolean>()
+                    })
+                }
+            }
+        }
+    }
+
+    // add signups to each course/week
+    for (var signup of props.assignments) {
+        for (var commitment of signup.signup.commitments) {
+            signups[commitment.week - 1].courses[commitment.course].volunteers.push(signup.volunteer);
+            signups[commitment.week - 1].courses[commitment.course].instructors.push(commitment.instructor);
+            signups[commitment.week - 1].weeklyTotal++;
+            signups[commitment.week - 1].courses[commitment.course].courseTotal++;
+        }
+    }
     
     return (
         <>
-            {props.program.schedule.map((weeklySchedule, index) => {
-                let weeklyTotal = 0;
+            {signups.map(week => {
                 return (
-                    <section className="enrollment-section" key={`week_${index}`}>
-                        <h3>Week {index + 1}</h3>
-                        <p><b>Signups:</b> {weeklyTotal}</p>
+                    <section className="enrollment-section" key={`week_${week.week}`}>
+                        <h3>Week {week.week}</h3>
+                        <p><b>Signups:</b> {week.weeklyTotal}</p>
 
-                        {props.program.courses.map(course => {
-                            if (course.available.indexOf(index + 1) == -1) {
-                                return;
-                            }
-
-                            let courseTotal = 0;
+                        {week.courses.map(course => {
+                            if (!course) return;
 
                             return (
-                                <>
-                                    {props.program.courses.length > 1 && <>
-                                        <h4>{course.name}</h4>
-                                        <p><b>Signups for course: {courseTotal}</b></p>
-                                    </>}
+                                <Fragment key={course.course.name}>
+                                    <h4>{course.course.name}</h4>
+                                    <p><b>Signups: </b> {course.courseTotal}</p>
                                     <Table.Root
                                         columns={[
                                             "Name",
@@ -41,26 +97,23 @@ export async function ConfirmedVolunteerAssignmentsByWeek(props: ConfirmedVolunt
                                             "Phone"
                                         ]}
                                     >
-                                        {props.assignments.map(signup => {
-                                            for (let commitment of signup.signup.commitments) {
-                                                if (commitment.week == index + 1 && commitment.course == course.id) {
-                                                    weeklyTotal += 1;
-                                                    courseTotal += 1;
-
-                                                    return (
-                                                        <Table.Row
-                                                            data={[
-                                                                <span>{signup.volunteer.name.first} {signup.volunteer.name.last} {commitment.instructor ? <b>(Instructor)</b> : ""}</span>,
-                                                                signup.volunteer.email,
-                                                                signup.volunteer.phone
-                                                            ]}
-                                                        />
-                                                    )
-                                                }
-                                            }
+                                        {course.volunteers.map((volunteer, i) => {
+                                            return (
+                                                <Table.Row
+                                                    key={volunteer.uuid + "_" + week.week + "_" + course.course.id}
+                                                    data={[
+                                                        <span>
+                                                            {volunteer.name.first} {volunteer.name.last}&nbsp;
+                                                            {course.instructors[i] ? <b>(Instructor)</b> : ""}
+                                                        </span>,
+                                                        volunteer.email,
+                                                        volunteer.phone
+                                                    ]}
+                                                />
+                                            )
                                         })}
                                     </Table.Root>
-                                </>
+                                </Fragment>
                             )
                         })}
                     </section>
