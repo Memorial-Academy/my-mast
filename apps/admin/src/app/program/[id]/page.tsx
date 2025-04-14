@@ -4,6 +4,7 @@ import API from "@/app/lib/APIHandler";
 import { UserTypes } from "@mymast/api/Types";
 import { Card } from "@mymast/ui";
 import AddDirectorPopup from "@/components/program_manager/AddDirectorPopup";
+import { hasPermssion, PERMISSIONS } from "@/app/lib/permissions";
 
 type Params = Promise<{
     id: string
@@ -128,10 +129,10 @@ export default async function Page({params}: {params: Params}) {
                     )
                 })}
             </div>
-            <AddDirectorPopup
+            {hasPermssion(PERMISSIONS.DIRECTOR) && <AddDirectorPopup
                 programName={data.name}
                 programID={data.id}
-            />
+            />}
         </>
     )
 }

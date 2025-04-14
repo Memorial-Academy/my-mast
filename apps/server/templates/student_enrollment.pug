@@ -12,9 +12,12 @@ ul
     else
         li Location: #{location.name} #{location.address}
 
-p To find more information about your student's enrollment, make sure to check your MyMAST dashboard. On MyMAST, you'll be able to find detailed schedules, contact information, and location information relating to your signup.
 p 
-    | If you have any questions or concerns, please don't hesitate to contact us at 
+    | To find more information about your student's enrollment, make sure to check your 
+    a(href=mymast) MyMAST dashboard
+    | . On MyMAST, you'll be able to find detailed schedules, contact information, and location information relating to your signup.
+p 
+    | If you have any questions or concerns, please don't hesitate to contact your program director: 
     a(href=`mailto:${email}`) #{email}
     | .
 

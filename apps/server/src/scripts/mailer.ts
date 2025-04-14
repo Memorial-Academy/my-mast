@@ -23,7 +23,7 @@ export function sendMail(
     content: string,
 ) {
     pendingEmails.push({
-        from: "notifications@memorialacademy.org",
+        from: "Memorial Academy of Science and Technology <notifications@memorialacademy.org>",
         to: to,
         subject: subject,
         html: content

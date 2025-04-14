@@ -9,6 +9,8 @@ import VolunteerSignup from "../models/application/volunteer_signups.model";
 import Attendance from "../models/application/attendance.model";
 import { permissionCheck, PERMISSIONS } from "../scripts/admin_permissions";
 import adminProgramSignup from "../scripts/admin_program_signup";
+import { Templates } from "../scripts/pug_handler";
+import { sendMail } from "../scripts/mailer";
 
 function validateData(data: any, res: Response) {
     if (data) {
@@ -328,6 +330,64 @@ export async function confirmVolunteerAssignment(req: Request, res: Response) {
         console.log("deleted")
         res.writeHead(200);
         res.end();
+    })
+
+    let emailThread = new Promise<void>(async resolve => {
+        let program = (await Program.findOne({id: req.body.program}))!
+
+        // only send this email if there are mutliple courses to be assigned to
+        if (program.courses.length == 1) {
+            resolve();
+            return;
+        }
+
+        // get location
+        let location: {
+            type: "virtual" | "physical",
+            address?: string,
+            name?: string
+        };
+        if (program.location.loc_type == "virtual") {
+            location = {
+                type: "virtual"
+            }
+        } else {
+            location = {
+                type: "physical",
+                address: `${program.location.address!}, ${program.location.city!}, ${program.location.state!} ${program.location.zip!}`,
+                name: program.location.common_name! || ""
+            }
+        }
+
+        // format commitments
+        let commitments = [];
+        for (var commitment of req.body.data) {
+            let week = Array.from(Object.values(program.schedule[commitment.week - 1].toObject())) as any;
+            commitments.push({
+                week: commitment.week,
+                courseName: program.courses[commitment.course].name,
+                instructor: commitment.instructor,
+                startDate: `${week[0].month}/${week[0].date}`,
+                endDate: `${week.at(-1).month}/${week.at(-1).date}`
+            })
+        }
+
+        let confirmationEmail = Templates.ConfirmVolunteer({
+            volunteerName: volunteer.name.first,
+            programName: program.name,
+            mymast: process.env.MYMAST_URL!,
+            location: location,
+            commitments: commitments,
+            email: program.contact.email
+        })
+
+        sendMail(
+            volunteer.email,
+            `You've been assigned tasks! - ${program.name}`,
+            confirmationEmail
+        );
+
+        resolve();
     })
 }
 

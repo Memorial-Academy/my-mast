@@ -81,6 +81,24 @@ export async function newEnrollment(req: Request, res: Response) {  // for stude
         res.end("No program found");
         return;
     }
+
+    // get location information; this is used in the confirmation emails
+    let location: {
+        type: "virtual" | "physical",
+        address?: string,
+        name?: string
+    };
+    if (program.location.loc_type == "virtual") {
+        location = {
+            type: "virtual"
+        }
+    } else {
+        location = {
+            type: "physical",
+            address: `${program.location.address!}, ${program.location.city!}, ${program.location.state!} ${program.location.zip!}`,
+            name: program.location.common_name! || ""
+        }
+    }
     
     if (req.params.role == "parent") {  // Create new enrollments for students (via a parent account)
         let parent = await ParentUser.findOne({uuid: req.body.uuid});
@@ -113,26 +131,8 @@ export async function newEnrollment(req: Request, res: Response) {  // for stude
 
             program.enrollments.students.push(enrollmentID);
 
-            let emailThread = new Promise(resolve => {
+            let emailThread = new Promise<void>(resolve => {
                 let course = program.courses[enrollment.class];
-
-                // get location information
-                let location: {
-                    type: "virtual" | "physical",
-                    address?: string,
-                    name?: string
-                };
-                if (program.location.loc_type == "virtual") {
-                    location = {
-                        type: "virtual"
-                    }
-                } else {
-                    location = {
-                        type: "physical",
-                        address: `${program.location.address!}, ${program.location.city!}, ${program.location.state!} ${program.location.zip!}`,
-                        name: program.location.common_name! || ""
-                    }
-                }
 
                 // determine session
                 let start = enrollment.week - 1;
@@ -156,14 +156,18 @@ export async function newEnrollment(req: Request, res: Response) {  // for stude
                     course: course.name,
                     location: location,
                     session: sessionStr,
-                    email: program.program_type == "stempark" ? "stempark@memorialacademy.org" : "letscode@memorialacademy.org"
+                    // email: program.program_type == "stempark" ? "stempark@memorialacademy.org" : "letscode@memorialacademy.org",
+                    email: program.contact.email,
+                    mymast: process.env.MYMAST_URL!
                 })
 
                 sendMail(
-                    parent!.email!,
+                    parent!.email,
                     `Enrollment Confirmation - ${student.name.first} ${student.name.last} - ${program.name}`,
                     confirmationEmail
                 )
+
+                resolve();
             })
         }
     } else if (req.params.role == "volunteer") { // Create new enrollment for volunteers
@@ -194,6 +198,62 @@ export async function newEnrollment(req: Request, res: Response) {  // for stude
         volunteer.save();
         
         program.enrollments.volunteers.push(enrollmentID);
+
+        let emailThread = new Promise<void>(resolve => {
+            let coursesStr = "";
+            let weeksStr = enrollmentData.weeks.length > 1 ? "weeks " : "week ";
+
+            console.log(enrollmentData)
+            if (enrollmentData.courses.length > 1) {
+                for (var i = 0; i < enrollmentData.courses.length; i++) {
+                    console.log(enrollmentData.courses[i])
+                    if (enrollmentData.courses.length - 1 == i) {
+                        coursesStr += `and ${program.courses[enrollmentData.courses[i]].name}`;
+                    } else if (enrollmentData.courses.length - 2 == i) {
+                        coursesStr += `${program.courses[enrollmentData.courses[i]].name} `;
+                    } else {
+                        coursesStr += `${program.courses[enrollmentData.courses[i]].name}, `;
+                    }
+                }
+            } else {
+                coursesStr = program.courses[enrollmentData.courses[0]].name;
+            }
+
+            if (enrollmentData.weeks.length > 1) {
+                for (var i = 0; i < enrollmentData.weeks.length; i++) {
+                    console.log(enrollmentData.weeks[i])
+                    if (enrollmentData.weeks.length - 1 == i) {
+                        weeksStr += `and ${enrollmentData.weeks[i]}`;
+                    } else if (enrollmentData.weeks.length - 2 == i) {
+                        weeksStr += `${enrollmentData.weeks[i]} `;
+                    } else {
+                        weeksStr += `${enrollmentData.weeks[i]}, `;
+                    }
+                }
+            } else {
+                weeksStr += enrollmentData.weeks[0];
+            }
+
+            let confirmationEmail = Templates.VolunteerSignup({
+                volunteer: volunteer.name,
+                program: program.name,
+                courses: coursesStr,
+                weeks: weeksStr,
+                email: program.contact.email,
+                instructor: enrollmentData.instructor,
+                location: location,
+                pending_notice: program.courses.length > 1,
+                mymast: process.env.MYMAST_URL!
+            })
+
+            sendMail(
+                volunteer.email,
+                `Volunteer Signup Confirmation - ${program.name}`,
+                confirmationEmail
+            )
+
+            resolve();
+        })
     } else {
         res.writeHead(404);
         res.end(`"${req.params.role}" is not a valid role`);

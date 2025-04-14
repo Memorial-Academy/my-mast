@@ -1,0 +1,41 @@
+p Hello #{volunteerName}!
+p We're excited to have you volunteer with us at #{programName}! Your volunteering signup, and any necessary tasks/assignments, have been finalized; below are the final details of your enrollment, including specific responsibilities as decided by the program director.
+
+ul
+    each commitment in commitments 
+        li 
+            b Week #{commitment.week}
+            |
+            | (#{commitment.startDate} - #{commitment.endDate}): #{commitment.courseName}
+            if commitment.instructor
+                br
+                | You will be an instructor for this course; congratulations! 
+
+if location.type == "virtual"
+    p 
+        | As a reminder, this program will take place virtually.
+        |
+        if location.link 
+            | To join the virtual classroom, please visit this link: 
+            a(href=location.link) #{location.link}
+            | .
+        else
+            | The link to join the virtual classroom will be sent out shortly before the program begins.
+else
+    p As a reminder, this program will take place at #{location.name} (#{location.address}).
+
+p 
+    | If you have any questions, please contact the program director directly:
+    a(href=`mailto:${email}`) #{email}
+    |  .
+    br
+    | Additionally, make sure to visit
+    |
+    a(href=mymast) MyMAST
+    |
+    | to see all the information related to your signup.
+
+p 
+    | Sincerely,
+    br
+    | The Memorial Academy of Science and Technology
