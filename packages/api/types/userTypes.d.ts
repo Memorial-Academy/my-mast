@@ -1,5 +1,7 @@
 import { Birthday, ConfirmedEnrollment, ConfirmedVolunteerAssignment, FullName } from "./user"
 
+export type UserTypesString = "parent" | "volunteer" | "student";
+
 export namespace UserTypes {
     type Volunteer = {
         uuid: string,

@@ -314,3 +314,43 @@ export async function getAssignments(req: Request, res: Response) {
     }));
     return;
 }
+
+export async function addstudent(req: Request, res: Response) {
+    if (!checkRole("parent", req, res)) return;
+    
+    let parent = await ParentUser.findOne({uuid: req.body.uuid});
+
+    if (!parent) {
+        res.type("text/plain");
+        res.writeHead(404);
+        res.end(`Could not find parent with UUID "${req.body.uuid}".`)
+        return;
+    }
+
+    let studentUUID = "s_" + randomBytes(32).toString("hex");
+    let birthday = req.body.student_birthday.split("-");    // formatted as YYYY-MM-DD
+
+    let createPromise = StudentUser.create({
+        name: {
+            first: req.body.student_first_name,
+            last: req.body.student_last_name
+        },
+        uuid: studentUUID,
+        birthday: {
+            day: birthday[2],
+            month: birthday[1],
+            year: birthday[0]
+        },
+        notes: req.body.notes || "",
+        linkedParent: parent.uuid
+    })
+
+    parent.linkedStudents.push(studentUUID);
+    parent.save();
+
+    createPromise.then(() => {
+        res.type("text/plain");
+        res.writeHead(200);
+        res.end();
+    })
+}

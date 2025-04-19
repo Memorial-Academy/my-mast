@@ -16,7 +16,7 @@ UserRouter.use("/:role", async (req: Request, res: Response, next: NextFunction)
         next();
     } else {
         res.writeHead(403);
-        res.end();
+        res.end("Invalid session or role");
         return;
     }
 })
@@ -26,5 +26,6 @@ UserRouter.post("/:role/profile", Controller.profileInfo)
 UserRouter.post("/:role/students", Controller.getStudents)      // only for `parent` role
 UserRouter.post("/:role/newenrollment", Controller.newEnrollment)
 UserRouter.post("/:role/assignments", Controller.getAssignments)  // only for `volunteer` role
+UserRouter.post("/:role/addstudent", Controller.addstudent)     // only for `parent` role
 
 export default UserRouter;

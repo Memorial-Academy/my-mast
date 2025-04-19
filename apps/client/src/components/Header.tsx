@@ -43,7 +43,7 @@ export default async function Header() {
                 </>}
                 <Link href="/programs">Programs</Link>
                 <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
-                <Link href="/account">Account</Link>
+                <Link href="/dashboard/account">Account</Link>
                 <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
                 <LogoutButton />
             </nav>}

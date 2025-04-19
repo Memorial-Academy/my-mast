@@ -1,6 +1,6 @@
 import * as Fetch from "../fetcher";
 import type { FullName, Birthday, PendingVolunteerAssignment, ConfirmedVolunteerAssignment } from "../../types/user";
-import { UserTypes } from "../../types/userTypes";
+import { UserTypes, UserTypesString } from "../../types/userTypes";
 
 export default class User {
     private url = "https://localhost:5000"
@@ -10,7 +10,7 @@ export default class User {
     }
 
     // /user/<role>/profile
-    async profile<T extends "volunteer" | "parent" | "student">(role: T, uuid: string, token: string): Promise<(
+    async profile<T extends UserTypesString>(role: T, uuid: string, token: string): Promise<(
         // volunteer role
         T extends "volunteer" ? {
             name: FullName,
@@ -79,6 +79,22 @@ export default class User {
         return await Fetch.POST.json(this.url, "volunteer/assignments", {
             uuid,
             token
+        })
+    }
+
+    async addStudent(uuid: string, token: string, data: {
+        first_name: string,
+        last_name: string,
+        birthday: string,
+        notes: string
+    }): Promise<void> {
+        return await Fetch.POST.json(this.url, "parent/addstudent", {
+            uuid,
+            token,
+            student_first_name: data.first_name,
+            student_last_name: data.last_name,
+            student_birthday: data.birthday,
+            notes: data.notes
         })
     }
 }

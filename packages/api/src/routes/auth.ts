@@ -1,3 +1,4 @@
+import { UserTypesString } from "../../types";
 import * as Fetch from "../fetcher";
 
 export default class Auth {
@@ -13,7 +14,7 @@ export default class Auth {
             sessionToken: string,
             sessionExpiry: number,  // Unix timestamp
             uuid: string
-        } = await Fetch.POST.json(this.url, "auth/login", {
+        } = await Fetch.POST.json(this.url, "login", {
             email: email,
             password: password
         })
@@ -23,7 +24,7 @@ export default class Auth {
 
     // /auth/logout
     async logout(token: string)  {
-        let req: null = await Fetch.POST.text(this.url, "auth/logout", token);
+        let req: null = await Fetch.POST.text(this.url, "logout", token);
         return req;
     }
 
@@ -37,7 +38,17 @@ export default class Auth {
         let sessionData: {
             uuid: string,
             role: "parent" | "volunteer" | "student"
-        } = await Fetch.POST.text(this.url, "auth/getsession", token);
+        } = await Fetch.POST.text(this.url, "getsession", token);
         return sessionData;
+    }
+
+    async getRole(
+        uuid: string,
+        token: string
+    ): Promise<UserTypesString> {
+        return await Fetch.POST.json(this.url, "role", {
+            uuid: uuid,
+            token: token
+        })
     }
 }

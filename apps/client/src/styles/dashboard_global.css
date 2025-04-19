@@ -2,3 +2,7 @@ main.dashboard {
     margin: 0 15%;
     width: 70%;
 }
+
+.edit-account input.labelled-input {
+    width: 40%;
+}

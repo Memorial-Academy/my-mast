@@ -320,6 +320,7 @@ export async function adminCheck(req: Request, res: Response) {
 
     const user = await VolunteerUser.findOne({uuid: req.body.uuid});
     if (user && user.admin != 0) {
+        res.type("text/plain");
         res.writeHead(200);
         res.end(user.admin.toString());
     } else {
@@ -331,7 +332,7 @@ export async function adminCheck(req: Request, res: Response) {
 export async function getRole(req: Request, res: Response) {
     if (!validateSession(req.body.uuid, req.body.token)) {
         res.writeHead(403);
-        res.end();
+        res.end("Unauthorized");
         return;
     }
     
@@ -340,6 +341,7 @@ export async function getRole(req: Request, res: Response) {
     })
 
     if (user) {
+        res.type("text/plain");
         res.writeHead(200);
         res.end(user.role);
     } else {

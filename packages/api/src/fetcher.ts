@@ -34,11 +34,12 @@ export const POST = {
                 msg: await req.text()
             }
         }
-    
-        try {
+
+        console.log("content-type: " + req.headers.get("content-type"));
+        if (req.headers.get("content-type") && req.headers.get("content-type")?.indexOf("text/plain") != -1) {
+            return await req.text();
+        } else {
             return await req.json();
-        } catch(e) {
-            return;
         }
     },
     text: async (url: string, endpoint: string, data: string): Promise<any> => {

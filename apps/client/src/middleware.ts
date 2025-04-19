@@ -8,7 +8,6 @@ export async function middleware(request: NextRequest) {
                 method: "POST",
                 body: sessionCookie[0]
             })
-            console.log(session.status);
 
             if (session.status == 200) {
                 const headers = new Headers(request.headers);
@@ -32,5 +31,7 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-    matcher: "/dashboard/:path*"
+    matcher: [
+        "/dashboard/:path*",
+    ]
 }
