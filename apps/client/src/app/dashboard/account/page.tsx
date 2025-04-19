@@ -1,7 +1,7 @@
 import API from "@/app/lib/APIHandler";
 import AddStudent from "@/components/account_settings/add_student_popup";
 import { UserTypes, UserTypesString } from "@mymast/api/Types";
-import { LabelledInput, Card } from "@mymast/ui";
+import { LabelledInput, Card, ConfirmationPopup } from "@mymast/ui";
 import sessionInfo from "@mymast/utils/authorize_session";
 import { Metadata } from "next";
 
@@ -119,7 +119,14 @@ async function ParentSpecificSettings({profile, session}: ParentSpecificSettings
                                 name={`${student.uuid}_notes`}
                                 type="text"
                             />
-                            <a href="#">Remove student</a>
+                            <ConfirmationPopup
+                                buttonText="Remove student"
+                                message={`You are about to delete ${student.name.first} ${student.name.last} from MyMAST. This will unenroll them from all programs they are currently enrolled in and completely remove their data from MyMAST. This action is permanent. Are you sure you want to continue?`}
+                                callback={async () => {
+                                    "use server"
+                                    console.log("Deleted " + student.uuid);
+                                }}
+                            />
                         </Card>
                     )
                 })}

@@ -8,3 +8,4 @@ export * from "./Table";
 export * from "./Popup";
 export * from "./Loading";
 export * from "./IncreaseableInputSection";
+export * from "./ConfirmationPopup";
