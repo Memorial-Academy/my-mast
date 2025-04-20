@@ -1,5 +1,5 @@
 "use client";
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useState, Fragment } from "react";
 
 type SelectableInputProps = {
     name: string,
@@ -19,14 +19,13 @@ export function MultipleChoice(props: SelectableInputProps) {
                 let id = `input_${props.name}_${value[0]}`;
                     
                 return (
-                    <>
+                    <Fragment key={id}>
                         <input 
                             type={props.type}
                             value={value[0]}
                             required={props.required && props.type == "radio" ? true : false}
                             name={props.name}
                             id={id}
-                            key={id}
                             onChange={(e) => {
                                 let temp = data;
                                 
@@ -50,9 +49,9 @@ export function MultipleChoice(props: SelectableInputProps) {
                                 }
                             }}
                         />
-                        <label key={id + "_label"} htmlFor={id}>{value[1]}</label>
-                        <br key={id + "_br"} />
-                    </>
+                        <label htmlFor={id}>{value[1]}</label>
+                        <br />
+                    </Fragment>
                 )
             })}
         </div>
