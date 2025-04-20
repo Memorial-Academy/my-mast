@@ -26,6 +26,8 @@ export default async function ParentDashboard(props: ParentDashboardProps) {
                                     program={program}
                                     course={program.courses[enrollment.course]}
                                     week={enrollment.week}
+                                    studentName={`${student.name.first} ${student.name.last}`}
+                                    enrollmentID={enrollment.id}
                                 />
                             )
                         }) : <p>{student.name.first} is currently not enrolled in any programs. <a href="/programs">Get enrolled in some programs today!</a></p>}

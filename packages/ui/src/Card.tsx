@@ -1,6 +1,5 @@
-"use client";
 import "../styles/card.css";
-import React, { MouseEventHandler, ReactNode } from "react";
+import React, { ReactNode } from "react";
 import Link from "next/link";
 
 type CardProps = {
@@ -8,9 +7,9 @@ type CardProps = {
     children: ReactNode,
     actionLink?: {
         link?: string,
-        onClick?: MouseEventHandler<HTMLAnchorElement>,
         text: string
     }
+    actionElement?: ReactNode
 }
 
 export function Card(props: CardProps) {
@@ -18,16 +17,11 @@ export function Card(props: CardProps) {
         <div className="card">
             <h4>{props.header}</h4>
             {props.children}
-            {props.actionLink && <Link 
+            {(props.actionLink && !props.actionElement) && <Link 
                 className="action-link" 
                 href={props.actionLink.link || "#"}
-                onClick={e => {
-                    if (props.actionLink?.onClick) {
-                        e.preventDefault();
-                        props.actionLink.onClick(e)
-                    }
-                    return;
-            }}>{props.actionLink.text}</Link>}
+            >{props.actionLink.text}</Link>}
+            {props.actionElement || <></>}
         </div>
     )
 } 

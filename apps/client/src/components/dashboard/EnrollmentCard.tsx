@@ -1,18 +1,30 @@
-import { Card } from "@mymast/ui";
+import { Card, ConfirmationPopup } from "@mymast/ui";
 import EnrollmentCardSchedule from "./EnrollmentCardSchedule"
 import { Program } from "@mymast/api/Types";
 
 type EnrollmentCardProps = {
     program: Program,
     course: Course,
-    week: number
+    week: number,
+    studentName: string,
+    enrollmentID: string
 }
 
-export default function EnrollmentCard({ program, course, week }: EnrollmentCardProps) {
+export default function EnrollmentCard({ program, course, week, studentName, enrollmentID }: EnrollmentCardProps) {
     return (
         <>
             <Card 
                 header={program.name}
+                // actionElement={
+                //     <ConfirmationPopup 
+                //         buttonText="Unenroll"
+                //         message={`You are about to unenroll ${studentName} from ${program.name}. They will immediately be removed from this program. If you decide you would still like to have your student attend this program, you will have re-enroll them. Are you sure you want to continue?`}
+                //         callback={async () => {
+                //             "use server";
+                //             console.log(enrollmentID);
+                //         }}
+                //     />
+                // }
             >
                 <div className="tri-fold">
                     {/* Basic course info */}

@@ -15,6 +15,7 @@ export function ConfirmationPopup(props: ConfirmationPopupProps) {
         <>
             <a 
                 href="#"
+                className="action-link"
                 onClick={(e) => {
                     e.preventDefault();
                     setActive(true);
