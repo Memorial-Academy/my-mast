@@ -35,7 +35,7 @@ export const POST = {
             }
         }
 
-        console.log("content-type: " + req.headers.get("content-type"));
+        console.log("content-type: " + req.headers.get("content-type") + "; status: " + req.status);
         if (req.headers.get("content-type") && req.headers.get("content-type")?.indexOf("text/plain") != -1) {
             return await req.text();
         } else {

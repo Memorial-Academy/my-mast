@@ -9,7 +9,7 @@ const UserSession  = AuthDB.model(
         uuid: { type: String, required: true},
         expires: { type: Number, required: true},
         role: {type: String, enum: UserRoles, required: true },
-        createdAt: {type: Date, expires: 3456000000, default: Date.now} // sessions will last for 40 days, or 3456000000 milliseconds
+        createdAt: {type: Date, expires: 3456000, default: Date.now} // sessions will last for 40 days, or 3456000000 milliseconds
     })
 )
 

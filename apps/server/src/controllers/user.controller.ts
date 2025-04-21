@@ -7,8 +7,9 @@ import { randomBytes } from "crypto";
 import Program from "../models/application/program.model";
 import { Templates } from "../scripts/pug_handler";
 import { sendMail } from "../scripts/mailer";
+import { unenrollStudent } from "../scripts/unenroll";
 
-function checkRole(correctRole: string, req: Request, res: Response) {
+function checkRole(correctRole: "volunteer" | "parent", req: Request, res: Response) {
     if (req.params.role != correctRole) {
         res.writeHead(404);
         res.end();
@@ -74,7 +75,6 @@ export function generateEnrollmentID(uuid: string) {
 export async function newEnrollment(req: Request, res: Response) {  // for students and parents
     const enrollmentData = req.body.data;
     let program = await Program.findOne({id: req.body.program});
-    let schedule = await Program.findOne({id: req.body.program})
 
     if (!program) {
         res.writeHead(404);
@@ -353,4 +353,134 @@ export async function addstudent(req: Request, res: Response) {
         res.writeHead(200);
         res.end();
     })
+}
+
+export async function deleteStudent(req: Request, res: Response) {
+    if (!checkRole("parent", req, res))
+    res.type("text/plain");
+
+    let student = await StudentUser.findOne({uuid: req.body.student});
+    let parent = await ParentUser.findOne({uuid: req.body.uuid});
+    
+    if (!student) {     // check if student exists
+        res.writeHead(404);
+        res.end(`Student "${req.body.student}" does not exist`);
+        return;
+    } else if (student.linkedParent != req.body.uuid) {     // check if student is linked to the parent requesting deletion
+        res.writeHead(403);
+        res.end("Unauthorized");
+        return;
+    } else if (!parent) {
+        res.writeHead(404);
+        res.end(`Parent "${req.body.uuid}" does not exist`);
+        return;
+    }
+
+    // unenroll student from all programs
+    for (var enrollment of student.enrollments) {
+        unenrollStudent(enrollment.id);
+    }
+
+    // remove student from parent account
+    let studentIndex = parent.linkedStudents.indexOf(req.body.student);
+    parent.linkedStudents.splice(studentIndex, 1);
+    parent.save();
+
+    // delete student record
+    console.log("deleting student");
+    let awaitDelete = student.deleteOne();
+
+    awaitDelete.then(() => {
+        res.type("text/plain");
+        res.writeHead(200);
+        res.end();
+    })
+}
+
+export async function checkConflicts(req: Request, res: Response) {
+    const program = await Program.findOne({id: req.body.program});
+    if (!program) {
+        res.type("text/plain");
+        res.writeHead(404);
+        res.end(`Program "${req.body.program}" does not exist.`);
+        return;
+    }
+
+    let schedule = program.schedule.map(week => {
+        let weekArr = Array.from(Object.values(week.toObject()));
+        weekArr = weekArr.map((day: any) => {
+            delete day["_id"];
+            delete day["dayCount"];
+            day.start = { $gte: day.start };
+            day.end = { $lte: day.end };
+            return day;
+        })
+        return weekArr;
+    });
+
+    if (req.params.role == "parent") {
+        for (var enrollment of req.body.enrollments) {
+            // calculate start and end weeks for the requested enrolled and determine what dates to query the database with
+            let startWeek = enrollment.week - 1;
+            let endWeek = program.courses[enrollment.course].duration + startWeek - 1;
+            let querySchedule = new Array();
+            let requestWeeks = new Array<number>();
+
+            for (var weekIndex = startWeek; weekIndex <= endWeek; weekIndex++) {
+                requestWeeks.push(weekIndex + 1);
+                querySchedule = querySchedule.concat(schedule[weekIndex]);
+            }
+            
+            let enrolledPrograms = await Program.find({
+                $and: [
+                    { "enrollments.students": { $regex: new RegExp(enrollment.student) } },
+                    { schedule: {$elemMatch: {$elemMatch: {$or: querySchedule} }}}
+                ]
+            });
+
+            // if no document are found then there is no possibility of conflicts
+            if (enrolledPrograms.length === 0) {
+                res.writeHead(200, {
+                    "content-type": "application/json"
+                });
+                res.end(JSON.stringify({
+                    conflicts: false
+                }));
+                return;
+            }
+
+            // otherwise check to see if there are any enrollments that match the specific week(s) of the requested enrollment
+            for (var enrolledProgram of enrolledPrograms) {
+                let student = await StudentUser.findOne({ $and: [
+                    { uuid: enrollment.student },
+                    { enrollments: { $elemMatch: {
+                        program: enrolledProgram.id,
+                        week: { $in: requestWeeks }
+                    }}}
+                ]})
+                if (student) {
+                    res.writeHead(200, {
+                        "content-type": "application/json"
+                    })
+                    res.end(JSON.stringify({
+                        conflicts: true,
+                        student: student.uuid
+                    }));
+                    return;
+                }
+            }
+        }
+    } else if (req.params.role == "volunteer") {
+
+    } else {
+        res.type("text/plain");
+        res.writeHead(403);
+        res.end("Invalid role");
+    }
+    res.writeHead(200, {
+        "content-type": "application/json"
+    })
+    res.end(JSON.stringify({
+        conflicts: false
+    }));
 }

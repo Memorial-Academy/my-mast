@@ -123,9 +123,11 @@ async function ParentSpecificSettings({profile, session}: ParentSpecificSettings
                                 buttonText="Remove student"
                                 message={`You are about to delete ${student.name.first} ${student.name.last} from MyMAST. This will unenroll them from all programs they are currently enrolled in and completely remove their data from MyMAST. This action is permanent. Are you sure you want to continue?`}
                                 callback={async () => {
-                                    "use server"
-                                    console.log("Deleted " + student.uuid);
+                                    "use server";
+                                    console.log("deleting " + student.name.first + " " + student.name.last);
+                                    await API.User.deleteStudent(session.uuid, session.token, student.uuid);
                                 }}
+                                reload
                             />
                         </Card>
                     )

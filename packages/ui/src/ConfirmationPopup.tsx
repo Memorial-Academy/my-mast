@@ -5,7 +5,8 @@ import { Popup } from "./Popup";
 type ConfirmationPopupProps = {
     buttonText: string
     message: string
-    callback: () => any
+    callback: () => any,
+    reload?: boolean
 }
 
 export function ConfirmationPopup(props: ConfirmationPopupProps) {
@@ -35,6 +36,9 @@ export function ConfirmationPopup(props: ConfirmationPopupProps) {
                     onClick={() => {
                         props.callback();
                         setActive(false);
+                        if (props.reload) {
+                            window.location.reload();
+                        }
                     }}
                 >
                     Confirm

@@ -23,9 +23,11 @@ UserRouter.use("/:role", async (req: Request, res: Response, next: NextFunction)
 
 // API Routes
 UserRouter.post("/:role/profile", Controller.profileInfo)
-UserRouter.post("/:role/students", Controller.getStudents)      // only for `parent` role
+UserRouter.post("/:role/students", Controller.getStudents)          // only for `parent` role
 UserRouter.post("/:role/newenrollment", Controller.newEnrollment)
-UserRouter.post("/:role/assignments", Controller.getAssignments)  // only for `volunteer` role
-UserRouter.post("/:role/addstudent", Controller.addstudent)     // only for `parent` role
+UserRouter.post("/:role/assignments", Controller.getAssignments)    // only for `volunteer` role
+UserRouter.post("/:role/addstudent", Controller.addstudent)         // only for `parent` role
+UserRouter.post("/:role/deletestudent", Controller.deleteStudent)   // only for `parent` role
+UserRouter.post("/:role/conflicts", Controller.checkConflicts)
 
 export default UserRouter;

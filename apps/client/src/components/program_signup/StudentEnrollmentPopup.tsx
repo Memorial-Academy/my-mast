@@ -3,6 +3,7 @@ import { useState } from "react";
 import {  MultipleChoice } from "@mymast/ui";
 import { studentEnrollment, submitStudentEnrollment } from "@/app/lib/enrollment_handler";
 import Link from "next/link";
+import { Program } from "@mymast/api/Types";
 
 type StudentEnrollmentPopupProps = {
     students: Array<{
@@ -12,7 +13,7 @@ type StudentEnrollmentPopupProps = {
         },
         uuid: string
     }>,
-    program: ProgramData
+    program: Program
 }
 
 export default function StudentEnrollmentPopup(props: StudentEnrollmentPopupProps) {
@@ -20,14 +21,25 @@ export default function StudentEnrollmentPopup(props: StudentEnrollmentPopupProp
     const [enrollmentSections, setEnrollmentSections] = useState<Array<React.ReactNode>>([]);
     const [enrollment, setEnrollment] = useState<Array<StudentEnrollmentInformation>>([]);
     const [confirmation, setConfirmation] = useState("");
+    const [conflictStudent, setConflictStudent] = useState("");
 
     return (
         <>
             {/* FORM PAGE 1 */}
             <form 
                 action={async (data) => {
-                    setPage(2);
-                    setEnrollment(await studentEnrollment(data));
+                    let enrollmentInfo = await studentEnrollment(data, props.program.id);
+                    if (enrollmentInfo.conflicts) {
+                        props.students.forEach(student => {
+                            if (student.uuid === enrollmentInfo.student) {
+                                setConflictStudent(`${student.name.first} ${student.name.last}`);
+                                setPage(4);
+                            }
+                        })
+                    } else {
+                        setEnrollment(enrollmentInfo.enrollmentInformation!);
+                        setPage(2);
+                    }
                 }}
                 style={{
                     display: `${page == 1 ? "block" : "none"}`
@@ -134,10 +146,18 @@ export default function StudentEnrollmentPopup(props: StudentEnrollmentPopupProp
                     Check your <Link href="/dashboard">parent dashboard</Link> to see more information about this enrollment. Additionally, you should receive a confirmation email in a few minutes. Please note that sometimes our emails get mark as spammed, or get blocked by certain email providers. Regardless, your MyMAST parent dashboard will display all the necessary information about your enrollment!
                 </p>
             </>}
+
+            {/* PAGE 4 (only displayed when conflicts are present) */}
+            {page == 4 && <>
+                <h3>Whoops! We detected a problem!</h3>
+                <p>It looks like {conflictStudent} is already enrolled for a program during some or all of the dates you selected. Try going back to select a different time period, and visit your <Link href="/dashboard">dashboard</Link> to see your current enrollments!</p>
+                <input type="button" value="Back" onClick={() => {
+                    setPage(1);
+                }} />
+            </>}
         </>
     )
 }
-
 
 type StudentEnrollmentSectionProps = {
     name: {

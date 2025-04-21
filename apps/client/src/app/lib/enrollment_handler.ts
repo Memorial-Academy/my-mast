@@ -1,11 +1,18 @@
 "use server";
-import authorizeSession from "@mymast/utils/authorize_session";
+import API from "./APIHandler";
+import sessionInfo from "@mymast/utils/authorize_session";
 
 // Handlers for parent enrolling a student
 // initial verification of enrollment data
-export async function studentEnrollment(data: FormData) {
+export async function studentEnrollment(data: FormData, program: string) {
+    const auth = (await sessionInfo())!;
     let enrollmentInformation: Array<StudentEnrollmentInformation> = [];
-    const students = data.getAll("enroll_students")
+    const students = data.getAll("enroll_students");
+
+    let conflictCheckData: Array<{
+        student: string,
+        week: number
+    }> = []
 
     for (var student of students) {
         enrollmentInformation.push({
@@ -15,12 +22,34 @@ export async function studentEnrollment(data: FormData) {
         })
     }
 
-    return enrollmentInformation;
+    let conflicts = await API.User.checkStudentConflicts(
+        auth.uuid,
+        auth.token,
+        program,
+        enrollmentInformation.map(enrollment => {
+            return {
+                student: enrollment.id,
+                week: enrollment.week,
+                course: enrollment.class
+            }
+        })
+    )
+    if (conflicts.conflicts) {
+        return {
+            conflicts: true,
+            student: conflicts.student
+        }
+    } else {
+        return {
+            conflicts: false,
+            enrollmentInformation
+        }
+    }
 }
 
 // submit enrollment to the database
 export async function submitStudentEnrollment(data: Array<StudentEnrollmentInformation>, program_id: string) {
-    const auth = (await authorizeSession())!;
+    const auth = (await sessionInfo())!;
 
     const req = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/parent/newenrollment`, {
         method: "POST",
@@ -60,7 +89,7 @@ export async function volunteerSignup(data: FormData) {
 
 // submit volunteer signup
 export async function submitVolunteerSignup(data: VolunteerSignupInformation, program_id: string) {
-    const auth = (await authorizeSession())!;
+    const auth = (await sessionInfo())!;
     
     const req = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/volunteer/newenrollment`, {
         method: "POST",

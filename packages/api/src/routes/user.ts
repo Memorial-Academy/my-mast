@@ -1,6 +1,7 @@
 import * as Fetch from "../fetcher";
 import type { FullName, Birthday, PendingVolunteerAssignment, ConfirmedVolunteerAssignment } from "../../types/user";
 import { UserTypes, UserTypesString } from "../../types/userTypes";
+import { WeeklySchedule } from "../../types";
 
 export default class User {
     private url = "https://localhost:5000"
@@ -95,6 +96,39 @@ export default class User {
             student_last_name: data.last_name,
             student_birthday: data.birthday,
             notes: data.notes
+        })
+    }
+
+    async deleteStudent(
+        uuid: string, 
+        token: string,
+        student_uuid: string
+    ): Promise<void> {
+        return await Fetch.POST.json(this.url, "parent/deletestudent", {
+            uuid,
+            token,
+            student: student_uuid
+        })
+    }
+
+    async checkStudentConflicts(
+        uuid: string,
+        token: string,
+        program: string,    // program id
+        enrollments: {
+            student: string,    // student uuid
+            week: number,       // week number for enrollment
+            course: number      // id for the course
+        }[]
+    ): Promise<{
+        conflicts: boolean
+        student?: string
+    }> {
+        return await Fetch.POST.json(this.url, `parent/conflicts`, {
+            uuid,
+            token,
+            program,
+            enrollments
         })
     }
 }
