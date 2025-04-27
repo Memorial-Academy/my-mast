@@ -3,6 +3,6 @@ main.dashboard {
     width: 70%;
 }
 
-.edit-account input.labelled-input {
+.edit-account > div > input.labelled-input {
     width: 40%;
 }

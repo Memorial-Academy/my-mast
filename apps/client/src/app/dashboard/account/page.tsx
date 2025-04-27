@@ -50,9 +50,12 @@ export default async function Page() {
                     type="phone"
                     placeholder={profile.phone}
                 />
+                {role == "volunteer" && <ParentSpecificSettings profile={profile as UserTypes.Parent} />}
                 {role == "volunteer" && <VolunteerSpecificSettings profile={profile as UserTypes.Volunteer} />}
+                <br/>
+                <input type="submit" value={"Save account information"}/>
             </form>
-            {role == "parent" && <ParentSpecificSettings profile={profile as UserTypes.Parent} session={session} />}
+            {role == "parent" && <ManageStudents session={session} />}
         </>
     )
 }
@@ -62,77 +65,89 @@ function VolunteerSpecificSettings({profile}: {profile: UserTypes.Volunteer}) {
         <>
             <h3>Volunteer Information</h3>
             <LabelledInput
-                    question="School"
-                    defaultValue={profile.school}
-                    name="school"
-                    type="text"
-                    placeholder={profile.school}
-                />
+                question="School"
+                defaultValue={profile.school}
+                name="school"
+                type="text"
+                placeholder={profile.school}
+            />
         </>
     )
 }
 
-type ParentSpecificSettings = {
-    profile: UserTypes.Parent,
+async function ParentSpecificSettings({profile}: {profile: UserTypes.Parent}) {
+    return (
+        <></>
+    )
+}
+
+type ManageStudentProfilesProps = {
+    // profile: UserTypes.Parent,
     session: {
         uuid: string,
         token: string
     }
 }
 
-async function ParentSpecificSettings({profile, session}: ParentSpecificSettings) {
+async function ManageStudents({session}: ManageStudentProfilesProps) {
     let students = await API.User.parentGetStudents(session.uuid, session.token);
 
     return (
         <>
             <h3>Your Students</h3>
-            <div className="tri-fold">
-                {students.map(student => {
-                    return (
-                        <Card
-                            header={`${student.name.first} ${student.name.last}`}
-                            key={student.uuid}
-                        >
-                            <LabelledInput
-                                question="First name"
-                                defaultValue={student.name.first}
-                                name={`${student.uuid}_first_name`}
-                                type="text"
-                                placeholder={student.name.first}
-                            />
-                            <LabelledInput
-                                question="Last name"
-                                defaultValue={student.name.last}
-                                name={`${student.uuid}_last_name`}
-                                type="text"
-                                placeholder={student.name.last}
-                            />
-                            <LabelledInput
-                                question="Date of birth"
-                                defaultValue={`${student.birthday.year}-${leadingZero(student.birthday.month)}-${leadingZero(student.birthday.day)}`}
-                                name={`${student.uuid}_birthday`}
-                                type="date"
-                            />
-                            <LabelledInput
-                                question="Notes"
-                                defaultValue={student.notes}
-                                name={`${student.uuid}_notes`}
-                                type="text"
-                            />
-                            <ConfirmationPopup
-                                buttonText="Remove student"
-                                message={`You are about to delete ${student.name.first} ${student.name.last} from MyMAST. This will unenroll them from all programs they are currently enrolled in and completely remove their data from MyMAST. This action is permanent. Are you sure you want to continue?`}
-                                callback={async () => {
-                                    "use server";
-                                    console.log("deleting " + student.name.first + " " + student.name.last);
-                                    await API.User.deleteStudent(session.uuid, session.token, student.uuid);
-                                }}
-                                reload
-                            />
-                        </Card>
-                    )
-                })}
-            </div>
+            <p>Changes made here will automatically be updated across all enrollments.</p>
+            <form action={async (data: FormData) => {
+
+            }}>
+                <div className="tri-fold">
+                    {students.map(student => {
+                        return (
+                            <Card
+                                header={`${student.name.first} ${student.name.last}`}
+                                key={student.uuid}
+                            >
+                                <LabelledInput
+                                    question="First name"
+                                    defaultValue={student.name.first}
+                                    name={`${student.uuid}_first_name`}
+                                    type="text"
+                                    placeholder={student.name.first}
+                                />
+                                <LabelledInput
+                                    question="Last name"
+                                    defaultValue={student.name.last}
+                                    name={`${student.uuid}_last_name`}
+                                    type="text"
+                                    placeholder={student.name.last}
+                                />
+                                <LabelledInput
+                                    question="Date of birth"
+                                    defaultValue={`${student.birthday.year}-${leadingZero(student.birthday.month)}-${leadingZero(student.birthday.day)}`}
+                                    name={`${student.uuid}_birthday`}
+                                    type="date"
+                                />
+                                <LabelledInput
+                                    question="Notes"
+                                    defaultValue={student.notes}
+                                    name={`${student.uuid}_notes`}
+                                    type="text"
+                                />
+                                <ConfirmationPopup
+                                    buttonText="Remove student"
+                                    message={`You are about to delete ${student.name.first} ${student.name.last} from MyMAST. This will unenroll them from all programs they are currently enrolled in and completely remove their data from MyMAST. This action is permanent. Are you sure you want to continue?`}
+                                    callback={async () => {
+                                        "use server";
+                                        console.log("deleting " + student.name.first + " " + student.name.last);
+                                        await API.User.deleteStudent(session.uuid, session.token, student.uuid);
+                                    }}
+                                    reload
+                                />
+                            </Card>
+                        )
+                    })}
+                </div>
+                <input type="submit" value={"Save student information"}/>
+            </form>
             <AddStudent 
                 uuid={session.uuid}
                 token={session.token}
