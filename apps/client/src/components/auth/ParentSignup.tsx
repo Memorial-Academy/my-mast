@@ -7,6 +7,37 @@ export default function ParentSignupPage() {
         <>
             <input readOnly className="signup-role-tracker" value="parent" title="role" name="role" />
         
+            <h2>Emergency Contact</h2>
+            <p>Please specify the emergency contact you wish to have associated with your students. We only contact emergency contacts in the event of an emergency and you are unavailable.</p>
+            <LabelledInput
+                type="text"
+                question="First Name"
+                placeholder="First Name"
+                required
+                name={`emergency_first_name`}
+            />
+            <LabelledInput
+                type="text"
+                question="Last Name"
+                placeholder="Last Name"
+                required
+                name={`emergency_last_name`}
+            />
+            <LabelledInput
+                type="text"
+                question="Email address"
+                placeholder="Email"
+                required
+                name={`emergency_email`}
+            />
+            <LabelledInput
+                type="phone"
+                question="Phone number"
+                placeholder="Phone number"
+                required
+                name={`emergency_phone`}
+            />
+
             <h2>Student Information</h2>
             <p>
                 Enter the information for all the students you wish to enroll in MAST programs.

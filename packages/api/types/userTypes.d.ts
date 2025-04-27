@@ -1,4 +1,4 @@
-import { Birthday, ConfirmedEnrollment, ConfirmedVolunteerAssignment, FullName } from "./user"
+import { Birthday, ConfirmedEnrollment, ConfirmedVolunteerAssignment, EmergencyContact, FullName } from "./user"
 
 export type UserTypesString = "parent" | "volunteer" | "student";
 
@@ -21,7 +21,8 @@ export namespace UserTypes {
         name: FullName,
         email: string,
         phone: string,
-        linkedStudents: string[]    // Array of student UUID's
+        linkedStudents: string[],   // Array of student UUID's
+        emergencyContact: EmergencyContact
     }
 
     type Student = {

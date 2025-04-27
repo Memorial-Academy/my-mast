@@ -18,7 +18,7 @@ export default async function Page() {
     return (
         <>
             <h2>My Account</h2>
-            <p>Account type: {role}</p>
+            {/* <p>Account type: {role}</p> */}
             <form className="edit-account">
                 <h3>Personal Information</h3>
                 <LabelledInput
@@ -50,7 +50,7 @@ export default async function Page() {
                     type="phone"
                     placeholder={profile.phone}
                 />
-                {role == "volunteer" && <ParentSpecificSettings profile={profile as UserTypes.Parent} />}
+                {role == "parent" && <ParentSpecificSettings profile={profile as UserTypes.Parent} />}
                 {role == "volunteer" && <VolunteerSpecificSettings profile={profile as UserTypes.Volunteer} />}
                 <br/>
                 <input type="submit" value={"Save account information"}/>
@@ -77,7 +77,38 @@ function VolunteerSpecificSettings({profile}: {profile: UserTypes.Volunteer}) {
 
 async function ParentSpecificSettings({profile}: {profile: UserTypes.Parent}) {
     return (
-        <></>
+        <>
+            <h3>Emergency Contact</h3>
+            <p>The same emergency contact is used for all of your students. Updating your emergency contact information here will automatically update it on all enrollments for your students.</p>
+            <LabelledInput
+                question="First name"
+                defaultValue={profile.emergencyContact.name.first}
+                name="emergency_first_name"
+                type="text"
+                placeholder={profile.emergencyContact.name.first}
+            />
+            <LabelledInput
+                question="Last name"
+                defaultValue={profile.emergencyContact.name.last}
+                name="emergency_last_name"
+                type="text"
+                placeholder={profile.emergencyContact.name.last}
+            />
+            <LabelledInput
+                question="Email"
+                defaultValue={profile.emergencyContact.email}
+                name="emergency_email"
+                type="email"
+                placeholder={profile.emergencyContact.email}
+            />
+            <LabelledInput
+                question="Phone"
+                defaultValue={profile.emergencyContact.phone}
+                name="emergency_phone"
+                type="phone"
+                placeholder={profile.emergencyContact.phone}
+            />
+        </>
     )
 }
 
@@ -97,7 +128,7 @@ async function ManageStudents({session}: ManageStudentProfilesProps) {
             <h3>Your Students</h3>
             <p>Changes made here will automatically be updated across all enrollments.</p>
             <form action={async (data: FormData) => {
-
+                "use server";
             }}>
                 <div className="tri-fold">
                     {students.map(student => {

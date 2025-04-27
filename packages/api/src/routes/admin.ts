@@ -51,11 +51,7 @@ export default class Admin {
             week: number,
             enrollments: {
                 student: Omit<UserTypes.Student, "enrollments">,
-                parent: {
-                    name: FullName,
-                    email: string,
-                    phone: string
-                },
+                parent: Omit<UserTypes.Parent, "linkedStudents">,
                 enrollmentID: string
             }[]
         }[]

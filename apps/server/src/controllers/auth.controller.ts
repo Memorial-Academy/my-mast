@@ -170,7 +170,15 @@ export function signupHandler(req: Request, res: Response) {
                     phone: req.body.phone_number,
                     linkedStudents: students.map(student => {
                         return student.uuid;
-                    })
+                    }),
+                    emergencyContact: {
+                        name: {
+                            first: req.body.emergency_first_name,
+                            last: req.body.emergency_last_name
+                        },
+                        email: req.body.emergency_email,
+                        phone: req.body.emergency_phone
+                    }
                 })
             } else if (req.body.role == "volunteer") {
                 let bday = req.body.birthday.split("-"); // req.body.birthday is formatted as YYYY-MM-DD

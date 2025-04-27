@@ -40,6 +40,7 @@ export async function profileInfo(req: Request, res: Response) {
                     "email": 1,
                     "phone": 1,
                     "linkedStudents": 1,
+                    "emergencyContact": 1,
                     "_id": 0
                 }))
             );

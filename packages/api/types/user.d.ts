@@ -40,3 +40,10 @@ export type VolunteeringCommitment = {
     course: number,
     instructor: boolean
 }
+
+// for parents
+export type EmergencyContact = {
+    name: FullName,
+    email: string,
+    phone: string
+}

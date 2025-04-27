@@ -87,6 +87,7 @@ export default async function Page({params}: {params: Params}) {
                                                 week={week.week}
                                                 program={data.id}
                                                 auth={auth}
+                                                emergencyContact={student.parent.emergencyContact}
                                             />
                                         ]}
                                         key={`${student.student.name.first} ${student.student.name.last}`}

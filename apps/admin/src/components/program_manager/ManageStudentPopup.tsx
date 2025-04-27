@@ -1,18 +1,13 @@
 "use client";
 import API from "@/app/lib/APIHandler";
+import { EmergencyContact, FullName } from "@mymast/api/Types";
 import { ConfirmationPopup, Popup } from "@mymast/ui";
 import { useState } from "react";
 
 type ManageStudentPopupProps = {
     notes?: string,
-    name: {
-        first: string,
-        last: string
-    },
-    parentName: {
-        first: string,
-        last: string
-    },
+    name: FullName,
+    parentName: FullName,
     parentContact: {
         email: string,
         phone: string
@@ -24,7 +19,8 @@ type ManageStudentPopupProps = {
     auth: {
         uuid: string,
         token: string
-    }
+    },
+    emergencyContact: EmergencyContact
 }
 
 export default function ManageStudentPopup(props: ManageStudentPopupProps) {
@@ -35,12 +31,10 @@ export default function ManageStudentPopup(props: ManageStudentPopupProps) {
         hasNotes = false;
     } else {
         let noteCheck = props.notes.toLowerCase();
-
-        if (noteCheck == "n/a" || noteCheck == "none" || noteCheck == "no") {
+        if (["n/a","none","no"].indexOf(noteCheck) != -1) {
             hasNotes = false;
         }
     }
-
 
     return (
         <>
@@ -52,14 +46,19 @@ export default function ManageStudentPopup(props: ManageStudentPopupProps) {
                 active={active}
                 onClose={() => {setActive(false)}}
             >
-                <h2>{props.name.first} {props.name.last}</h2>
-                <p>
-                    <b>Parent: {props.parentName.first} {props.parentName.last}</b>
-                    <br/>
-                    Email: {props.parentContact.email}
-                    <br/>
-                    Phone: {props.parentContact.phone}
-                </p>
+                <h2>Student: {props.name.first} {props.name.last}</h2>
+                <div className="bi-fold">
+                    <ParentInfoDisplay
+                        name={props.parentName}
+                        email={props.parentContact.email}
+                        phone={props.parentContact.phone}
+                    />
+                    <ParentInfoDisplay
+                        name={props.emergencyContact.name}
+                        email={props.emergencyContact.email}
+                        phone={props.emergencyContact.phone}
+                    />
+                </div>
                 
                 <h3>Student Notes</h3>
                 {hasNotes ? <p>"{props.notes}"</p> : <p>No notes</p>}
@@ -81,5 +80,17 @@ export default function ManageStudentPopup(props: ManageStudentPopupProps) {
                 />
             </Popup>
         </>
+    )
+}
+
+function ParentInfoDisplay({name, phone, email}: {name: FullName, phone: string, email: string}) {
+    return (
+        <p>
+            <b>Parent: {name.first} {name.last}</b>
+            <br/>
+            Email: <a href={`mailto:${email}`}>{email}</a>
+            <br/>
+            Phone: <a href={`tel:${phone}`}>{phone}</a>
+        </p>
     )
 }
