@@ -1,14 +1,14 @@
 #auth {
-    margin: 10% 40%;
+    margin: 10% 32%;
 }
 
 #auth img {
-    width: 45%;
-    margin: 0 27.5%;
+    width: 30%;
+    margin: 0 34%;
 
 }
 
-#auth h1, #auth p {
+#auth h1, #auth > p, #auth > form > p {
     font-family: "Play";
     text-align: center;
 }
@@ -16,12 +16,11 @@
 #auth form {
     width: 70%;
     padding: 0 15%;
-    gap: 0.8em;
 }
 
 form#signup {
-    padding: 0 7%;
-    width: 86%;
+    padding: 0;
+    width: 100%;
 }
 
 #auth input[type="submit"] {
@@ -46,4 +45,24 @@ p#form-message {
 #password_reset {
     font-size: 0.9rem;
     text-decoration: underline;
+}
+
+@media screen and (max-width: 1400px) {
+    #auth {
+        margin: 4% 20%;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    #auth {
+        margin: 6% 3%;
+    }
+    #auth input[type="submit"] {
+        width: calc(60% - 0.6ch); /* 0.6ch padding per side */
+        margin: 3% 20%;
+    }
+    #auth form {
+        width: 90%;
+        padding: 0 5%;
+    }
 }

@@ -4,5 +4,21 @@ main.dashboard {
 }
 
 .edit-account > div > input.labelled-input {
-    width: 40%;
+    width: 50%;
+}
+
+@media screen and (max-width: 1250px) {
+    .edit-account > div > input.labelled-input {
+        width: 70%;
+    }
+}
+
+@media screen and (max-width: 750px) {
+    main.dashboard {
+        margin: 0 4%;
+        width: 92%;
+    }
+    .edit-account > div > input.labelled-input {
+        width: 100%;
+    }
 }

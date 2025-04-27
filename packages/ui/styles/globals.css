@@ -130,3 +130,28 @@ input[type="checkbox"], input[type="radio"] {
     font-family: "Kode Mono";
     src: url("../fonts/Kode_Mono/KodeMono-VariableFont_wght.ttf");
 }
+
+/* Media queries & responsiveness */
+@media screen and (max-width: 1000px) {
+    h1, h2 {
+        font-size: 1.6rem !important;
+    }
+    h3 {
+        font-size: 1.4rem;
+    }
+    h4 {
+        font-size: 1.23rem;
+    }
+}
+@media screen and (max-width: 600px) {
+    :root, body {
+        font-size: 16px;
+    }
+}
+
+@media screen and (max-width: 750px) {
+    .bi-fold, .tri-fold {
+        grid-template-columns: 100% !important;
+        grid-template-rows: auto !important;
+    }
+}

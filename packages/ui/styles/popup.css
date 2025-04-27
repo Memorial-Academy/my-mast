@@ -12,12 +12,12 @@
     width: 54vw;
     height: 55vh;
     margin: 20vh 20vw;
+    padding: 2.5vh 3vw;
     background-color: var(--background-white);
     border: none;
     border-radius: 2rem;
     position: relative; 
     z-index:1000;
-    padding: 2.5vh 3vw;
     overflow: auto;
     text-align: left;
 }
@@ -29,4 +29,28 @@
     font-size: 1.8rem;
     right: 2ch;
     margin: 0;
+}
+
+@media screen and (max-width: 1800px) {
+    .popup {
+        width: 74vw !important;
+        height: 75vh !important;
+        margin: 10vh 10vw !important;
+    }
+}
+
+@media screen and (max-width: 1200px) {
+    .popup {
+        width: 85vw !important;
+        height: 85vh !important;
+        margin: 5vh 4.5vw !important;
+    }
+}
+
+@media screen and (max-width: 700px) {
+    .popup {
+        width: 91vw !important;
+        height: 92vh !important;
+        margin: 1.5vh 1.5vw !important;
+    }
 }

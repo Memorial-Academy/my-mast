@@ -14,7 +14,7 @@ header a.title {
 
 header img {
     width: 6rem;
-    border-radius: 25px;
+    border-radius: 1.5rem;
 }
 
 header nav {
@@ -32,4 +32,28 @@ header nav a {
 
 header nav a:hover {
     text-decoration: underline;
+}
+
+@media screen and (max-width: 1260px) {
+    header {
+        padding: 0.7vh 0.9vw;
+        grid-template-columns: 50% 50%;
+    }
+}
+
+@media screen and (max-width: 940px) {
+    header {
+        grid-template-columns: 5.5rem auto;
+    }
+    header a.title h1 {
+        display: none;
+    }
+    header img {
+        width: 5.5rem;
+        border-radius: 1.375rem;
+    }
+    header nav {
+        padding-right: 0.5ch;
+        width: calc(100% - 0.5ch);
+    }
 }
