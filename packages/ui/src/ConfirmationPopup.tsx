@@ -6,15 +6,17 @@ type ConfirmationPopupProps = {
     buttonText: string
     message: string
     callback: () => any,
-    reload?: boolean
+    reload?: boolean,
+    buttonStyle?: "link" | "button"
 }
 
 export function ConfirmationPopup(props: ConfirmationPopupProps) {
+    let buttonStyle = props.buttonStyle || "link";
     const [active, setActive] = useState(false);
 
     return (
         <>
-            <a 
+            {buttonStyle == "link" ? <a 
                 href="#"
                 className="action-link"
                 onClick={(e) => {
@@ -22,7 +24,17 @@ export function ConfirmationPopup(props: ConfirmationPopupProps) {
                     setActive(true);
                 }}
                 role="button"
-            >{props.buttonText}</a> 
+            >{props.buttonText}</a> : 
+            <button 
+                type="button" 
+                title={props.buttonText}
+                onClick={(e) => {
+                    setActive(true);
+                }}
+            >
+                {props.buttonText}
+            </button>}
+
             <Popup
                 active={active}
                 onClose={() => {
@@ -33,8 +45,8 @@ export function ConfirmationPopup(props: ConfirmationPopupProps) {
                 <p>{props.message}</p>
                 <button 
                     type="button"
-                    onClick={() => {
-                        props.callback();
+                    onClick={async () => {
+                        await props.callback();
                         setActive(false);
                         if (props.reload) {
                             window.location.reload();

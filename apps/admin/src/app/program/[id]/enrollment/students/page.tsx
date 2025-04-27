@@ -1,7 +1,7 @@
 import calculateAge from "@mymast/utils/birthday";
 import { Table } from "@mymast/ui";
 import authorizeSession from "@mymast/utils/authorize_session";
-import StudentNotesPopup from "@/components/program_manager/StudentNotesPopup";
+import ManageStudentPopup from "@/components/program_manager/ManageStudentPopup";
 import API from "@/app/lib/APIHandler";
 
 type Params = Promise<{
@@ -62,7 +62,7 @@ export default async function Page({params}: {params: Params}) {
                                     "Parent Name",
                                     "Parent Email",
                                     "Parent Phone",
-                                    "Notes"
+                                    ""
                                 ]}>
                                     {/* Individual rows for each student */}
                                     {week.enrollments.map(student => {
@@ -74,18 +74,23 @@ export default async function Page({params}: {params: Params}) {
                                             `${student.parent.name.first} ${student.parent.name.last}`,
                                             student.parent.email,
                                             student.parent.phone,
-                                            <>
-                                                <StudentNotesPopup 
-                                                    notes={student.student.notes}
-                                                    name={student.student.name}
-                                                    parentName={student.parent.name}
-                                                    parentContact={{
-                                                        email: student.parent.email,
-                                                        phone: student.parent.phone
-                                                    }}
-                                                />
-                                            </>
-                                        ]}/>
+                                            <ManageStudentPopup 
+                                                notes={student.student.notes}
+                                                name={student.student.name}
+                                                parentName={student.parent.name}
+                                                parentContact={{
+                                                    email: student.parent.email,
+                                                    phone: student.parent.phone
+                                                }}
+                                                enrollmentID={student.enrollmentID}
+                                                courseName={data.courses[course.courseID].name}
+                                                week={week.week}
+                                                program={data.id}
+                                                auth={auth}
+                                            />
+                                        ]}
+                                        key={`${student.student.name.first} ${student.student.name.last}`}
+                                        />
                                     })}
                                 </Table.Root>
 

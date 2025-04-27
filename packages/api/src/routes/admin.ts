@@ -55,7 +55,8 @@ export default class Admin {
                     name: FullName,
                     email: string,
                     phone: string
-                }
+                },
+                enrollmentID: string
             }[]
         }[]
     }[]> {
@@ -134,12 +135,26 @@ export default class Admin {
         token: string,
         program: string,
         new_admin_uuid: string
-    ) {
+    ): Promise<void> {
         return await Fetch.POST.json(this.url, "addadmin", {
             uuid,
             token,
             program,
             new_uuid: new_admin_uuid
+        })
+    }
+
+    async unenrollStudent(
+        uuid: string,
+        token: string,
+        program: string,
+        enrollmentID: string
+    ): Promise<void> {
+        return await Fetch.POST.json(this.url, "unenroll/student", {
+            uuid,
+            token,
+            program,
+            enrollmentID
         })
     }
 }

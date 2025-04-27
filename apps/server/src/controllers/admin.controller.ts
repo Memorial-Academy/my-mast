@@ -11,6 +11,7 @@ import { permissionCheck, PERMISSIONS } from "../scripts/admin_permissions";
 import adminProgramSignup from "../scripts/admin_program_signup";
 import { Templates } from "../scripts/pug_handler";
 import { sendMail } from "../scripts/mailer";
+import { unenrollStudent } from "../scripts/unenroll";
 
 function validateData(data: any, res: Response) {
     if (data) {
@@ -203,19 +204,34 @@ export async function getStudentEnrollments(req: Request, res: Response) {
                     week: week                  // enrolled in the week found in `week`
                 }}
             }, {
-                "enrollments": 0,
                 "_id": 0
-            })
+            }).lean();
 
             for (var student of students) {
                 let parent = await ParentUser.findOne({uuid: student.linkedParent}, {
                     "linkedStudents": 0,
                     "_id": 0
                 });
+
+                // get enrollment id
+                let enrollmentID = "";
+                for (var enrollment of student.enrollments) {
+                    if (
+                        enrollment.program == req.body.program &&
+                        enrollment.course == course.id &&
+                        enrollment.week == week 
+                    ) {
+                        enrollmentID = enrollment.id;
+                        break;
+                    }
+                }
+                // get rid of the enrollment objkect before sending it to the response
+                delete (student as any).enrollments;
         
                 studentParentPairs.push({
                     student,
-                    parent
+                    parent,
+                    enrollmentID
                 })
             }
 
@@ -467,4 +483,23 @@ export async function addProgramAdmin(req: Request, res: Response) {
 
     res.writeHead(200);
     res.end();
+}
+
+export async function unenrollStudent_Admin(req: Request, res: Response) {
+    if (!permissionCheck(res, PERMISSIONS.ADMIN)) return;
+
+    console.log(req.body.enrollmentID)
+    let unenrollPromise = unenrollStudent(req.body.enrollmentID);
+
+    unenrollPromise.then((statusCode) => {
+        res.type("text/plain");
+        console.log(statusCode)
+        if (statusCode == 0) {
+            res.writeHead(200);
+            res.end();
+        } else {
+            res.writeHead(500);
+            res.end();
+        }
+    })
 }
