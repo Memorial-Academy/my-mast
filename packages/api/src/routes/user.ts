@@ -1,5 +1,5 @@
 import * as Fetch from "../fetcher";
-import type { FullName, Birthday, PendingVolunteerAssignment, ConfirmedVolunteerAssignment } from "../../types/user";
+import type { FullName, Birthday, PendingVolunteerAssignment, ConfirmedVolunteerAssignment, EmergencyContact } from "../../types/user";
 import { UserTypes, UserTypesString } from "../../types/userTypes";
 import { WeeklySchedule } from "../../types";
 
@@ -129,6 +129,42 @@ export default class User {
             token,
             program,
             enrollments
+        })
+    }
+
+    async updateParentProfile(
+        uuid: string,
+        token: string,
+        name: FullName,
+        email: string,
+        phone: string,
+        emergencyContact: EmergencyContact
+    ): Promise<void> {
+        return await Fetch.POST.json(this.url, "parent/update/profile", {
+            uuid,
+            token,
+            name,
+            email,
+            phone,
+            emergencyContact
+        })
+    }
+    
+    async updateVolunteerProfile(
+        uuid: string,
+        token: string,
+        name: FullName,
+        email: string,
+        phone: string,
+        school: string
+    ): Promise<void> {
+        return await Fetch.POST.json(this.url, "parent/update/profile", {
+            uuid,
+            token,
+            name,
+            email,
+            phone,
+            school
         })
     }
 }

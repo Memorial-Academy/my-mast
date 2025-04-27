@@ -357,7 +357,7 @@ export async function addstudent(req: Request, res: Response) {
 }
 
 export async function deleteStudent(req: Request, res: Response) {
-    if (!checkRole("parent", req, res))
+    if (!checkRole("parent", req, res)) return;
     res.type("text/plain");
 
     let student = await StudentUser.findOne({uuid: req.body.student});
@@ -484,4 +484,54 @@ export async function checkConflicts(req: Request, res: Response) {
     res.end(JSON.stringify({
         conflicts: false
     }));
+}
+
+export async function updateProfile(req: Request, res: Response) {    
+    let user;
+    if (req.params.role == "parent") {
+        user = await ParentUser.findOne({uuid: req.body.uuid});
+        if (!user) {
+            res.writeHead(404, {
+                "Content-Type": "text/plain"
+            });
+            res.end(`User "${req.body.uuid}" does not exist.`);
+            return;
+        }
+        
+        if (req.body.emergencyContact) {
+            let originalEmergencyContact = user.emergencyContact;
+            user.emergencyContact.name.first = req.body.emergencyContact.name.first || originalEmergencyContact.name.first;
+            user.emergencyContact.name.last = req.body.emergencyContact.name.last || originalEmergencyContact.name.last;
+            user.emergencyContact.email = req.body.emergencyContact.email || originalEmergencyContact.email;
+            user.emergencyContact.phone = req.body.emergencyContact.phone || originalEmergencyContact.phone;
+        }
+    } else if (req.params.role == "volunteer") {
+        user = await VolunteerUser.findOne({uuid: req.body.uuid});
+        if (!user) {
+            res.writeHead(404, {
+                "Content-Type": "text/plain"
+            });
+            res.end(`User "${req.body.uuid}" does not exist.`);
+            return;
+        }
+
+        user.school = req.body.school || user.school;
+    } else {
+        res.writeHead(404, {
+            "Content-Type": "text/plain"
+        })
+        res.end(`"${req.params.role}" is not a valid role.`)
+        return;
+    }
+
+    // save general data
+    user.name.first = req.body.name.first || user.name.first;
+    user.name.last = req.body.name.last || user.name.last;
+    user.email = req.body.email || user.email;
+    user.phone = req.body.phone || user.phone;
+    await user.save();
+
+    res.type("text/plain");
+    res.writeHead(200)
+    res.end();
 }
