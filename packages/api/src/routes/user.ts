@@ -158,13 +158,30 @@ export default class User {
         phone: string,
         school: string
     ): Promise<void> {
-        return await Fetch.POST.json(this.url, "parent/update/profile", {
+        return await Fetch.POST.json(this.url, "volunteer/update/profile", {
             uuid,
             token,
             name,
             email,
             phone,
             school
+        })
+    }
+
+    async updateStudents(
+        uuid: string,
+        token: string,
+        studentInfo: {
+            uuid: string,
+            name: FullName,
+            birthday: string,   // YYYY-MM-DD
+            notes: string
+        }[]
+    ): Promise<void> {
+        return await Fetch.POST.json(this.url, "parent/update/students", {
+            uuid,
+            token,
+            students: studentInfo
         })
     }
 }

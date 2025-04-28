@@ -535,3 +535,46 @@ export async function updateProfile(req: Request, res: Response) {
     res.writeHead(200)
     res.end();
 }
+
+export async function updateStudents(req: Request, res: Response) {
+    if (!checkRole("parent", req, res)) return;
+
+    for (var studentInfo of req.body.students) {
+        let student = await StudentUser.findOne({uuid: studentInfo.uuid});
+
+        // check if student exists or not
+        if (!student) {
+            res.writeHead(404, {
+                "content-type": "text/plain"
+            })
+            res.end(`Student user "${studentInfo.uuid}" cannot be found.`)
+            return;
+        }
+
+        // check if parent is authorized to modify student profile
+        if (student.linkedParent != req.body.uuid) {
+            res.writeHead(403, {
+                "content-type": "text/plain"
+            })
+            res.end(`Student user "${studentInfo.uuid}" is not linked to parent user "${req.body.uuid}".`)
+            return;
+        }
+
+        // edit student profile
+        student.name.first = studentInfo.name.first || student.name.first;
+        student.name.last = studentInfo.name.last || student.name.last;
+        student.notes = studentInfo.notes || student.notes;
+        let birthday = studentInfo.birthday.split("-");
+        student.birthday = {
+            day: parseInt(birthday[2]) || student.birthday.day,
+            month: parseInt(birthday[1]) || student.birthday.month,
+            year: parseInt(birthday[0]) || student.birthday.year
+        }
+
+        await student.save();
+    }
+    res.writeHead(200, {
+        "content-type": "text/plain"
+    })
+    res.end();
+}

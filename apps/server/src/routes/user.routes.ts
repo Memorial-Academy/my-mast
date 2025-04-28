@@ -30,5 +30,6 @@ UserRouter.post("/:role/addstudent", Controller.addstudent)         // only for 
 UserRouter.post("/:role/deletestudent", Controller.deleteStudent)   // only for `parent` role
 UserRouter.post("/:role/conflicts", Controller.checkConflicts)
 UserRouter.post("/:role/update/profile", Controller.updateProfile)
+UserRouter.post("/:role/update/students", Controller.updateProfile) // only for `parent` role
 
 export default UserRouter;
