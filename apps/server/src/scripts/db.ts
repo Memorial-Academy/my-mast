@@ -9,7 +9,5 @@ const DEFAULT_OPTIONS = {
 }
 
 export const AuthDB = mongoose.createConnection(`mongodb://${MONGODB_URL}/auth`, DEFAULT_OPTIONS)
-
 export const UserDB = mongoose.createConnection(`mongodb://${MONGODB_URL}/users`, DEFAULT_OPTIONS)
-
 export const ApplicationDB = mongoose.createConnection(`mongodb://${MONGODB_URL}/application`, DEFAULT_OPTIONS)

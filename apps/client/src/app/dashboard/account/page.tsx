@@ -1,9 +1,11 @@
 import API from "@/app/lib/APIHandler";
+import { updateProfileFormHandler, updateStudentsFormHandler } from "@/app/lib/update_accounts";
 import AddStudent from "@/components/account_settings/add_student_popup";
-import { UserTypes, UserTypesString } from "@mymast/api/Types";
+import { Session, UserTypes, UserTypesString } from "@mymast/api/Types";
 import { LabelledInput, Card, ConfirmationPopup } from "@mymast/ui";
 import sessionInfo from "@mymast/utils/authorize_session";
 import { Metadata } from "next";
+import { headers } from "next/headers";
 
 export const metadata: Metadata = {
     title: "My Account | MyMAST"
@@ -11,15 +13,21 @@ export const metadata: Metadata = {
 
 export default async function Page() {
     let session = (await sessionInfo())!;
-    let role: UserTypesString = await API.Auth.getRole(session.uuid, session.token);
-
+    // let role: UserTypesString = await API.Auth.getRole(session.uuid, session.token);
+    let role: UserTypesString = headers().get("X-UserRole") as UserTypesString;
     let profile = await API.User.profile(role, session.uuid, session.token);
 
     return (
         <>
             <h2>My Account</h2>
             {/* <p>Account type: {role}</p> */}
-            <form className="edit-account">
+            <form 
+                className="edit-account"
+                action={async (data: FormData) => {
+                    "use server";
+                    await updateProfileFormHandler(data, session, role);
+                }}
+            >
                 <h3>Personal Information</h3>
                 <LabelledInput
                     question="First name"
@@ -114,10 +122,7 @@ async function ParentSpecificSettings({profile}: {profile: UserTypes.Parent}) {
 
 type ManageStudentProfilesProps = {
     // profile: UserTypes.Parent,
-    session: {
-        uuid: string,
-        token: string
-    }
+    session: Session
 }
 
 async function ManageStudents({session}: ManageStudentProfilesProps) {
@@ -129,6 +134,10 @@ async function ManageStudents({session}: ManageStudentProfilesProps) {
             <p>Changes made here will automatically be updated across all enrollments.</p>
             <form action={async (data: FormData) => {
                 "use server";
+                let ids = students.map(student => {
+                    return student.uuid;
+                })
+                await updateStudentsFormHandler(data, session, ids)
             }}>
                 <div className="tri-fold">
                     {students.map(student => {

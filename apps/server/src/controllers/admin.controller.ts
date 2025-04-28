@@ -88,7 +88,7 @@ export function createProgram(req: Request, res: Response) {
             state: validateData(submitted.location.state, res),
             zip: validateData(submitted.location.zip, res)
         }
-    } else if (submitted.location.type == "virtual") {
+    } else {
         locationData = {
             loc_type: "virtual",
             link: ""
@@ -96,35 +96,40 @@ export function createProgram(req: Request, res: Response) {
     }
 
     // add to database
-    Program.create({
-        id: id,
-        name: validateData(submitted.name, res), 
-        program_type: programType,
-        location: locationData,
-        schedule: validateData(submitted.schedule, res),
-        contact: validateData(submitted.contact, res),
-        courses: courses,
-        volunteering_hours: {
-            total: totalVolunteering,
-            weekly: weeklyHours
-        },
-        admins: [
-            req.body.uuid
-        ],
-        enrollments: {
-            students: [],
-            volunteers: []
-        },
-        active: {
-            student: true,
-            volunteer: true
-        }
+    let createProgramPromise = new Promise<void>(async resolve => {
+        await Program.create({
+            id: id,
+            name: validateData(submitted.name, res), 
+            program_type: programType,
+            location: locationData,
+            schedule: validateData(submitted.schedule, res),
+            contact: validateData(submitted.contact, res),
+            courses: courses,
+            volunteering_hours: {
+                total: totalVolunteering,
+                weekly: weeklyHours
+            },
+            admins: [
+                req.body.uuid
+            ],
+            enrollments: {
+                students: [],
+                volunteers: []
+            },
+            active: {
+                student: true,
+                volunteer: true
+            }
+        })
+
+        adminProgramSignup(req.body.uuid, id);
+        resolve();
     })
 
-    adminProgramSignup(req.body.uuid, id);
-
-    res.writeHead(200);
-    res.end(id);
+    createProgramPromise.finally(() => {
+        res.writeHead(200);
+        res.end(id);
+    })
 }
 
 export async function getManagedPrograms(req: Request, res: Response) {
