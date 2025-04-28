@@ -561,9 +561,11 @@ export async function updateStudents(req: Request, res: Response) {
         }
 
         // edit student profile
-        student.name.first = studentInfo.name.first || student.name.first;
-        student.name.last = studentInfo.name.last || student.name.last;
-        student.notes = studentInfo.notes || student.notes;
+        if (studentInfo.name) {
+            student.name.first = studentInfo.name.first || student.name.first;
+            student.name.last = studentInfo.name.last || student.name.last;
+        }
+        student.notes = studentInfo.notes;
         let birthday = studentInfo.birthday.split("-");
         student.birthday = {
             day: parseInt(birthday[2]) || student.birthday.day,
