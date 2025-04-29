@@ -4,9 +4,11 @@ import { LabelledInput, MultipleChoice } from "@mymast/ui";
 import { submitVolunteerSignup, volunteerSignup } from "@/app/lib/enrollment_handler";
 import { calculateHoursFromWeek } from "@/app/lib/calculate_hours";
 import Link from "next/link";
+import { Program } from "@mymast/api/Types";
 
 type VolunteerEnrollmentPopupProps = {
-    program: ProgramData
+    program: Program,
+    email: string
 }
 
 export default function VolunteerEnrollmentPopup(props: VolunteerEnrollmentPopupProps) {
@@ -38,6 +40,7 @@ export default function VolunteerEnrollmentPopup(props: VolunteerEnrollmentPopup
 
     return (
         <>
+            {/* PAGE 1: initial course, week, and instructor preference selection */}
             <form
                 action={async data => {
                     setPage(2);
@@ -96,6 +99,7 @@ export default function VolunteerEnrollmentPopup(props: VolunteerEnrollmentPopup
                 }
                 <input type="submit" value="Next" />
             </form>
+            {/* PAGE 2: signup confirmation, volunteer agreement, notes */}
             {page == 2 &&
                 <>
                     <h3>Confirm your signup</h3>
@@ -151,6 +155,19 @@ export default function VolunteerEnrollmentPopup(props: VolunteerEnrollmentPopup
                             placeholder="Brag about yourself here (optional)"
                             required={enrollment.instructor}
                         />
+
+                        {/* Jump into the notes form section to ensure completion of the volunteer agreement */}
+                        <h3>Complete the Program Volunteering Agreement</h3>
+                        <p>
+                            Before enrolling, please make sure to read and complete the Program Volunteering Agreement! <b>It is a requirement to volunteer for a MAST program!</b>
+                        </p>
+                        <p>
+                            We use a third-party service, DocuSeal, to manage our digital agreements. Visit this link (automatically opens in a new tab) to complete the agreement (it takes less than 30 seconds):&nbsp;
+                            <a href={process.env.NEXT_PUBLIC_VOLUNTEER_AGREEMENT + `?email=${props.email}`} target="_blank">{process.env.NEXT_PUBLIC_VOLUNTEER_AGREEMENT}</a>.
+                            <br/>
+                            Then, you can complete your signup!
+                        </p>
+
                         {props.program.courses.length > 1 && props.program.schedule.length > 1 && 
                             <input type="button" value="Back" onClick={() => {
                                 setPage(1);

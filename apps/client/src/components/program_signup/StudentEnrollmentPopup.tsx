@@ -13,7 +13,8 @@ type StudentEnrollmentPopupProps = {
         },
         uuid: string
     }>,
-    program: Program
+    program: Program,
+    email: string
 }
 
 export default function StudentEnrollmentPopup(props: StudentEnrollmentPopupProps) {
@@ -107,6 +108,17 @@ export default function StudentEnrollmentPopup(props: StudentEnrollmentPopupProp
                     Note: donations are completely optional and have no impact on your enrollment.
                 </p>
                 <p><a href="https://memorialacademy.org/donate" target="_blank" rel="noopener">Click here</a> to make a tax-deductible donation (link will open in a new tab).</p>
+
+                <h3>Complete the Program Enrollment Agreement</h3>
+                <p>
+                    Before enrolling, please make sure to read and complete the Program Enrollment Agreement! <b>It is a requirement to attend a MAST program!</b>
+                </p>
+                <p>
+                    We use a third-party service, DocuSeal, to manage our digital agreements. Visit this link (automatically opens in a new tab) to complete the agreement (it takes less than 30 seconds):&nbsp;
+                    <a href={process.env.NEXT_PUBLIC_PARENT_AGREEMENT + `?email=${props.email}`} target="_blank">{process.env.NEXT_PUBLIC_PARENT_AGREEMENT}</a>.
+                    <br/>
+                    Then, you can complete your enrollment!
+                </p>
 
                 <input type="button" value="Back" onClick={() => {
                     setPage(1);
