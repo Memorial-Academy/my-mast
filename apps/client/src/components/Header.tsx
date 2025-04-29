@@ -1,12 +1,11 @@
 import React from "react";
 import "@/styles/header.css";
-import LogoutButton from "./auth/LogoutButton";
 import authorizeSession from "@mymast/utils/authorize_session";
 import Link from "next/link";
+import Nav from "./Nav";
 
 export default async function Header() {
     let session = await authorizeSession();
-
     let adminCheck = false;
 
     if (session) {
@@ -36,17 +35,7 @@ export default async function Header() {
                     of Science and Technology
                 </h1>
             </Link>
-            {session && <nav>
-                {adminCheck && <>
-                    <Link href={process.env.NEXT_PUBLIC_ADMIN_URL || "admin.memorialacademy.org"}>Admin Control Panel</Link>
-                    <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
-                </>}
-                <Link href="/programs">Programs</Link>
-                <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
-                <Link href="/dashboard/account">Account</Link>
-                <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
-                <LogoutButton />
-            </nav>}
+            {session && <Nav adminCheck={adminCheck} />}
         </header>
     )
 }
