@@ -13,18 +13,20 @@ type RowProps = {
 export const Table = {
     Root: (props: TableProps) => {
         return (
-            <table>
-                <thead>
-                    <tr>
-                        {props.columns.map(col => {
-                            return <th key={col}>{col}</th>
-                        })}
-                    </tr>
-                </thead>
-                <tbody>
-                    {props.children}
-                </tbody>
-            </table>
+            <div className="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            {props.columns.map(col => {
+                                return <th key={col}>{col}</th>
+                            })}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {props.children}
+                    </tbody>
+                </table>
+            </div>
         )
     },
     Row: (props: RowProps) => {

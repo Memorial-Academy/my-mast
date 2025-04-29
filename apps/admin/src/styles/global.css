@@ -31,3 +31,48 @@ header nav {
 main {
     margin: 0 25%;
 }
+
+/* Responsiveness */
+@media screen and (max-width: 1900px) {
+    header {
+        grid-template-columns: 60% 40%;
+    }
+}
+
+@media screen and (max-width: 960px) {
+    header {
+        grid-template-columns: 70% 30%;
+    }
+    header img {
+        width: 7rem;
+    }
+    header nav {
+        flex-direction: column;
+        align-items: flex-end;
+        justify-content: center;
+        gap: 1.2ch;
+    }
+    header nav p {
+        display: none;
+    }
+    header nav a:hover, header nav a:active{
+        text-decoration: underline;
+    }
+}
+
+@media screen and (max-width: 780px) {
+    header h1 {
+        display: none;
+    }
+    header {
+        grid-template-columns: 6.4rem auto;
+        width: 94vw;
+        padding: 1vw 3vw;
+    }
+    header img {
+        width: 6.4rem;
+    }
+    main {
+        margin: 0 10%;
+    }
+}

@@ -30,9 +30,7 @@ export default function RootLayout({
 						<a href={process.env.NEXT_PUBLIC_MYMAST_URL}>Return to MyMAST</a>
 					</nav>
 				</header>
-				<main>
-					{children}
-				</main>
+				{children}
 			</Layout>
 		</html>
 	);

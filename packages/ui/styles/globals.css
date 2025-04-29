@@ -8,6 +8,7 @@
     --gray: rgb(31, 31, 31);
     --white: rgb(255,255,255);
     --light-blue: rgb(27, 128, 223);
+    --blue: rgb(6, 58, 228);
 
     font-size: 17px;
     margin: 0;
@@ -45,6 +46,10 @@ h4 {
 p, label, a, td, th, li, nav {
     font-size: 1rem;
     font-family: "Lato";
+}
+
+a, a:visited {
+    color: var(--blue);
 }
 
 input {
@@ -134,7 +139,7 @@ input[type="checkbox"], input[type="radio"] {
 /* Media queries & responsiveness */
 @media screen and (max-width: 1000px) {
     h1, h2 {
-        font-size: 1.6rem !important;
+        font-size: 1.6rem;
     }
     h3 {
         font-size: 1.4rem;
@@ -142,16 +147,33 @@ input[type="checkbox"], input[type="radio"] {
     h4 {
         font-size: 1.23rem;
     }
-}
-@media screen and (max-width: 600px) {
-    :root, body {
-        font-size: 16px;
+    .tri-fold {
+        grid-template-columns: 100% !important;
+        grid-template-rows: auto !important;
     }
 }
 
-@media screen and (max-width: 750px) {
-    .bi-fold, .tri-fold {
+@media screen and (max-width: 770px) {
+    :root, body {
+        font-size: 16px;
+    }
+    h1, h2 {
+        font-size: 1.45rem;
+    }
+    h3 {
+        font-size: 1.3rem;
+    }
+    h4 {
+        font-size: 1.15rem;
+    }
+    .bi-fold {
         grid-template-columns: 100% !important;
         grid-template-rows: auto !important;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    :root, body {
+        font-size: 15px;
     }
 }

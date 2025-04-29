@@ -30,7 +30,7 @@ export default async function Home() {
     }
 
     return (
-        <>
+        <main>
             <h2>My Programs</h2>
             {programs.length > 0 && programs.map(program => {
                 return (
@@ -55,6 +55,6 @@ export default async function Home() {
             })}
             {programs.length == 0 && <p>You don't manage any programs currently.</p>}
             {hasPermssion(PERMISSIONS.DIRECTOR) && <p><Link href="/new_program">+ Add a program</Link></p>}
-        </>
+        </main>
     );
 }

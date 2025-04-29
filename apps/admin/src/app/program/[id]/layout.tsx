@@ -28,10 +28,12 @@ export default async function Layout({params, children}: {params: Params, childr
     }
 
     return (
-        <>
+        <main className="program-manager">
             <ProgramManagerNav id={data.id} name={data.name} />
-            {children}
-        </>
+            <div className="program-manager-display">
+                {children}
+            </div>
+        </main>
     )
 }
 

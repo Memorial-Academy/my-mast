@@ -48,10 +48,11 @@ The `config` directory provides the config files utilized to correctly configure
 - `MAIL_PORT`: port to connect to mail server
 - `MAIL_USER`: username to connect to mail server
 - `MAIL_PASSWORD`: password to connect to mail server
+- `MYMAST_URL`: URL to access the `client` for MyMAST (used in emails)
 
 #### `apps/client/.env`
 - `NEXT_PUBLIC_API_URL`: the URL to be used by the application to connect to the API server (ex: https://localhost:5000)
-- `NEXT_PUBLIC_ADMIN_URL`: the URL used to access the Admin Control Panel
+- `NEXT_PUBLIC_ADMIN_URL`: the URL used to access the Admin Control Panel (`admin`)
 - `NEXT_PUBLIC_PARENT_AGREEMENT`: URL to the document to be signed by parents enrolling their student(s)
 - `NEXT_PUBLIC_VOLUNTEER_AGREEMENT`: URL to the document to be signed by volunteers when signing up
 

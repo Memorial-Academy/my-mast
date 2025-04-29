@@ -11,6 +11,10 @@ main.dashboard {
     .edit-account > div > input.labelled-input {
         width: 70%;
     }
+    main.dashboard {
+        margin: 0 8%;
+        width: 84%;
+    }
 }
 
 @media screen and (max-width: 750px) {

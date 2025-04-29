@@ -30,10 +30,10 @@ export default async function Page() {
     
 
     return (
-        <>
+        <main>
             <h2>Add a new program</h2>
             <p>Completing this form will create a new program in the MyMAST database. Volunteers and parents will immediately be able to begin enrolling in this program.</p>
             <CreateProgramForm contact={autofillContactInfo} />
-        </>
+        </main>
     )
 }
