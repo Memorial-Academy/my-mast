@@ -9,3 +9,5 @@ export * from "./Popup";
 export * from "./Loading";
 export * from "./IncreaseableInputSection";
 export * from "./ConfirmationPopup";
+export * from "./errors/404";
+export * from "./errors/error_boundary";

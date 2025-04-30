@@ -5,13 +5,13 @@ export const GET = {
         })
     
         if (req.status != 200) {
-            throw {
+            return {
                 code: req.status,
                 msg: await req.text()
             }
-        }
-    
-        return await req.json();
+        } else {
+            return await req.json();
+        }    
     }
 }
 
@@ -35,7 +35,7 @@ export const POST = {
             }
         }
 
-        console.log("content-type: " + req.headers.get("content-type") + "; status: " + req.status);
+        // console.log("content-type: " + req.headers.get("content-type") + "; status: " + req.status);
         if (req.headers.get("content-type") && req.headers.get("content-type")?.indexOf("text/plain") != -1) {
             return await req.text();
         } else {

@@ -13,7 +13,7 @@ button:hover, input[type="submit"]:hover, input[type="button"]:hover {
     background-color: rgb(189, 189, 189);
 }
 
-button.big-button, a.big-button {
+button.big-button, a.big-button, a.big-button:visited {
     display: block;
     font-size: 1.2rem;
     font-family: "Play";

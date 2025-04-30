@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import ProgramInfo from "@/components/program_signup/ProgramInfo";
 import authorizeSession from "@mymast/utils/authorize_session";
 import API from "@/app/lib/APIHandler";
@@ -42,6 +42,10 @@ export default async function Page({params}: {params: Params}) {
     }
 
     const data = await API.Application.getProgram(id);
+    if (Object.keys(data).indexOf("code") != -1 && (data as any).code != 200) {
+        notFound();
+        
+    }
 
     // Check whether a user is logged in
     const authCookie = await authorizeSession();

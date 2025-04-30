@@ -1,3 +1,4 @@
+import { Program } from "@mymast/api/Types";
 import { Card } from "@mymast/ui";
 import sessionInfo from "@mymast/utils/authorize_session";
 import { Metadata } from "next";
@@ -9,8 +10,8 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/app/programs`);
-    const programs: Array<ProgramData> = await res.json();
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/app/programs`, {next: {revalidate: 3600}});
+    const programs: Array<Program> = await res.json();
 
     const authCookie = await sessionInfo();
     let userRole: string;

@@ -8,10 +8,14 @@ export async function getProgram(req: Request, res: Response) {
     });
 
     if (program) {
-        res.writeHead(200);
+        res.writeHead(200, {
+            "content-type": "application/json"
+        });
         res.end(JSON.stringify(program));
     } else {
-        res.writeHead(404);
+        res.writeHead(404, {
+            "content-type": "text/plain"
+        });
         res.end("No program found");
     }
 }
