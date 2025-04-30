@@ -5,6 +5,7 @@ services:
     env_file: "./config/mongo.env"
     environment:
       # to be configured within Coolify
+      - SERVICE_FQDN_MONGODB
       - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
       - MONGO_INITDB_ROOT_DATABASE=${MONGO_INITDB_ROOT_DATABASE}
