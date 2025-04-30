@@ -21,7 +21,14 @@ COPY ./turbo.json ./
 COPY ./apps ./apps
 COPY ./packages ./packages
 # install dependencies
+
+## build target to install all dependencies (for `build` stage)
+FROM initialize AS all-deps
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm i --frozen-lockfile
+
+# build target to install only production dependencies (to be used later by certain non-bundled apps)
+FROM initialize AS prod-deps
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm i --frozen-lockfile --prod
 
 #####
 # Build the NextJS application as a standalone server
@@ -31,10 +38,10 @@ WORKDIR /app
 ## copy all the source code & config files
 COPY . ./
 ## copy dependencies
-COPY --from=initialize /app/node_modules ./node_modules
-COPY --from=initialize /app/apps/client/node_modules ./apps/client/node_modules
-COPY --from=initialize /app/apps/admin/node_modules ./apps/admin/node_modules
-COPY --from=initialize /app/apps/server/node_modules ./apps/server/node_modules
+COPY --from=all-deps /app/node_modules ./node_modules
+COPY --from=all-deps /app/apps/client/node_modules ./apps/client/node_modules
+COPY --from=all-deps /app/apps/admin/node_modules ./apps/admin/node_modules
+COPY --from=all-deps /app/apps/server/node_modules ./apps/server/node_modules
 # build time
 RUN pnpm run build
 
@@ -83,7 +90,7 @@ COPY --from=build /app/apps/server/dist ./apps/server/dist
 COPY --from=build /app/apps/server/templates ./apps/server/templates
 COPY --from=build /app/apps/server/node_modules ./apps/server/node_modules
 COPY --from=build /app/apps/server/package.json ./apps/server/package.json
-COPY --from=build /app/node_modules ./node_modules
+COPY --from=prod-deps /app/node_modules ./node_modules
 
 ENV PORT=5000
 EXPOSE 5000
