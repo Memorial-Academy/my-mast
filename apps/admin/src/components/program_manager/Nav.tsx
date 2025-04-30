@@ -34,7 +34,7 @@ export default function ProgramManagerNav({id, name}: {id: string, name: string}
                     link="enrollment/volunteers"
                     text="Volunteers"
                 />
-                <p><b>Attendance & Hours</b></p>
+                {/* <p><b>Attendance & Hours</b></p>
                 <NavLink
                     link="attendance/students"
                     text="Student Attendance"
@@ -42,7 +42,7 @@ export default function ProgramManagerNav({id, name}: {id: string, name: string}
                 <NavLink
                     link="attendance/volunteers"
                     text="Volunteer Attendance & Hours"
-                />
+                /> */}
             </IDContext.Provider>
             <a 
                 id="close-mobile-nav"
