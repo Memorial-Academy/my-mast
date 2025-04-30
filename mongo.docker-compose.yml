@@ -3,6 +3,13 @@ services:
   mongodb:
     image: mongo
     env_file: "./config/mongo.env"
+    environment:
+      # to be configured within Coolify
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+      - MONGO_INITDB_ROOT_DATABASE=${MONGO_INITDB_ROOT_DATABASE}
+      - MONGO_USER=${MONGO_USER}
+      - MONGO_PASSWORD=${MONGO_PASSWORD}
     ports:
       - "27017:27017"
     volumes:

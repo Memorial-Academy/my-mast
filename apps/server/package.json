@@ -5,7 +5,9 @@
   "private": true,
   "scripts": {
     "dev": "npx nodemon",
-    "check-types": "tsc --noEmit"
+    "check-types": "npx tsc --noEmit",
+    "build": "npx tsc",
+    "start": "node dist/app.js"
   },
   "repository": {
     "type": "git",
