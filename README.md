@@ -33,7 +33,7 @@ The project utilizes MongoDB as the database provider. A Docker Compose file is 
 The `config` directory provides the config files utilized to correctly configure MongoDB for MyMAST
 
 ### Required environment variables
-#### `config/mongo.env`
+#### `config/.env`
 - `MONGO_INITDB_ROOT_USERNAME`: admin username for MongoDB
 - `MONGO_INITDB_ROOT_PASSWORD`: admin password for MongoDB
 - `MONGO_INITDB_ROOT_DATABASE`: authentication database for MongoDB
@@ -42,8 +42,9 @@ The `config` directory provides the config files utilized to correctly configure
 
 #### `apps/server/.env`
 - `PORT`: API server port
-- `MONGO_USER`: see `MONGO_USER` in `config/mongo.env`
-- `MONGO_PASSWORD`:  see `MONGO_PASSWORD` in `config/mongo.env`
+- `MONGO_USER`: see `MONGO_USER` in `config/.env`
+- `MONGO_PASSWORD`:  see `MONGO_PASSWORD` in `config/.env`
+- `MONGO_URL`:  FQDN and port to connect to MongoDB
 - `MAIL_URL`: URL to connect to mail server
 - `MAIL_PORT`: port to connect to mail server
 - `MAIL_USER`: username to connect to mail server
