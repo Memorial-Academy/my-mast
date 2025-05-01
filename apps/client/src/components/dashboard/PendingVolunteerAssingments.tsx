@@ -9,9 +9,9 @@ export default function PendingVolunteerAssignmentsSection({signups}: {signups: 
                 {/* heading and section explanation */}
                 <h3>Pending Assignments</h3>
                 <p>
-                    When signing up to volunteer for MAST, program directors will review your signup first to ensure there are no problems with your signup. In programs with multiple courses and/or weeks, program directors may also assign you to specific courses and/or specific weeks.
+                    When signing up to volunteer for MAST, program directors will review your signup before confirming your assignment. In programs with multiple courses and/or weeks, program directors will assign you to specific courses and/or specific weeks.
                     <br/>
-                    We rarely cancel volunteer signups. If your signup appears here for an extended length of time, that's ok! You are still signed up to volunteer and will receive information on your signup. Email <a href="mailto:volunteer@memorialacademy.org">volunteer@memorialacademy.org</a> if you have any concerns, or your signup still displays here less than one week before the program begins.
+                    If your signup appears here for an extended length of time, that's ok! You are still signed up to volunteer and will receive information on your signup. Email <a href="mailto:volunteer@memorialacademy.org">volunteer@memorialacademy.org</a> if you have any concerns, or if your signup still displays here less than one week before the program begins.
                 </p>
 
                 {/* loop through all assignments and generate cards for each */}

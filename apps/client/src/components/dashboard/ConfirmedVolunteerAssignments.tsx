@@ -10,7 +10,7 @@ export default function ConfirmedVolunteerAssignmentsSection({signups}: {signups
                 {/* heading and section explanation */}
                 <h3>Confirmed Assignments</h3>
                 <p>
-                    Signups in this section have been reviewed and approved by the program director and are ready for you to show up for! If the program you signed up for has multiple courses, your signup will display which courses you've been assigned to and for which week(s) (if applicable).
+                    Signups in this section have been reviewed and finalized by the program director and are ready for you to show up for! If the program you signed up for has multiple courses, your signup will display which courses you've been assigned to and for which week(s) (if applicable).
                     <br/>
                     Any questions about a confirmed signup? Try contacting the program director listed for your program directly. Otherwise, we're always here to help at <a href="mailto:volunteer@memorialacademy.org">volunteer@memorialacademy.org</a>.
                     <br/>

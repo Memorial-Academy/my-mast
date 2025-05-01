@@ -11,7 +11,7 @@ export default async function ParentDashboard(props: ParentDashboardProps) {
 
     return (
         <>
-            <p>Your MyMAST dashboard allows you to see everything related to your student's enrollments. Missed an email? Need to change enrollment information? All the information you need is right here!</p>
+            <p>Your MyMAST dashboard allows you to see everything related to your student's enrollments. Missed an email? Got a question? All the information you need is right here!</p>
             <h2>Your Students</h2>
             {students.map(student => {
                 return (

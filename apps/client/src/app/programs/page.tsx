@@ -36,7 +36,7 @@ export default async function Page() {
     return (
         <>
             <h2>Programs</h2>
-            {programs.map(program => {
+            {programs.length > 0 ? programs.map(program => {
                 return <Card header={program.name} key={program.id}>
                     <div className="tri-fold">
                         <img src={`/img/${program.program_type}_vertical_dark.png`} alt={`${program.name} logo`} />
@@ -79,7 +79,7 @@ export default async function Page() {
                         </>}
                     </div>
                 </Card>
-            })}
+            }) : <p>There are no programs available to signup for currently. Check back later for the latest opportunities!</p>}
         </>
     );
 }
