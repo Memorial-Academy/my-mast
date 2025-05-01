@@ -16,4 +16,6 @@ RUN echo "MONGO_INITDB_ROOT_USERNAME=$MONGO_INITDB_ROOT_USERNAME" >> .env && \
     echo "MONGO_USER=$MONGO_USER" >> .env && \
     echo "MONGO_PASSWORD=$MONGO_PASSWORD" >> .env
 
+ENTRYPOINT [ "bash", "/usr/local/bin/docker-entrypoint.sh" ]
 EXPOSE 27017
+CMD ["mongod"]
