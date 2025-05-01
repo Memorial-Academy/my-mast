@@ -3,6 +3,7 @@ FROM node:22-alpine AS base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 ENV HOSTNAME="0.0.0.0"
+ENV NODE_ENV=production
 RUN apk update && apk add --no-cache libc6-compat && corepack enable pnpm
 
 #####
@@ -55,7 +56,6 @@ RUN pnpm run build
 # TARGET: `deploy-client`
 #####
 FROM base AS deploy-client
-ENV NODE_ENV=production
 COPY --from=build /app/apps/client/.next/standalone/apps/client ./apps/client
 COPY --from=build /app/apps/client/.next/static ./apps/client/.next/static
 COPY --from=build /app/apps/client/public ./apps/client/public
@@ -71,7 +71,6 @@ CMD ["node", "./apps/client/server.js"]
 # TARGET: `deploy-admin`
 #####
 FROM base AS deploy-admin
-ENV NODE_ENV=production
 COPY --from=build /app/apps/admin/.next/standalone/apps/admin ./apps/admin
 COPY --from=build /app/apps/admin/.next/static ./apps/admin/.next/static
 COPY --from=build /app/apps/admin/public ./apps/admin/public
@@ -88,7 +87,6 @@ CMD ["node", "./apps/admin/server.js"]
 #####
 FROM base AS deploy-server
 WORKDIR /app
-ENV NODE_ENV=production
 COPY --from=build /app/apps/server/dist ./apps/server/dist
 COPY --from=build /app/apps/server/templates ./apps/server/templates
 COPY --from=build /app/apps/server/node_modules ./apps/server/node_modules

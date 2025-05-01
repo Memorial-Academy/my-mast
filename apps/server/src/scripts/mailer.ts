@@ -6,7 +6,7 @@ const transporter = Nodemailer.createTransport({
     pool: true,
     host: process.env.MAIL_URL,
     port: parseInt(process.env.MAIL_PORT!),
-    secure: false,
+    secure: process.env.NODE_ENV === "production" ? true : false,
     auth: {
         user: process.env.MAIL_USER,
         pass: process.env.MAIL_PASSWORD
@@ -26,7 +26,8 @@ export function sendMail(
         from: "Memorial Academy of Science and Technology <notifications@memorialacademy.org>",
         to: to,
         subject: subject,
-        html: content
+        html: content,
+        text: content.replace(/<.*?>/gm, "")
     })
 }
 
