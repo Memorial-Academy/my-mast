@@ -42,6 +42,9 @@ COPY --from=all-deps /app/node_modules ./node_modules
 COPY --from=all-deps /app/apps/client/node_modules ./apps/client/node_modules
 COPY --from=all-deps /app/apps/admin/node_modules ./apps/admin/node_modules
 COPY --from=all-deps /app/apps/server/node_modules ./apps/server/node_modules
+COPY --from=all-deps /app/packages/api/node_modules ./packages/api/node_modules
+COPY --from=all-deps /app/packages/ui/node_modules ./packages/ui/node_modules
+COPY --from=all-deps /app/packages/utils/node_modules ./packages/utils/node_modules
 # build time
 RUN pnpm run build
 
