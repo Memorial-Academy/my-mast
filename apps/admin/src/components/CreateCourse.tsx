@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import { IncreaseableInputSection, LabelledDropdown, LabelledInput, MultipleChoice } from "@mymast/ui";
 
 export default function CreateCourse({schedule}: {schedule: Schedule[][]}) {
@@ -25,13 +25,13 @@ function CourseCard({count, scheduleWeeks}: {count: number, scheduleWeeks: Sched
     const [duration, setDuration] = useState(1); 
 
     // Determine the options available for the course's duration
-    let durationOpts = [];
+    let durationOpts: (string | number)[][] = [];
     for (var i = 1; i <= scheduleWeeks.length; i++) {
         durationOpts.push([i, `${i} Week${i > 1 ? "s" : ""}`])
     }
 
     // Determine options for enrollment available
-    let enrollmentAvailable = [];
+    let enrollmentAvailable: string[][] = [];
     for (var i = 1; i < scheduleWeeks.length + 2 - duration; i++) {
         enrollmentAvailable.push([i.toString(), `Week ${i}`]);
     }
@@ -45,7 +45,7 @@ function CourseCard({count, scheduleWeeks}: {count: number, scheduleWeeks: Sched
                 type="text"
                 placeholder="Name"
                 name={`course${count}_name`}
-                onChange={(e) => {
+                onChange={(e: ChangeEvent<HTMLInputElement>) => {
                     setTitle(e.target.value);
                 }}
             />
@@ -55,7 +55,7 @@ function CourseCard({count, scheduleWeeks}: {count: number, scheduleWeeks: Sched
                     name={`course${count}_duration`}
                     values={durationOpts}
                     required
-                    onChange={e => {
+                    onChange={(e: ChangeEvent<HTMLSelectElement>) => {
                         setDuration(parseInt(e.target.value));
                     }}
                 />

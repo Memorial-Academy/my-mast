@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "npx nodemon",
-    "check-types": "npx tsc --noEmit",
+    "lint": "npx tsc --noEmit",
     "build": "npx tsc",
     "start": "node dist/app.js"
   },
@@ -27,7 +27,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^4.21.2",
-    "mongoose": "^8.13.2",
+    "mongoose": "^8.14.1",
     "multer": "1.4.5-lts.1",
     "nodemailer": "^6.10.1",
     "pug": "^3.0.3"
@@ -39,10 +39,10 @@
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
     "@types/multer": "^1.4.12",
-    "@types/node": "^20.17.30",
+    "@types/node": "^20.17.32",
     "@types/nodemailer": "^6.4.17",
     "@types/pug": "^2.0.10",
-    "nodemon": "^3.1.9",
+    "nodemon": "^3.1.10",
     "typescript": "^5.8.3"
   }
 }

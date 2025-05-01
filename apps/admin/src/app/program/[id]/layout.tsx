@@ -22,7 +22,7 @@ export default async function Layout({params, children}: {params: Params, childr
     let data;
     try {
         data = await API.Application.getProgram((await params).id);
-    } catch(e) {
+    } catch(e: any) {
         console.log("Invalid ID!")
         redirect("/404")
     }

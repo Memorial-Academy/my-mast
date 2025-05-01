@@ -7,6 +7,10 @@
         },
         "build": {
             "outputs": ["./next/**", "!.next/cache/**", "dist/**"]
+        },
+        "lint": {
+            "cache": false,
+            "persistent": false
         }
     }
 }
