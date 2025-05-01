@@ -15,7 +15,23 @@ app.use(upload.none());
 app.use(BodyParser.text());
 app.use(BodyParser.json());
 
-app.use(cors());
+if (process.env.NODE_ENV === "production") {
+    let whitelist = [
+        "my.memorialacademy.org",
+        "admin.memorialacademy.org"
+    ]
+    app.use(cors({
+        origin: (origin, callback) => {
+            if (!origin || whitelist.indexOf(origin) !== -1) {
+                callback(null, true)
+            } else {
+                callback(new Error(`"${origin}" is blocked.`))
+            }
+        }
+    }))
+} else {
+    app.use(cors());
+}
 
 // Routing
 import AuthRouter from "./routes/auth.routes";
