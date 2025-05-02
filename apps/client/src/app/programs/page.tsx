@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/app/programs`, {next: {revalidate: 3600}});
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/app/programs`);
     const programs: Array<Program> = await res.json();
 
     const authCookie = await sessionInfo();

@@ -5,7 +5,7 @@ import { generateEnrollmentID } from "../controllers/user.controller";
 
 export default async function adminProgramSignup(uuid: string, programID: string) {
     let program = (await Program.findOne({id: programID}))!;
-    let user = (await VolunteerUser.findOne({id: uuid}))!;
+    let user = (await VolunteerUser.findOne({uuid: uuid}))!;
 
     let courses = program.courses.map((course, index) => {
         return course.id;

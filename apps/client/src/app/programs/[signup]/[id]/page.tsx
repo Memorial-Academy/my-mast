@@ -3,6 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import ProgramInfo from "@/components/program_signup/ProgramInfo";
 import authorizeSession from "@mymast/utils/authorize_session";
 import API from "@/app/lib/APIHandler";
+import { revalidatePath } from "next/cache";
 
 type Params = Promise<{
     signup: string,
@@ -19,16 +20,22 @@ export async function generateMetadata({params, searchParams}: GenerateMetadataP
     const signupType = (await params).signup;
     const data = await (await fetch(`${process.env.NEXT_PUBLIC_API_URL}/app/program/${id}`)).json();
 
-
     return {
         title: `${signupType == "volunteer" ? "Volunteer for " : "Enroll in "} ${data.name} | Memorial Academy of Science and Technology`,
         description: `${signupType == "volunteer" ? "Volunteer for " : "Enroll in "} ${data.name} at the Memorial Academy of Science and Technology`
     }
 }
 
-export default async function Page({params}: {params: Params}) {
+export default async function Page({params, searchParams}: GenerateMetadataProps) {
     const id = (await params).id;
     const signupType = (await params).signup;
+    console.log(await searchParams);
+
+    // revalidate cache if the URL contains the "?revalidate" parameter
+    if (Object.keys(await searchParams).indexOf("revalidate") != -1) {
+        revalidatePath("/programs");
+    }
+
     let students: {
         name: {
             first: string,

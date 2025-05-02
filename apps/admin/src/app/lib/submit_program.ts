@@ -18,7 +18,7 @@ export default async function SubmitNewProgram(programData: ProgramDataSubmitted
     })
 
     if (res.status == 200) {
-        redirect(`${process.env.NEXT_PUBLIC_MYMAST_URL}/programs/enroll/${await res.text()}`);
+        redirect(`${process.env.NEXT_PUBLIC_MYMAST_URL}/programs/volunteer/${await res.text()}?revalidate`);
     } else {
         return res.statusText;
     }
