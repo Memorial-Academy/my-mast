@@ -17,15 +17,15 @@ app.use(BodyParser.json());
 
 if (process.env.NODE_ENV === "production") {
     let whitelist = [
-        "my.memorialacademy.org",
-        "admin.memorialacademy.org"
+        "https://my.memorialacademy.org",
+        "https://admin.memorialacademy.org"
     ]
     app.use(cors({
         origin: (origin, callback) => {
             if (!origin || whitelist.indexOf(origin) !== -1) {
                 callback(null, true)
             } else {
-                callback(new Error(`"${origin}" is blocked.`))
+                callback(new Error(`"${origin}" is blocked by CORS.`))
             }
         }
     }))
