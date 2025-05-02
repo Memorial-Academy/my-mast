@@ -28,6 +28,8 @@ export async function profileInfo(req: Request, res: Response) {
                     "email": 1,
                     "phone": 1,
                     "birthday": 1,
+                    "school": 1,
+                    "skills": 1,
                     "_id": 0
                 }))
             );
@@ -516,6 +518,7 @@ export async function updateProfile(req: Request, res: Response) {
         }
 
         user.school = req.body.school || user.school;
+        user.skills = req.body.skills || user.skills;
     } else {
         res.writeHead(404, {
             "Content-Type": "text/plain"

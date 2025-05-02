@@ -81,6 +81,13 @@ function VolunteerSpecificSettings({profile}: {profile: UserTypes.Volunteer}) {
                 type="text"
                 placeholder={profile.school}
             />
+            <LabelledInput
+                question="Notes, additional info, etc."
+                defaultValue={profile.skills}
+                name="skills"
+                type="text"
+                placeholder={profile.skills}
+            />
         </>
     )
 }
