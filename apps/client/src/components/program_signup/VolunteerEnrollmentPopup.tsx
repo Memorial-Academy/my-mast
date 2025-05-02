@@ -149,10 +149,10 @@ export default function VolunteerEnrollmentPopup(props: VolunteerEnrollmentPopup
                         }}
                     >
                         <LabelledInput
-                            question="List any of your skills, qualifications, experiences, etc. that you want us to know about! (Don't write an essay, just write a list)"
+                            question="List any of your skills, qualifications, experiences, etc. that you want us to know about (don't write an essay, just write a list)! Make sure to list any conflicts here as well!"
                             name="skills"
                             type="text"
-                            placeholder="Brag about yourself here (optional)"
+                            placeholder="Brag about yourself, list any scheduling conflicts, etc. (optional)"
                             required={enrollment.instructor}
                         />
 

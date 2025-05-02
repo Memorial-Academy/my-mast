@@ -81,7 +81,8 @@ export default function SignupForm() {
                 
                 {(userRole != "") && <>
                     <input type="checkbox" name="agreement" id="agreement" required value="agree" />
-                    <label htmlFor="agreement">I agree to the Privacy Policy and Terms of Service for the Memorial Academy of Science and Technology</label>
+                    <label htmlFor="agreement">I agree to the <a href="https://memorialacademy.org/legal/privacy" target="_blank">Privacy Policy</a> for the Memorial Academy of Science and Technology.</label>
+                    <p>Please note you may have to agree to additional items (liabilities waivers, media release, etc.) when signing up for a program.</p>
                     <p id="form-message">{formMessage}</p>
                     <LoginButton text="Create Account" />
                 </>}
