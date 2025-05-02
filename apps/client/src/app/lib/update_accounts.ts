@@ -16,7 +16,8 @@ export async function updateProfileFormHandler(data: FormData, auth: Session, ro
             },
             getFormData(data, "email"),
             getFormData(data, "phone"),
-            getFormData(data, "school")
+            getFormData(data, "school"),
+            getFormData(data, "skills")
         )
     } else if (role == "parent") {
         return await API.User.updateParentProfile(

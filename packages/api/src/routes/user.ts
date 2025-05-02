@@ -156,7 +156,8 @@ export default class User {
         name: FullName,
         email: string,
         phone: string,
-        school: string
+        school: string,
+        skills: string
     ): Promise<void> {
         return await Fetch.POST.json(this.url, "volunteer/update/profile", {
             uuid,
@@ -164,7 +165,8 @@ export default class User {
             name,
             email,
             phone,
-            school
+            school,
+            skills
         })
     }
 
