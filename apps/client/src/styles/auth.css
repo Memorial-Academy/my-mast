@@ -30,7 +30,7 @@ form#signup {
 
 #auth h2 {
     font-size: 1.2rem;
-    font-weight: normal;
+    font-weight: bold;
 }
 
 .signup-role-tracker {

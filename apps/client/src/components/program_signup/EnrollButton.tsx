@@ -49,8 +49,8 @@ export default function EnrollButton(props: EnrollButtonProps) {
 
     function signupHandler() {
         if (!props.uuid) {
-            alert(`You need an account in order to ${props.signupType == "volunteer" ? "volunteer for" : "enroll in"} a program! Click \"OK\" to go to the login/create account page!`);
-            router.push("/");
+            alert(`You need an account in order to ${props.signupType == "volunteer" ? "volunteer for" : "enroll in"} a program! Click \"OK\" to go to the login/create account page!\nOnce you're done, you'll be bought back to this page!`);
+            router.push(`/?program_redirect=${props.program.id}`);
         } else {
             setPopupActive(true);
         }

@@ -9,7 +9,7 @@ function POSTData(data: FormData, endpoint: string) {
     })
 }
 
-export default async function authenticate(data: FormData, endpoint: string) {
+export default async function authenticate(data: FormData, endpoint: string, programRedirect?: string) {
     const cookieStore = cookies();
     const serverRes = await POSTData(data, endpoint);
 
@@ -34,6 +34,11 @@ export default async function authenticate(data: FormData, endpoint: string) {
             sameSite: "strict",
             domain: process.env.NODE_ENV === "production" ? ".memorialacademy.org" : "localhost"
         })
-        redirect("/dashboard");
+
+        if (programRedirect) {
+            redirect(`/programs/enroll/${programRedirect}`);
+        } else {
+            redirect("/dashboard");
+        }
     }
 }

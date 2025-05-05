@@ -4,12 +4,12 @@ import { LabelledInput } from "@mymast/ui";
 import LoginButton from "@/components/auth/LoginButton";
 import { useState } from "react";
 
-export default function Home() {
+export default function LoginFom({programRedirect}: {programRedirect?: string}) {
     const [formMessage, setFormMessage] = useState("");
 
     async function formSubmissionHandler(data: FormData) {
         setFormMessage(""); // blank message on every login attempt
-        const status = await Authenticate(data, "/auth/login");
+        const status = await Authenticate(data, "/auth/login", programRedirect);
         
         if (status) {
             // setFormMessage("Could not login. Make sure the email and password are correct.");
@@ -38,7 +38,7 @@ export default function Home() {
                 <LoginButton text="Login" />
                 <p id="password_reset"><a href="/forgot_password">Reset password</a></p>
                 <p>
-                    Don't have an account? <a href="/signup">Create one today</a> to enroll in and volunteer for MAST programs!
+                    Don't have an account? <a href={programRedirect ? `/signup?program_redirect=${programRedirect}` : "/signup"}>Create one today</a> to enroll in and volunteer for MAST programs!
                 </p>
                 <p>
                     MyMAST is a central dashboard to manage everything related to your participation in MAST programs.

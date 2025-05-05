@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: "Login | MyMAST",
 };
 
-export default function Home() {
+export default async function Home({searchParams}: {searchParams: {program_redirect: string} | undefined}) {
   if (cookies().has("id")) {
     redirect("/dashboard");
   }
@@ -19,7 +19,7 @@ export default function Home() {
         <img alt="MAST seal" src="/seal.svg" />
         <h1>Welcome to MyMAST</h1>
         <p>Login to continue</p>
-        <LoginForm />
+        <LoginForm programRedirect={searchParams?.program_redirect} />
       </div>
     </>
   );

@@ -8,12 +8,12 @@ import Authenticate from "@/app/lib/auth";
 import ParentSignupPage from "./ParentSignup";
 import VolunteerSignupPage from "./VolunteerSignup";
 
-export default function SignupForm() {
+export default function SignupForm({programRedirect}: {programRedirect? :string}) {
     const [userRole, setUserRole] = useState("");
     const [formMessage, setFormMessage] = useState("");
 
     async function formSubmissionHandler(data: FormData) {
-        const status = await Authenticate(data, "/auth/signup");
+        const status = await Authenticate(data, "/auth/signup", programRedirect);
         
         if (status) {
             // setFormMessage("Could not create account");
