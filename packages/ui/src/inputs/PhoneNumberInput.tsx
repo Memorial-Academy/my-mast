@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { ChangeEvent } from "react";
 import { useState } from "react";
 
 type PhoneNumberInputProps = {
@@ -9,7 +9,7 @@ type PhoneNumberInputProps = {
     defaultValue?: string
 }
 
-export default function PhoneNumberInput(props: PhoneNumberInputProps) {
+/*function PhoneNumberInput_OLD(props: PhoneNumberInputProps) {
     const matcher = new RegExp(/[0-9]/);
     const [value, setValue] = useState(props.defaultValue || "");
     const [nums, setNums] = useState(props.defaultValue?.replace(/\(|\)|\s|-/g, "").split("") || new Array<string>);
@@ -38,6 +38,63 @@ export default function PhoneNumberInput(props: PhoneNumberInputProps) {
             value={value}
             onKeyDown={e => update(e.key)}
             onChange={e => {e.preventDefault()}}
+        />
+    )
+}*/
+
+export default function PhoneNumberInput(props: PhoneNumberInputProps) {
+    const matcher = new RegExp(/[0-9]/);
+    const specialSymbols = new RegExp(/\(|\)|\s|-/gm);
+    const [value, setValue] = useState(props.defaultValue || "");
+
+    function update(e: ChangeEvent<HTMLInputElement>) {
+        let values = e.target.value.replace(specialSymbols, "").split("");
+        let str = "";
+        let cursorPosition = e.target.selectionStart || 1;
+        console.log(cursorPosition)
+
+        console.log(values);
+        if (values.length > 10) {
+            e.preventDefault();
+            return;
+        }
+
+        for (var i = 0; i < 10; i++) {
+            if (!values[i]) break;
+            if (!matcher.test(values[i])) {
+                console.log("nonmatch")
+                e.preventDefault();
+                return;
+            }
+
+            if (i == 0) {
+                str += "(";
+            } else if (i == 3) {
+                str += ") ";
+            } else if (i == 6) {
+                str += "-";
+            }
+            
+            str += values[i];
+        }
+
+        console.log(str)
+        setValue(str);
+        e.target.setSelectionRange(cursorPosition, cursorPosition);
+    }
+
+    return (
+        <input 
+            type="text"
+            name={props.name}
+            id={props.id}
+            required={props.required}
+            className="labelled-input"
+            placeholder="Phone number"
+
+            value={value}
+            // onKeyDown={e => update(e.key)}
+            onChange={update}
         />
     )
 }
