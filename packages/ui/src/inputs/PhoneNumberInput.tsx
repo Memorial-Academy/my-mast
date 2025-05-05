@@ -93,7 +93,6 @@ export default function PhoneNumberInput(props: PhoneNumberInputProps) {
             placeholder="Phone number"
 
             value={value}
-            // onKeyDown={e => update(e.key)}
             onChange={update}
         />
     )

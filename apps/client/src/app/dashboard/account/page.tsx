@@ -11,9 +11,13 @@ export const metadata: Metadata = {
 
 export default async function Page() {
     let session = (await sessionInfo())!;
-    // let role: UserTypesString = await API.Auth.getRole(session.uuid, session.token);
     let role: UserTypesString = headers().get("X-UserRole") as UserTypesString;
     let profile = await API.User.profile(role, session.uuid, session.token);
+
+    let students;
+    if (role == "parent") {
+        students = await API.User.parentGetStudents(session.uuid, session.token);
+    }
 
     return (
         <>
@@ -25,7 +29,7 @@ export default async function Page() {
                 profile={profile}
             />
             
-            {role == "parent" && <ManageStudents session={session} />}
+            {role == "parent" && <ManageStudents session={session} students={students!} />}
         </>
     )
 }

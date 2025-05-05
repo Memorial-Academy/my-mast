@@ -92,7 +92,7 @@ function VolunteerSpecificSettings({profile}: {profile: UserTypes.Volunteer}) {
     )
 }
 
-async function ParentSpecificSettings({profile}: {profile: UserTypes.Parent}) {
+function ParentSpecificSettings({profile}: {profile: UserTypes.Parent}) {
     return (
         <>
             <h3>Emergency Contact</h3>
@@ -130,13 +130,11 @@ async function ParentSpecificSettings({profile}: {profile: UserTypes.Parent}) {
 }
 
 type ManageStudentProfilesProps = {
-    // profile: UserTypes.Parent,
-    session: Session
+    session: Session,
+    students: UserTypes.Student[]
 }
 
-export async function ManageStudents({session}: ManageStudentProfilesProps) {
-    let students = await API.User.parentGetStudents(session.uuid, session.token);
-
+export function ManageStudents({session, students}: ManageStudentProfilesProps) {
     return (
         <>
             <h3>Your Students</h3>
