@@ -5,7 +5,8 @@ export default function getTimestamp(time: number) {
 
     if (time >= 12) {
         period = "P.M";
-        str[0] = (parseInt(str[0]) - 12).toString();
+        let num = parseInt(str[0]);
+        str[0] = (num > 12 ? num - 12 : num).toString();
     } else {
         period = "A.M";
     }
