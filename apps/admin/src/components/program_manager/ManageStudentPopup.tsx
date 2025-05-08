@@ -49,11 +49,13 @@ export default function ManageStudentPopup(props: ManageStudentPopupProps) {
                 <h2>Student: {props.name.first} {props.name.last}</h2>
                 <div className="bi-fold">
                     <ParentInfoDisplay
+                        contactType="Parent"
                         name={props.parentName}
                         email={props.parentContact.email}
                         phone={props.parentContact.phone}
                     />
                     <ParentInfoDisplay
+                        contactType="Emergenct Contact"
                         name={props.emergencyContact.name}
                         email={props.emergencyContact.email}
                         phone={props.emergencyContact.phone}
@@ -83,10 +85,10 @@ export default function ManageStudentPopup(props: ManageStudentPopupProps) {
     )
 }
 
-function ParentInfoDisplay({name, phone, email}: {name: FullName, phone: string, email: string}) {
+function ParentInfoDisplay({name, phone, email, contactType}: {name: FullName, phone: string, email: string, contactType: string}) {
     return (
         <p>
-            <b>Parent: {name.first} {name.last}</b>
+            <b>{contactType}: {name.first} {name.last}</b>
             <br/>
             Email: <a href={`mailto:${email}`}>{email}</a>
             <br/>
