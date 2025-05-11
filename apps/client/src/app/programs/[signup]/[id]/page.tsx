@@ -29,7 +29,6 @@ export async function generateMetadata({params, searchParams}: GenerateMetadataP
 export default async function Page({params, searchParams}: GenerateMetadataProps) {
     const id = (await params).id;
     const signupType = (await params).signup;
-    console.log(await searchParams);
 
     // revalidate cache if the URL contains the "?revalidate" parameter
     if (Object.keys(await searchParams).indexOf("revalidate") != -1) {

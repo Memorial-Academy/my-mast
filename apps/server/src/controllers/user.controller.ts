@@ -103,7 +103,8 @@ export async function newEnrollment(req: Request, res: Response) {  // for stude
         }
     }
     
-    if (req.params.role == "parent") {  // Create new enrollments for students (via a parent account)
+    if (req.params.role == "parent") {  
+        // Create new enrollments for students (via a parent account)
         let parent = await ParentUser.findOne({uuid: req.body.uuid});
         
         for (var enrollment of enrollmentData) {
@@ -173,7 +174,8 @@ export async function newEnrollment(req: Request, res: Response) {  // for stude
                 resolve();
             })
         }
-    } else if (req.params.role == "volunteer") { // Create new enrollment for volunteers
+    } else if (req.params.role == "volunteer") { 
+        // Create new enrollment for volunteers
         let volunteer = await VolunteerUser.findOne({uuid: req.body.uuid});
         let enrollmentID = generateEnrollmentID(req.body.uuid);
 
@@ -206,10 +208,8 @@ export async function newEnrollment(req: Request, res: Response) {  // for stude
             let coursesStr = "";
             let weeksStr = enrollmentData.weeks.length > 1 ? "weeks " : "week ";
 
-            console.log(enrollmentData)
             if (enrollmentData.courses.length > 1) {
                 for (var i = 0; i < enrollmentData.courses.length; i++) {
-                    console.log(enrollmentData.courses[i])
                     if (enrollmentData.courses.length - 1 == i) {
                         coursesStr += `and ${program.courses[enrollmentData.courses[i]].name}`;
                     } else if (enrollmentData.courses.length - 2 == i) {
@@ -441,7 +441,7 @@ export async function checkConflicts(req: Request, res: Response) {
                 ]
             });
 
-            // if no document are found then there is no possibility of conflicts
+            // if no document(s) are found then there is no possibility of conflicts
             if (enrolledPrograms.length === 0) {
                 res.writeHead(200, {
                     "content-type": "application/json"
@@ -474,7 +474,52 @@ export async function checkConflicts(req: Request, res: Response) {
             }
         }
     } else if (req.params.role == "volunteer") {
+        let signupWeeks = (req.body.weeks as number[]).sort();
+        console.log(signupWeeks);
 
+        // build the query schedule
+        let querySchedule = new Array();
+        for (var week of signupWeeks) {
+            querySchedule = querySchedule.concat(schedule[week - 1]);
+        }
+
+        // find all programs the user is enrolled in that have a matching schedule
+        let enrolledPrograms = await Program.find({
+            $and: [
+                { "enrollments.volunteers": { $regex: new RegExp(req.body.uuid) } },
+                { schedule: {$elemMatch: {$elemMatch: {$or: querySchedule} }}}
+            ]
+        })
+
+        // if no document(s) are found then there is no possibility of conflicts
+        if (enrolledPrograms.length === 0) {
+            res.writeHead(200, {
+                "content-type": "application/json"
+            });
+            res.end(JSON.stringify({
+                conflicts: false
+            }));
+            return;
+        }
+
+        // otherwise check to see if there are any enrollments that match the specific week(s) of the requested enrollment
+        for (var enrolledProgram of enrolledPrograms) {
+            let volunteer = await VolunteerUser.findOne({ $and: [
+                { uuid: req.body.uuid },
+                { assignments: [
+
+                ]}
+            ]})
+            if (volunteer) {
+                res.writeHead(200, {
+                    "content-type": "application/json"
+                })
+                res.end(JSON.stringify({
+                    conflicts: true
+                }));
+                return;
+            }
+        }
     } else {
         res.type("text/plain");
         res.writeHead(403);

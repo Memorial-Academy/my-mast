@@ -132,6 +132,20 @@ export default class User {
         })
     }
 
+    async checkVolunteerConflicts(
+        uuid: string,
+        token: string,
+        program: string,
+        weeks: number[]
+    ): Promise<{ conflicts: boolean }> {
+        return await Fetch.POST.json(this.url, "volunteer/conflicts", {
+            uuid,
+            token,
+            program,
+            weeks
+        })
+    }
+
     async updateParentProfile(
         uuid: string,
         token: string,

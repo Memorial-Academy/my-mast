@@ -1,4 +1,5 @@
 "use server";
+import { Session, WeeklySchedule } from "@mymast/api/Types";
 import API from "./APIHandler";
 import sessionInfo from "@mymast/utils/authorize_session";
 
@@ -71,7 +72,8 @@ export async function submitStudentEnrollment(data: Array<StudentEnrollmentInfor
 
 // Handlers for a volunteer signing up
 // initial verification of enrollment information
-export async function volunteerSignup(data: FormData) {
+export async function volunteerSignup(data: FormData, program_id: string) {
+    const auth = (await sessionInfo())!;
     let courseInterest = data.getAll("course_interest").map(val => {
         return parseInt(val.toString());
     })
@@ -80,11 +82,23 @@ export async function volunteerSignup(data: FormData) {
         return parseInt(val.toString());
     })
     
-    return {
-        weeks: weeks || [0],
-        courses: courseInterest || [0],
-        instructor: data.get("instructor")!.toString() == "yes" ? true : false
-    }
+    let {conflicts} = await API.User.checkVolunteerConflicts(
+        auth.uuid,
+        auth.token,
+        program_id,
+        weeks
+    );
+    console.log(conflicts);
+    
+    if (!conflicts) {
+        return {
+            weeks: weeks.length == 0 ? [1] : weeks,
+            courses: courseInterest.length == 0 ? [0] : courseInterest,
+            instructor: data.get("instructor")?.toString() == "yes" ? true : false
+        }
+    } else {
+        return false;
+    } 
 }
 
 // submit volunteer signup

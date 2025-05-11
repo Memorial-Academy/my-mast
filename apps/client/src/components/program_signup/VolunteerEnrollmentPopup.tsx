@@ -5,6 +5,7 @@ import { submitVolunteerSignup, volunteerSignup } from "@/app/lib/enrollment_han
 import { calculateHoursFromWeek } from "@/app/lib/calculate_hours";
 import Link from "next/link";
 import { Program } from "@mymast/api/Types";
+import API from "@/app/lib/APIHandler";
 
 type VolunteerEnrollmentPopupProps = {
     program: Program,
@@ -13,7 +14,7 @@ type VolunteerEnrollmentPopupProps = {
 
 export default function VolunteerEnrollmentPopup(props: VolunteerEnrollmentPopupProps) {
     const [confirmation, setConfirmation] = useState("");
-    const [page, setPage] = useState((props.program.courses.length == 1 && props.program.schedule.length == 1) ? 2 : 1);
+    const [page, setPage] = useState(1);
     const [enrollment, setEnrollment] = useState<{
         weeks: Array<number>,
         courses: Array<number>,
@@ -43,8 +44,14 @@ export default function VolunteerEnrollmentPopup(props: VolunteerEnrollmentPopup
             {/* PAGE 1: initial course, week, and instructor preference selection */}
             <form
                 action={async data => {
-                    setPage(2);
-                    setEnrollment(await volunteerSignup(data));
+                    let signupVerification = await volunteerSignup(data, props.program.id);
+                    console.log(signupVerification);
+                    if (signupVerification) {
+                        setEnrollment(signupVerification)
+                        setPage(2);
+                    } else {
+                        setPage(4);
+                    }
                 }}
                 style={{
                     display: `${page == 1 ? "block" : "none"}`
@@ -84,7 +91,7 @@ export default function VolunteerEnrollmentPopup(props: VolunteerEnrollmentPopup
                     </p>
                 </>}
 
-                {props.program.schedule.length > 1 &&
+                {/* {props.program.schedule.length > 1 && */}
                     <MultipleChoice
                         question="Which week(s) are you planning to volunteer for? (select all that apply)"
                         name="weeks"
@@ -96,7 +103,7 @@ export default function VolunteerEnrollmentPopup(props: VolunteerEnrollmentPopup
                         }
                         required
                     />
-                }
+                {/* } */}
                 <input type="submit" value="Next" />
             </form>
             {/* PAGE 2: signup confirmation, volunteer agreement, notes */}
@@ -168,16 +175,15 @@ export default function VolunteerEnrollmentPopup(props: VolunteerEnrollmentPopup
                             Then, you can complete your signup!
                         </p>
 
-                        {props.program.courses.length > 1 && props.program.schedule.length > 1 && 
-                            <input type="button" value="Back" onClick={() => {
-                                setPage(1);
-                            }} />
-                        }
+                        <input type="button" value="Back" onClick={() => {
+                            setPage(1);
+                        }} />
                         <input type="submit" value="Submit" />
                     </form>
                     <p>{confirmation}</p>
                 </>
             }
+            {/* PAGE 3: confirmation page */}
             {page == 3 && <>
                 <h3>All done!</h3>
                 <p>Thanks for volunteering! We are thankful for your help and look forward to having you join us!</p>
@@ -185,6 +191,14 @@ export default function VolunteerEnrollmentPopup(props: VolunteerEnrollmentPopup
                     Make sure to frequently check your <Link href="/dashboard">MyMAST dashboard</Link> to see more information about your signup. Additionally, any information related to your signup will be emailed to you. 
                     Please note that sometimes our emails get mark as spammed, or get blocked by certain email providers. Regardless, your MyMAST dashboard will display all the necessary information about your enrollment!
                 </p>
+            </>}
+            {/* PAGE 4: conflict detected */}
+            {page == 4 && <>
+                <h3>Whoops! We detected a problem!</h3>
+                <p>It looks like you're already volunteering for a program at some point during this program's duration. If possible, try selecting a different date range, or go to your <Link href="/dashboard">MyMAST dashboard</Link> to see your current volunteering commitments.</p>
+                <input type="button" value="Back" onClick={() => {
+                    setPage(1);
+                }} />
             </>}
         </>
     )
