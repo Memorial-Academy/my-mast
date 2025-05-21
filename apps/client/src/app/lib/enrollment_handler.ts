@@ -88,7 +88,6 @@ export async function volunteerSignup(data: FormData, program_id: string) {
         program_id,
         weeks
     );
-    console.log(conflicts);
     
     if (!conflicts) {
         return {

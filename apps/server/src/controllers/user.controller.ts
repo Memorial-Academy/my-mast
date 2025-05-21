@@ -409,6 +409,7 @@ export async function checkConflicts(req: Request, res: Response) {
         return;
     }
 
+    // schedule from DB record in a conventional JSON array form
     let schedule = program.schedule.map(week => {
         let weekArr = Array.from(Object.values(week.toObject()));
         weekArr = weekArr.map((day: any) => {
@@ -422,6 +423,7 @@ export async function checkConflicts(req: Request, res: Response) {
     });
 
     if (req.params.role == "parent") {
+        // CONFLICTS FOR STUDENTS (enrolled via parent account)
         for (var enrollment of req.body.enrollments) {
             // calculate start and end weeks for the requested enrolled and determine what dates to query the database with
             let startWeek = enrollment.week - 1;
@@ -474,8 +476,8 @@ export async function checkConflicts(req: Request, res: Response) {
             }
         }
     } else if (req.params.role == "volunteer") {
+        // CONFLICTS FOR VOLUNTEERS
         let signupWeeks = (req.body.weeks as number[]).sort();
-        console.log(signupWeeks);
 
         // build the query schedule
         let querySchedule = new Array();
@@ -506,11 +508,21 @@ export async function checkConflicts(req: Request, res: Response) {
         for (var enrolledProgram of enrolledPrograms) {
             let volunteer = await VolunteerUser.findOne({ $and: [
                 { uuid: req.body.uuid },
-                { assignments: [
-
-                ]}
+                { assignments: { $elemMatch: {
+                    program: enrolledProgram.id,
+                    commitments: { $elemMatch: {
+                        week: {$in: signupWeeks}
+                    }}
+                }}}
             ]})
-            if (volunteer) {
+
+            let pendingVolunteer = await VolunteerSignup.findOne({ $and: [
+                {uuid: req.body.uuid},
+                {program: enrolledProgram.id},
+                {weeks: {$in: signupWeeks}}
+            ]})
+
+            if (volunteer || pendingVolunteer) {
                 res.writeHead(200, {
                     "content-type": "application/json"
                 })
@@ -521,9 +533,11 @@ export async function checkConflicts(req: Request, res: Response) {
             }
         }
     } else {
+        // exits if invalid account type
         res.type("text/plain");
         res.writeHead(403);
         res.end("Invalid role");
+        return;
     }
     res.writeHead(200, {
         "content-type": "application/json"
