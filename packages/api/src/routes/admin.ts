@@ -95,6 +95,7 @@ export default class Admin {
         program_id: string,
         signupData: VolunteeringCommitment[],
         enrollment_id: string,
+        signupNotes?: string
     ) {
         await Fetch.POST.json(this.url, "confirmvolunteer", {
             uuid,
@@ -102,7 +103,8 @@ export default class Admin {
             volunteer: volunteer_uuid,
             program: program_id,
             data: signupData,
-            enrollment: enrollment_id
+            enrollment: enrollment_id,
+            signupNotes
         })
     }
 
@@ -147,6 +149,20 @@ export default class Admin {
         enrollmentID: string
     ): Promise<void> {
         return await Fetch.POST.json(this.url, "unenroll/student", {
+            uuid,
+            token,
+            program,
+            enrollmentID
+        })
+    }
+
+    async unenrollVolunteer(
+        uuid: string,
+        token: string,
+        program: string,
+        enrollmentID: string
+    ): Promise<void> {
+        return await Fetch.POST.json(this.url, "unenroll/volunteer", {
             uuid,
             token,
             program,

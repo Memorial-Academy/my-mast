@@ -1,7 +1,8 @@
 "use client"
+import API from "@/app/lib/APIHandler"
 import submitVolunteerAssignments from "@/app/lib/assign_commitments"
-import { Course, WeeklySchedule } from "@mymast/api/Types"
-import { Popup, Table } from "@mymast/ui"
+import { Course, Session, WeeklySchedule } from "@mymast/api/Types"
+import { ConfirmationPopup, Popup, Table } from "@mymast/ui"
 import { useState } from "react"
 
 type AssignVolunteerPopupProps = {
@@ -22,7 +23,8 @@ type AssignVolunteerPopupProps = {
         skills?: string,
         additionalNotes?: string,
         instructor: boolean
-    }
+    },
+    auth: Session
 }
 
 export default function AssignVolunteerPopup(props: AssignVolunteerPopupProps) {
@@ -99,7 +101,8 @@ export default function AssignVolunteerPopup(props: AssignVolunteerPopupProps) {
                         data, 
                         props.program.id,
                         props.enrollment.volunteerID,
-                        props.enrollment.id
+                        props.enrollment.id,
+                        props.signup.additionalNotes
                     );
                     window.location.reload();
                 }}>
@@ -147,6 +150,20 @@ export default function AssignVolunteerPopup(props: AssignVolunteerPopupProps) {
                     <br/>
                     <button type="submit">Submit</button>
                 </form>
+                <ConfirmationPopup
+                    buttonText="Delete signup"
+                    message={`You are about to delete ${props.name}'s pending volunteering signup for ${props.program.name}. They will have to signup again if they wish to participate. Are you sure you want to do this?`}
+                    callback={async () => {
+                        await API.Admin.unenrollVolunteer(
+                            props.auth.uuid,
+                            props.auth.token,
+                            props.program.id,
+                            props.enrollment.id
+                        )
+                    }}
+                    reload
+                    buttonStyle="button"
+                />
             </Popup>
         </>
     )

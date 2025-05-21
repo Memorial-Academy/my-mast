@@ -2,6 +2,7 @@ import { PendingVolunteerAssignment, Program, UserTypes } from "@mymast/api/Type
 import { Card } from "@mymast/ui";
 import calculateAge from "@mymast/utils/birthday";
 import AssignVolunteerPopup from "./AssignVolunteerPopup";
+import sessionInfo from "@mymast/utils/authorize_session";
 
 type PendingVolunteerAssignmentsProps = {
     program: Program,
@@ -11,7 +12,8 @@ type PendingVolunteerAssignmentsProps = {
     }[]
 }
 
-export default function PendingVolunteerAssignments(props: PendingVolunteerAssignmentsProps) {
+export default async function PendingVolunteerAssignments(props: PendingVolunteerAssignmentsProps) {
+    const auth = (await sessionInfo())!;
     return (
         <>
             {props.assignments.map(signup => {
@@ -89,6 +91,7 @@ export default function PendingVolunteerAssignments(props: PendingVolunteerAssig
                                 id: signup.signup.id,
                                 volunteerID: signup.volunteer.uuid
                             }}
+                            auth={auth}
                         />
                     </Card>
                 )

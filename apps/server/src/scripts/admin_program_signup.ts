@@ -7,6 +7,11 @@ export default async function adminProgramSignup(uuid: string, programID: string
     let program = (await Program.findOne({id: programID}))!;
     let user = (await VolunteerUser.findOne({uuid: uuid}))!;
 
+    // prevent duplicate signups if volunteer signed up before being made an admin
+    if (program.enrollments.volunteers.find(val => val.indexOf(uuid) > -1)) {
+        return;
+    }
+
     let courses = program.courses.map((course, index) => {
         return course.id;
     })

@@ -76,7 +76,7 @@ export default function VolunteerEnrollmentPopup(props: VolunteerEnrollmentPopup
                         Instructors should be passionate and reasonably knowledgable about the subjects they are teaching, work very well with children and be good at explaining things, and work well with other volunteers.
                     </p>
                     <MultipleChoice
-                        question="Are you interested and/or comfortable in being an instructor?"
+                        question="Are you interested in and/or comfortable with being an instructor?"
                         name="instructor"
                         type="radio"
                         values={[
@@ -91,19 +91,17 @@ export default function VolunteerEnrollmentPopup(props: VolunteerEnrollmentPopup
                     </p>
                 </>}
 
-                {/* {props.program.schedule.length > 1 && */}
-                    <MultipleChoice
-                        question="Which week(s) are you planning to volunteer for? (select all that apply)"
-                        name="weeks"
-                        type="checkbox"
-                        values={
-                            props.program.schedule.map((week, index) => {
-                                return [(index + 1).toString(), `Week ${index + 1}`];
-                            })
-                        }
-                        required
-                    />
-                {/* } */}
+                <MultipleChoice
+                    question="Which week(s) are you planning to volunteer for? (select all that apply)"
+                    name="weeks"
+                    type="checkbox"
+                    values={
+                        props.program.schedule.map((week, index) => {
+                            return [(index + 1).toString(), `Week ${index + 1}`];
+                        })
+                    }
+                    required
+                />
                 <input type="submit" value="Next" />
             </form>
             {/* PAGE 2: signup confirmation, volunteer agreement, notes */}

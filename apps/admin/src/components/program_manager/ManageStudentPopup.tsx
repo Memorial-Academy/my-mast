@@ -1,6 +1,6 @@
 "use client";
 import API from "@/app/lib/APIHandler";
-import { EmergencyContact, FullName } from "@mymast/api/Types";
+import { EmergencyContact, FullName, Session } from "@mymast/api/Types";
 import { ConfirmationPopup, Popup } from "@mymast/ui";
 import { useState } from "react";
 
@@ -16,10 +16,7 @@ type ManageStudentPopupProps = {
     enrollmentID: string,
     courseName: string,
     week: number,
-    auth: {
-        uuid: string,
-        token: string
-    },
+    auth: Session,
     emergencyContact: EmergencyContact
 }
 

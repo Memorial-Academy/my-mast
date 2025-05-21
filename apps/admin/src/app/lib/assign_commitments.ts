@@ -7,7 +7,8 @@ export default async function submitVolunteerAssignments(
     data: FormData, 
     programID: string, 
     volunteerID: string,
-    enrollmentID: string
+    enrollmentID: string,
+    additionalInformation?: string
 ) {
     let assignments: Array<VolunteeringCommitment> = [];
 
@@ -35,6 +36,7 @@ export default async function submitVolunteerAssignments(
         volunteerID,
         programID,
         assignments,
-        enrollmentID
+        enrollmentID,
+        additionalInformation
     )
 }
