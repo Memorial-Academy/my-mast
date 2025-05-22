@@ -55,6 +55,7 @@ export default function AccountSettingsForm({session, role, profile}: AccountSet
                 type="email"
                 placeholder={profile.email}
             />
+            <p><b>Please note:</b> changing your email address here will change the email address you use to login and the email address used to contact you.</p>
             <LabelledInput
                 question="Phone"
                 defaultValue={profile.phone}

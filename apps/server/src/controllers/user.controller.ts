@@ -8,6 +8,8 @@ import Program from "../models/application/program.model";
 import { Templates } from "../scripts/pug_handler";
 import { sendMail } from "../scripts/mailer";
 import { unenrollStudent } from "../scripts/unenroll";
+import AuthUser from "../models/auth/user.model";
+import { validateEmail } from "../scripts/input_validation";
 
 function checkRole(correctRole: "volunteer" | "parent", req: Request, res: Response) {
     if (req.params.role != correctRole) {
@@ -589,8 +591,26 @@ export async function updateProfile(req: Request, res: Response) {
     // save general data
     user.name.first = req.body.name.first || user.name.first;
     user.name.last = req.body.name.last || user.name.last;
-    user.email = req.body.email || user.email;
     user.phone = req.body.phone || user.phone;
+    
+    // update email address
+    let newEmail = req.body.email.toLowerCase()
+    if (user.email != newEmail && newEmail != "" && validateEmail(newEmail)) {
+        user.email = newEmail;
+
+        // update email on auth
+        let authUser = await AuthUser.findOne({uuid: req.body.uuid});
+        if (!authUser) {
+            res.writeHead(500, {
+                "content-type": "text/plain"
+            });
+            res.end(`Could not find the authentication record for the user with UUID "${req.body.uuid}". Something has gone VERY wrong.`)
+            return
+        }
+
+        authUser.email = newEmail;
+        authUser.save();
+    }
     await user.save();
 
     res.type("text/plain");

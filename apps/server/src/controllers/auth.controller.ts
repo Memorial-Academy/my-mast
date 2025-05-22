@@ -36,14 +36,17 @@ async function generateSession(uuid: string, role: string) {
 }
 
 export async function loginHandler(req: Request, res: Response) {
+    // ensure email is entirely lowercase; emails are not case-sensitive
+    let email = req.body.email.toLowerCase();
+    
     let genericMessage = "Could not login. Please ensure you're using the correct email and password.";
-    if (!validateEmail(req.body.email)) {
+    if (!validateEmail(email)) {
         authenticationError(res, "Please enter a valid email address.");
         return;
     }
     
     let user = await AuthUser.findOne({
-        email: req.body.email
+        email: email
     });
 
     // Account does not exist
@@ -88,7 +91,9 @@ export function signupHandler(req: Request, res: Response) {
         authenticationError(res, "Please agree to the Terms of Service and Privacy Policy");
         return;
     }
-    if (!validateEmail(req.body.email)) {
+
+    let email = req.body.email.toLowerCase();
+    if (!validateEmail(email)) {
         authenticationError(res, "Please enter a valid email address.");
         return;
     } else if (!validatePhoneNumber(req.body.phone_number)) {
@@ -104,7 +109,7 @@ export function signupHandler(req: Request, res: Response) {
 
             if (err) authenticationError(res, err);
 
-            if (await AuthUser.findOne({email: req.body.email})) {
+            if (await AuthUser.findOne({email: email})) {
                 authenticationError(res, "Could not create account; please try again. If you already have an account, please try resetting your password.");
                 return;
             }
@@ -114,7 +119,7 @@ export function signupHandler(req: Request, res: Response) {
             // Add data to the user authentication datbase
             AuthUser.create({
                 password: hash,
-                email: req.body.email,
+                email: email,
                 role: req.body.role,
                 uuid: id
             })
@@ -165,7 +170,7 @@ export function signupHandler(req: Request, res: Response) {
                         first: req.body.first_name,
                         last: req.body.last_name
                     },
-                    email: req.body.email,
+                    email: email,
                     uuid: id,
                     phone: req.body.phone_number,
                     linkedStudents: students.map(student => {
@@ -187,7 +192,7 @@ export function signupHandler(req: Request, res: Response) {
                         first: req.body.first_name,
                         last: req.body.last_name
                     },
-                    email: req.body.email,
+                    email: email,
                     uuid: id,
                     phone: req.body.phone_number,
                     birthday: {
