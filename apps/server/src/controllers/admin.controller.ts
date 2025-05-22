@@ -415,11 +415,12 @@ export async function confirmVolunteerAssignment(req: Request, res: Response) {
 export async function getUserByEmail(req: Request, res: Response) {
     if (!permissionCheck(res, PERMISSIONS.DIRECTOR)) return;
 
-    let user = await AuthUser.findOne({email: req.body.email});
+    let email = req.body.email.toLowerCase();
+    let user = await AuthUser.findOne({email: email});
 
     if (!user) {
         res.writeHead(404);
-        res.end(`User with email address "${req.params.email}" does not exist.`)
+        res.end(`User with email address "${email}" does not exist.`)
         return;
     }
 
