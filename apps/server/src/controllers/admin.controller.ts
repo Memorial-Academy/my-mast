@@ -486,7 +486,9 @@ export async function addProgramAdmin(req: Request, res: Response) {
         adminProgramSignup(req.body.new_uuid, req.body.program);
     }
 
-    res.writeHead(200);
+    res.writeHead(200, {
+        "content-type": "text/plain"
+    });
     res.end();
 }
 

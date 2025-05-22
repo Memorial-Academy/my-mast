@@ -5,7 +5,6 @@ import { submitVolunteerSignup, volunteerSignup } from "@/app/lib/enrollment_han
 import { calculateHoursFromWeek } from "@/app/lib/calculate_hours";
 import Link from "next/link";
 import { Program } from "@mymast/api/Types";
-import API from "@/app/lib/APIHandler";
 
 type VolunteerEnrollmentPopupProps = {
     program: Program,

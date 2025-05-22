@@ -104,7 +104,7 @@ a#close-mobile-nav {
     header nav span {
         display: none;
     }
-    header nav a {
+    header nav a, header nav a:visited {
         color: var(--white);
         font-size: 1.3rem;
     }
