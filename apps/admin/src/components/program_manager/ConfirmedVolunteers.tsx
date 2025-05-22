@@ -1,6 +1,8 @@
 import { ConfirmedVolunteerAssignment, Course, Program, UserTypes } from "@mymast/api/Types"
 import { Table } from "@mymast/ui"
 import { Fragment } from "react"
+import ManageVolunteerPopup from "./ManageVolunteerPopup"
+import sessionInfo from "@mymast/utils/authorize_session"
 
 type ConfirmedVolunteerAssignmentsProps = {
     program: Program,
@@ -14,10 +16,18 @@ type SignupsPerCourse = {
     course: Course,
     courseTotal: number,
     volunteers: UserTypes.Volunteer[],
-    instructors: boolean[]
+    instructors: boolean[],
+    signup: GenericSignupData[]
+}
+
+type GenericSignupData = {
+    enrollmentID: string,
+    signupNotes?: string
 }
 
 export async function ConfirmedVolunteerAssignmentsByWeek(props: ConfirmedVolunteerAssignmentsProps) {
+    const auth = (await sessionInfo())!;
+
     let signups = new Array<{
         week: number,
         weeklyTotal: number,
@@ -38,27 +48,32 @@ export async function ConfirmedVolunteerAssignmentsByWeek(props: ConfirmedVolunt
     // add courses to each week
     for (var course of props.program.courses) {
         for (var week of course.available) {
+            // check if the course already exists 
             if (signups[week - 1].courses.indexOf({
                 course: course,
                 courseTotal: 0,
                 volunteers: new Array<UserTypes.Volunteer>(),
-                instructors: new Array<boolean>()
+                instructors: new Array<boolean>(),
+                signup: new Array<GenericSignupData>()
             }) != -1) continue;
 
             signups[week - 1].courses.splice(course.id, 0, {
                 course: course,
                 courseTotal: 0,
                 volunteers: new Array<UserTypes.Volunteer>(),
-                instructors: new Array<boolean>()
+                instructors: new Array<boolean>(),
+                signup: new Array<GenericSignupData>()
             })
 
+            // add the course to all the weeks necessary (if multi-week course)
             if (course.duration > 1) {
                 for (var extension = 1; extension < course.duration; extension++) {
                     signups[week - 1 + extension].courses.splice(course.id, 0, {
                         course: course,
                         courseTotal: 0,
                         volunteers: new Array<UserTypes.Volunteer>(),
-                        instructors: new Array<boolean>()
+                        instructors: new Array<boolean>(),
+                        signup: new Array<GenericSignupData>()
                     })
                 }
             }
@@ -69,6 +84,10 @@ export async function ConfirmedVolunteerAssignmentsByWeek(props: ConfirmedVolunt
     for (var signup of props.assignments) {
         for (var commitment of signup.signup.commitments) {
             signups[commitment.week - 1].courses[commitment.course].volunteers.push(signup.volunteer);
+            signups[commitment.week - 1].courses[commitment.course].signup.push({
+                enrollmentID: signup.signup.id,
+                signupNotes: signup.signup.signupNotes
+            });
             signups[commitment.week - 1].courses[commitment.course].instructors.push(commitment.instructor);
             signups[commitment.week - 1].weeklyTotal++;
             signups[commitment.week - 1].courses[commitment.course].courseTotal++;
@@ -94,7 +113,8 @@ export async function ConfirmedVolunteerAssignmentsByWeek(props: ConfirmedVolunt
                                         columns={[
                                             "Name",
                                             "Email",
-                                            "Phone"
+                                            "Phone",
+                                            ""
                                         ]}
                                     >
                                         {course.volunteers.map((volunteer, i) => {
@@ -107,7 +127,18 @@ export async function ConfirmedVolunteerAssignmentsByWeek(props: ConfirmedVolunt
                                                             {course.instructors[i] ? <b>(Instructor)</b> : ""}
                                                         </span>,
                                                         volunteer.email,
-                                                        volunteer.phone
+                                                        volunteer.phone,
+                                                        <ManageVolunteerPopup
+                                                            name={volunteer.name.first + " " + volunteer.name.last}
+                                                            notes={volunteer.skills}
+                                                            signupNotes={course.signup[i].signupNotes}
+                                                            enrollmentID={course.signup[i].enrollmentID}
+                                                            auth={auth}
+                                                            program={{
+                                                                id: props.program.id,
+                                                                name: props.program.name
+                                                            }}
+                                                        />
                                                     ]}
                                                 />
                                             )

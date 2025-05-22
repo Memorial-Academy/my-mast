@@ -155,7 +155,7 @@ export default function StudentEnrollmentPopup(props: StudentEnrollmentPopupProp
                     join us for a week of fun and learning!
                 </p>
                 <p>
-                    Check your <Link href="/dashboard">parent dashboard</Link> to see more information about this enrollment. Additionally, you should receive a confirmation email in a few minutes. Please note that sometimes our emails get mark as spammed, or get blocked by certain email providers. Regardless, your MyMAST parent dashboard will display all the necessary information about your enrollment!
+                    Check your <a href="/dashboard">parent dashboard</a> to see more information about this enrollment. Additionally, you should receive a confirmation email in a few minutes. Please note that sometimes our emails get mark as spammed, or get blocked by certain email providers. Regardless, your MyMAST parent dashboard will display all the necessary information about your enrollment!
                 </p>
             </>}
 

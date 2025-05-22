@@ -186,7 +186,7 @@ export default function VolunteerEnrollmentPopup(props: VolunteerEnrollmentPopup
                 <h3>All done!</h3>
                 <p>Thanks for volunteering! We are thankful for your help and look forward to having you join us!</p>
                 <p>
-                    Make sure to frequently check your <Link href="/dashboard">MyMAST dashboard</Link> to see more information about your signup. Additionally, any information related to your signup will be emailed to you. 
+                    Make sure to frequently check your <a href="/dashboard">MyMAST dashboard</a> to see more information about your signup. Additionally, any information related to your signup will be emailed to you. 
                     Please note that sometimes our emails get mark as spammed, or get blocked by certain email providers. Regardless, your MyMAST dashboard will display all the necessary information about your enrollment!
                 </p>
             </>}

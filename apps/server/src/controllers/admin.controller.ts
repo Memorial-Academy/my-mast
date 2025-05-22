@@ -346,12 +346,6 @@ export async function confirmVolunteerAssignment(req: Request, res: Response) {
     volunteer.pendingAssignments.splice(removeIndex, 1);
     volunteer.save();
 
-    deletion.finally(() => {
-        console.log("deleted")
-        res.writeHead(200);
-        res.end();
-    })
-
     let emailThread = new Promise<void>(async resolve => {
         let program = (await Program.findOne({id: req.body.program}))!
 
@@ -408,6 +402,13 @@ export async function confirmVolunteerAssignment(req: Request, res: Response) {
         );
 
         resolve();
+    })
+
+    deletion.finally(() => {
+        res.writeHead(200, {
+            "content-type": "text/plain"
+        });
+        res.end();
     })
 }
 
