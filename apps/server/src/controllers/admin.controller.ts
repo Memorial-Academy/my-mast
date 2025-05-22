@@ -349,11 +349,11 @@ export async function confirmVolunteerAssignment(req: Request, res: Response) {
     let emailThread = new Promise<void>(async resolve => {
         let program = (await Program.findOne({id: req.body.program}))!
 
-        // only send this email if there are mutliple courses to be assigned to
-        if (program.courses.length == 1) {
-            resolve();
-            return;
-        }
+        // // only send this email if there are mutliple courses to be assigned to
+        // if (program.courses.length == 1) {
+        //     resolve();
+        //     return;
+        // }
 
         // get location
         let location: {
