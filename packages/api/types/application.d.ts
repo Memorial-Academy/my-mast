@@ -33,7 +33,8 @@ export type Program = {
     enrollments: {
         volunteers: string[],   // array of enrollment ID's for volunteers
         students: string[]  // array of enrollment ID's for students
-    }
+    },
+    active: boolean[]
 }
 
 export type DailySchedule = {

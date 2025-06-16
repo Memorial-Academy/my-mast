@@ -60,15 +60,8 @@ const Program = ApplicationDB.model(
             }
         },
         active: {   // whether the program is still accepting enrollments or not
-            type: {
-                volunteer: { type: Boolean, required: true },
-                student: { type: Boolean, required: true },
-            },
-            required: true,
-            default: {
-                volunteer: true,
-                student: true
-            }
+            type: [Boolean],    // array, one item for each week
+            required: true
         },
     })
 )

@@ -5,6 +5,7 @@ import { UserTypes } from "@mymast/api/Types";
 import { Card } from "@mymast/ui";
 import AddDirectorPopup from "@/components/program_manager/AddDirectorPopup";
 import { hasPermssion, PERMISSIONS } from "@/app/lib/permissions";
+import AllowEnrollmentControls from "@/components/program_manager/AllowEnrollments";
 
 type Params = Promise<{
     id: string
@@ -42,6 +43,15 @@ export default async function Page({params}: {params: Params}) {
                                     </>
                                 })}
                             </p>
+                            <AllowEnrollmentControls 
+                                week={index + 1}
+                                active={data.active[index]}
+                                program={{
+                                    name: data.name,
+                                    id: data.id
+                                }}
+                                auth={auth}
+                            />
                         </div>
                     )
                 })}

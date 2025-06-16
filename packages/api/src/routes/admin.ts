@@ -169,4 +169,20 @@ export default class Admin {
             enrollmentID
         })
     }
+
+    async toggleNewEnrollments(
+        uuid: string,
+        token: string,
+        program: string,
+        week: number,
+        new_status: boolean
+    ): Promise<void> {
+        return await Fetch.POST.json(this.url, "allowenrollments", {
+            uuid,
+            token,
+            program,
+            week,
+            new_status
+        })
+    }
 }

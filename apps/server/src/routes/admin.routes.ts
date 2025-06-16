@@ -29,5 +29,6 @@ AdminRouter.post("/getuserbyemail", Controller.getUserByEmail);
 AdminRouter.post("/addadmin", Controller.addProgramAdmin);
 AdminRouter.post("/unenroll/student", Controller.unenrollStudent_Admin);
 AdminRouter.post("/unenroll/volunteer", Controller.unenrollVolunteer_Admin);
+AdminRouter.post("/allowenrollments", Controller.toggleNewEnrollments);
 
 export default AdminRouter;

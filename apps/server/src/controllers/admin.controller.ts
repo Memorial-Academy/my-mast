@@ -116,10 +116,9 @@ export function createProgram(req: Request, res: Response) {
                 students: [],
                 volunteers: []
             },
-            active: {
-                student: true,
-                volunteer: true
-            }
+            active: (submitted.schedule as Array<any>).map((val, i) => {
+                return true;
+            })
         })
 
         adminProgramSignup(req.body.uuid, id);
@@ -523,5 +522,28 @@ export async function unenrollVolunteer_Admin(req: Request, res: Response) {
             res.writeHead(500);
             res.end();
         }
+    })
+}
+
+export async function toggleNewEnrollments(req: Request, res: Response) {
+    if (!permissionCheck(res, PERMISSIONS.ADMIN)) return;
+
+    const program = await Program.findOne({id: req.body.program});
+    if (!program) {
+        res.writeHead(404, {
+            "content-type": "text/plain"
+        })
+        res.end(`Could not find a program with the ID of "${req.body.program}".`);
+        return;
+    }
+
+    program.active[req.body.week - 1] = req.body.new_status;
+    let awaitSave = program.save();
+
+    awaitSave.finally(() => {
+        res.writeHead(200, {
+            "content-type": "text/plain"
+        })
+        res.end(req.body.new_status.toString());
     })
 }
