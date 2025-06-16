@@ -65,6 +65,7 @@ export default function StudentEnrollmentPopup(props: StudentEnrollmentPopupProp
                                     uuid={student!.uuid} 
                                     key={student!.uuid}
                                     classes={props.program.courses}
+                                    activeWeeks={props.program.active}
                                 />
                             )
                         })
@@ -177,7 +178,8 @@ type StudentEnrollmentSectionProps = {
         last: string
     },
     uuid: string,
-    classes: Array<Course>
+    classes: Array<Course>,
+    activeWeeks: Array<boolean>
 }
 
 function StudentEnrollmentSection(props: StudentEnrollmentSectionProps) {
@@ -188,7 +190,7 @@ function StudentEnrollmentSection(props: StudentEnrollmentSectionProps) {
             <h3>Enrollment Information for {props.name.first} {props.name.last}</h3>
             {props.classes.length > 1 ? <>
                 <MultipleChoice
-                    question="Select a class"
+                    question="Please select the class you wish to enroll in."
                     name={`${props.uuid}_class`}
                     type="radio"
                     values={props.classes.map((course, index) => {
@@ -200,25 +202,18 @@ function StudentEnrollmentSection(props: StudentEnrollmentSectionProps) {
                     required
                 />
                 <p>Trying to enroll one student in multiple classes? You can only enroll a student in one class at a time; complete this form multiple times to enroll a student in more than one class.</p>
-                {course > -1 ? <>
-                    <MultipleChoice
-                        question={`Select the week you wish to attend ${props.classes[course].duration > 1 ? `(note: this is a ${props.classes[course].duration} week long course)` : ""}`}
-                        name={`${props.uuid}_week`}
-                        type="radio"
-                        values={props.classes[course].available.map(val => {
-                            return [val.toString(), `Week ${val}`];
-                        })}
-                        required
-                    />
-                </> : <></>}
+                
             </> : <>
+                {/* Placeholder input element for single course programs. When the form is submitted, this automatically enrolls the student in the default course */}
                 <input type="hidden" name={`${props.uuid}_class`} value={0} />
+            </>}
+            {(course > -1 || props.classes.length == 1) && <>
                 <MultipleChoice
-                    question={`Select the week you wish to attend ${props.classes[course].duration > 1 ? `(note: this is a ${props.classes[course].duration} week long course)` : ""}`}
+                    question={`Please select the week you wish to attend${props.classes[course].duration > 1 ? ` (note: this is a ${props.classes[course].duration} week long course)` : ""}.`}
                     name={`${props.uuid}_week`}
                     type="radio"
                     values={props.classes[course].available.map(val => {
-                        return [val.toString(), `Week ${val}`];
+                        return [val.toString(), `Week ${val} ${!props.activeWeeks[val - 1] ? "(Signups for this week are closed!)" : ""}`, !props.activeWeeks[val - 1]];
                     })}
                     required
                 />

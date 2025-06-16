@@ -96,7 +96,7 @@ export default function VolunteerEnrollmentPopup(props: VolunteerEnrollmentPopup
                     type="checkbox"
                     values={
                         props.program.schedule.map((week, index) => {
-                            return [(index + 1).toString(), `Week ${index + 1}`];
+                            return [(index + 1).toString(), `Week ${index + 1} ${!props.program.active[index] ? "(Signups for this week are closed!)" : ""}`, !props.program.active[index]];
                         })
                     }
                     required

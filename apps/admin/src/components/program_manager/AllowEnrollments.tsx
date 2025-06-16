@@ -1,7 +1,9 @@
 "use client";
 import API from "@/app/lib/APIHandler";
+import revalidateProgramPageCache from "@/app/lib/revalidate_program";
 import { Session } from "@mymast/api/Types";
 import { Popup } from "@mymast/ui";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 type AllowEnrollmentControlsProps = {
@@ -17,6 +19,7 @@ type AllowEnrollmentControlsProps = {
 export default function AllowEnrollmentControls({week, active, program, auth}: AllowEnrollmentControlsProps) {
     const [popupActive, setPopupActive] = useState(false);
     const [checkboxActive, setCheckboxActive] = useState(active);
+    const router = useRouter();
 
     return (
         <>
@@ -46,6 +49,8 @@ export default function AllowEnrollmentControls({week, active, program, auth}: A
                     )
                     res.finally(() => {
                         setCheckboxActive(!checkboxActive);
+                        router.refresh();
+                        revalidateProgramPageCache(program.id);
                         setPopupActive(false);
                     })
                     res.catch(() => {

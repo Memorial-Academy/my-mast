@@ -3,7 +3,7 @@ import React, { ChangeEvent, useState, Fragment } from "react";
 
 type SelectableInputProps = {
     name: string,
-    values: Array<Array<string>>,
+    values: Array<[string, string, boolean?]>,
     type: "radio" | "checkbox",
     required?: boolean,
     question: string,
@@ -31,23 +31,22 @@ export function MultipleChoice(props: SelectableInputProps) {
                                 
                                 if (props.type == "radio") {
                                     // process data if type is radio
-                                    temp = [value[0]]
-                                    temp[0] == value[0];
+                                    temp = [value[0]];
                                 } else if (props.type == "checkbox") {
                                     // process data if type is checkbox
-                                    if (e.target.checked) {
+                                    if (e.target.checked) { // add the data if the checkbox is newly checked
                                         temp.push(value[0])
-                                    } else {
+                                    } else {                // otherwise remove it
                                         temp.splice(temp.indexOf(value[0]), 1)
                                     }
                                 }
 
                                 setData(temp);
-
                                 if (props.onChange) {
                                     props.onChange(e, temp);
                                 }
                             }}
+                            disabled={value[2]}
                         />
                         <label htmlFor={id}>{value[1]}</label>
                         <br />

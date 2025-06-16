@@ -2,6 +2,7 @@ import React from "react";
 import getTimestamp from "@mymast/utils/convert_timestamp";
 import EnrollButton from "./EnrollButton";
 import { Program } from "@mymast/api/Types";
+import { shortDateString, startEndTimesString } from "@mymast/utils/time_strings";
 
 type ProgramInfoProps = {
     data: Program,
@@ -25,12 +26,15 @@ export default function ProgramInfo(props: ProgramInfoProps) {
     let schedule = [];
     for (var weekCount = 1; weekCount <= data.schedule.length; weekCount++) {
         let week = data.schedule[weekCount - 1]
-        schedule.push(<p key={"week_" + weekCount} >
-            {data.schedule.length > 1 ? <><b>Week {weekCount}</b><br/></> : <></>}
-            {week.map(day => {
-                return <span key={weekCount + "_" + day.dayCount}>{day.month}/{day.date}/{day.year}: {getTimestamp(day.start)} - {getTimestamp(day.end)}<br/></span>
-            })}
-        </p>)
+        schedule.push(
+            <p key={"week_" + weekCount} >
+                {data.schedule.length > 1 ? <><b>Week {weekCount}</b><br/></> : <></>}
+                {!data.active[weekCount - 1] && <><b>Signups for this week are closed!</b><br/></>}
+                {week.map(day => {
+                    return <span key={weekCount + "_" + day.dayCount}>{shortDateString(day)}: {startEndTimesString(day.start, day.end)}<br/></span>
+                })}
+            </p>
+        )
     }
 
     return (

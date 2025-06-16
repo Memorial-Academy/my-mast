@@ -1,6 +1,7 @@
 import { Program } from "@mymast/api/Types";
 import { Card } from "@mymast/ui";
 import sessionInfo from "@mymast/utils/authorize_session";
+import { longDateString } from "@mymast/utils/time_strings";
 import { Metadata } from "next";
 import Link from "next/link";
 
@@ -49,16 +50,15 @@ export default async function Page() {
                                 {program.location.city}, {program.location.state} {program.location.zip}
                             </span>}
                         </p>
-                        <p>
+                        <div>
                             {program.schedule.map((week, index) => {
-                                return <span key={"week" + index}>
+                                return <p key={"week" + index} className={program.active[index] ? "" : "strikethrough"}>
                                     <b>Week {index + 1}:</b>&nbsp;
-                                    {week[0].month}/{week[0].date}/{week[0].year} - {week.at(-1)!.month}/{week.at(-1)!.date}/{week.at(-1)!.year}
-                                    <br/>
-                                </span>
+                                    {longDateString(week[0])} - {longDateString(week.at(-1)!)}
+                                </p>
                             })}
 
-                        </p>
+                        </div>
                     </div>
                     <div className="flex-row-resize">
                         {(!userRole || userRole == "parent") && <>

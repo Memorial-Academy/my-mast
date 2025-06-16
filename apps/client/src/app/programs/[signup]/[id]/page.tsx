@@ -32,7 +32,7 @@ export default async function Page({params, searchParams}: GenerateMetadataProps
 
     // revalidate cache if the URL contains the "?revalidate" parameter
     if (Object.keys(await searchParams).indexOf("revalidate") != -1) {
-        revalidatePath("/programs");
+        revalidatePath(`/programs`, "layout");
     }
 
     let students: {
@@ -50,7 +50,6 @@ export default async function Page({params, searchParams}: GenerateMetadataProps
     const data = await API.Application.getProgram(id);
     if (Object.keys(data).indexOf("code") != -1 && (data as any).code != 200) {
         notFound();
-        
     }
 
     // Check whether a user is logged in

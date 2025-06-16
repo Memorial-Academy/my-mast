@@ -21,9 +21,11 @@ export async function getProgram(req: Request, res: Response) {
 }
 
 export async function getAllPrograms(req: Request, res: Response) {
-    const programs = await Program.find({}, {
+    const programs = await Program.find({active: true}, {
         "_id": 0,
-        "enrollments": 0
+        "enrollments": 0,
+        "admins": 0,
+        "volunteering_hours": 0
     });
 
     res.writeHead(200);

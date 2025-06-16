@@ -1,11 +1,11 @@
 import authorizeSession from "@mymast/utils/authorize_session";
-import getTimestamp from "@mymast/utils/convert_timestamp";
 import API from "@/app/lib/APIHandler";
 import { UserTypes } from "@mymast/api/Types";
 import { Card } from "@mymast/ui";
 import AddDirectorPopup from "@/components/program_manager/AddDirectorPopup";
 import { hasPermssion, PERMISSIONS } from "@/app/lib/permissions";
 import AllowEnrollmentControls from "@/components/program_manager/AllowEnrollments";
+import { shortDateString, startEndTimesString } from "@mymast/utils/time_strings";
 
 type Params = Promise<{
     id: string
@@ -38,7 +38,7 @@ export default async function Page({params}: {params: Params}) {
                                 {week.map(day => {
                                     return <>
                                         <b>Day {day.dayCount}:</b>&nbsp;
-                                        {day.month}/{day.date}/{day.year}: {getTimestamp(day.start)} - {getTimestamp(day.end)}
+                                        {shortDateString(day)}: {startEndTimesString(day.start, day.end)}
                                         <br/>
                                     </>
                                 })}

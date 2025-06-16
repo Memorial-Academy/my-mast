@@ -90,6 +90,9 @@ input[type="checkbox"], input[type="radio"] {
     align-items: center;
     gap: 1%;
 }
+.strikethrough {
+    text-decoration: line-through;
+}
 
 /* Fonts */
 @font-face {
