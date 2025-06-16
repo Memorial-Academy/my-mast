@@ -1,8 +1,7 @@
 import React from "react";
-import getTimestamp from "@mymast/utils/convert_timestamp";
 import EnrollButton from "./EnrollButton";
 import { Program } from "@mymast/api/Types";
-import { shortDateString, startEndTimesString } from "@mymast/utils/time_strings";
+import { shortDateString, startEndTimesString } from "@mymast/utils/string_helpers";
 
 type ProgramInfoProps = {
     data: Program,

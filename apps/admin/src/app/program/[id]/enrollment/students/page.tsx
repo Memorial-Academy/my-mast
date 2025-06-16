@@ -3,20 +3,11 @@ import { Table } from "@mymast/ui";
 import authorizeSession from "@mymast/utils/authorize_session";
 import ManageStudentPopup from "@/components/program_manager/ManageStudentPopup";
 import API from "@/app/lib/APIHandler";
+import generateProgramManagerMetadata, { ParamsArgument } from "../../generate_metadata";
 
-type Params = Promise<{
-    id: string
-}>
+export const generateMetadata = generateProgramManagerMetadata("Students");
 
-export async function generateMetadata({params}: {params: Params}) {
-    const data = await API.Application.getProgram((await params).id);
-
-    return {
-        title: `Enrolled Students - ${data.name} - Program Manager | Admin Control Panel | Memorial Academy of Science and Technology`
-    }
-}
-
-export default async function Page({params}: {params: Params}) {
+export default async function Page({params}: ParamsArgument) {
     const data = await API.Application.getProgram((await params).id);
 
     const auth = (await authorizeSession())!;

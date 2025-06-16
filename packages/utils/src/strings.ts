@@ -1,5 +1,6 @@
 import { DailySchedule } from "@mymast/api/Types";
 import getTimestamp from "./convert_timestamp";
+import { FullName } from "@mymast/api/Types";
 
 export function shortDateString(day: DailySchedule) {
     return `${day.month}/${day.date}/${day.year}`;
@@ -52,3 +53,8 @@ export function longDateString(day: DailySchedule) {
 export function startEndTimesString(startTime: number, endTime: number) {
     return `${getTimestamp(startTime)} - ${getTimestamp(endTime)}`;
 }
+
+export function getFullName(name: FullName) {
+    return `${name.first} ${name.last}`;
+}
+

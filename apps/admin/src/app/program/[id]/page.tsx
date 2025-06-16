@@ -5,21 +5,12 @@ import { Card } from "@mymast/ui";
 import AddDirectorPopup from "@/components/program_manager/AddDirectorPopup";
 import { hasPermssion, PERMISSIONS } from "@/app/lib/permissions";
 import AllowEnrollmentControls from "@/components/program_manager/AllowEnrollments";
-import { shortDateString, startEndTimesString } from "@mymast/utils/time_strings";
+import { shortDateString, startEndTimesString } from "@mymast/utils/string_helpers";
+import generateProgramManagerMetadata, { ParamsArgument } from "./generate_metadata";
 
-type Params = Promise<{
-    id: string
-}>
+export const generateMetadata = generateProgramManagerMetadata("");
 
-export async function generateMetadata({params}: {params: Params}) {
-    const data = await API.Application.getProgram((await params).id);
-    
-    return {
-        title: `${data.name} - Program Manager | Admin Control Panel | Memorial Academy of Science and Technology`
-    }
-}
-
-export default async function Page({params}: {params: Params}) {
+export default async function Page({params}: ParamsArgument) {
     const data = await API.Application.getProgram((await params).id);
 
     const auth = (await authorizeSession())!;    

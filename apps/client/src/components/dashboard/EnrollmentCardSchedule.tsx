@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
 import { Course, Program } from "@mymast/api/Types";
-import { longDateString, shortDateString, startEndTimesString } from "@mymast/utils/time_strings";
+import { longDateString, shortDateString, startEndTimesString } from "@mymast/utils/string_helpers";
 
 type EnrollmentCardScheduleProps = {
     course: Course,

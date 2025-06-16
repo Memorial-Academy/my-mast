@@ -5,7 +5,7 @@
         "./authorize_session": "./src/authorize_session.ts",
         "./convert_timestamp": "./src/convert_timestamp.ts",
         "./birthday": "./src/birthday.ts",
-        "./time_strings": "./src/time_strings.ts"
+        "./string_helpers": "./src/strings.ts"
     },
     "dependencies": {
         "@mymast/api": "workspace:*",

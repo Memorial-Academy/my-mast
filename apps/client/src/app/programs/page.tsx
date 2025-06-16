@@ -1,7 +1,7 @@
 import { Program } from "@mymast/api/Types";
 import { Card } from "@mymast/ui";
 import sessionInfo from "@mymast/utils/authorize_session";
-import { longDateString } from "@mymast/utils/time_strings";
+import { longDateString } from "@mymast/utils/string_helpers";
 import { Metadata } from "next";
 import Link from "next/link";
 
