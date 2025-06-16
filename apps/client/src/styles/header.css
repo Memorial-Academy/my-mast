@@ -62,7 +62,7 @@ a#close-mobile-nav {
     }
 }
 
-@media screen and (max-width: 940px) {
+@media screen and (max-width: 1040px) {
     header {
         grid-template-columns: 5.5rem auto;
     }
@@ -79,7 +79,7 @@ a#close-mobile-nav {
     }
 }
 
-@media screen and (max-width: 520px) {
+@media screen and (max-width: 570px) {
     button#open-mobile-nav {
         display: block;
     }

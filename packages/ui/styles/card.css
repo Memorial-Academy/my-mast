@@ -21,6 +21,10 @@
     padding: 5%;
 }
 
+@media screen and (max-width: 1030px) {
+    
+}
+
 @media screen and (max-width: 750px) {
     .card img {
         width: 50% !important;

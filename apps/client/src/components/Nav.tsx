@@ -47,11 +47,11 @@ export default function Nav({adminCheck}: NavProps) {
                     />
                     <NavLink
                         link="/programs"
-                        text="Programs"
+                        text="Browse Programs"
                     />
                     <NavLink
                         link="/dashboard/account"
-                        text="Account"
+                        text="Settings"
                     />
                     <LogoutButton />
                 </MobileNavContext.Provider>
