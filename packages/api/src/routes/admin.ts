@@ -185,4 +185,71 @@ export default class Admin {
             new_status
         })
     }
+
+    attendance = {
+        checkVolunteerStatus: async (
+            uuid: string,
+            token: string,
+            program_id: string,
+            volunteer_uuid: string
+        ): Promise<{
+            action: "checkin"
+        } | {
+            action: "conflict",
+            conflictDetails: {
+                email: string,
+                phone: string,
+                programName: string
+            }
+        } | {
+            action: "checkout",
+            checkInTime: number
+        }> => {
+            return await Fetch.POST.json(this.url, "attendance/volunteer/checkinstatus", {
+                uuid,
+                token,
+                program: program_id,
+                volunteer: volunteer_uuid
+            })
+        },
+        checkInVolunteer: async (
+            uuid: string,
+            token: string,
+            program_id: string,
+            volunteer_uuid: string,
+            date: {
+                date: number,
+                year: number,
+                month: number
+            },
+            startTime: number
+        ): Promise<void> => {
+            return await Fetch.POST.json(this.url, "attendance/volunteer/checkin", {
+                uuid,
+                token,
+                program: program_id,
+                volunteer: volunteer_uuid,
+                date,
+                startTime
+            })
+        },
+        checkOutVolunteer: async (
+            uuid: string,
+            token: string,
+            program_id: string,
+            volunteer_uuid: string,
+            endTime: number,
+            note?: string
+        ): Promise<void> => {
+            return await Fetch.POST.json(this.url, "attendance/volunteer/checkout", {
+                uuid,
+                token,
+                program: program_id,
+                volunteer: volunteer_uuid,
+                endTime,
+                note
+            })
+        }
+    }
+
 }

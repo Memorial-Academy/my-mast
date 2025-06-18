@@ -6,12 +6,12 @@ import VolunteerUser from "../models/users/volunteer.model";
 import ParentUser from "../models/users/parent.model";
 import StudentUser from "../models/users/student.model";
 import VolunteerSignup from "../models/application/volunteer_signups.model";
-import Attendance from "../models/application/attendance.model";
 import { permissionCheck, PERMISSIONS } from "../scripts/admin_permissions";
 import adminProgramSignup from "../scripts/admin_program_signup";
 import { Templates } from "../scripts/pug_handler";
 import { sendMail } from "../scripts/mailer";
 import { unenrollStudent, unenrollVolunteer } from "../scripts/unenroll";
+import { VolunteerAttendance } from "../models/application/attendance.model";
 
 function validateData(data: any, res: Response) {
     if (data) {
@@ -545,5 +545,154 @@ export async function toggleNewEnrollments(req: Request, res: Response) {
             "content-type": "text/plain"
         })
         res.end(req.body.new_status.toString());
+    })
+}
+
+// ATTENDANCE FOR VOLUNTEERS
+export async function volunteerCheckInStatus(req: Request, res: Response) {
+    // volunteers cannot be checked in if they have an incomplete time record
+    // find all incomplete records
+    let record = await VolunteerAttendance.findOne({
+        uuid: req.body.volunteer,
+        endTime: -1
+    });
+
+    let queryResponse;
+    if (record) {
+        // volunteer has incomplete time
+        if (record.program == req.body.program) {
+            // volunteer has an incomplete record for the current program and can be checked out
+            queryResponse= {
+                action: "checkout",
+                checkInTime: record.startTime
+            };
+        } else {
+            // otherwise the volunteer has been checked in by another program (and therefore has a conflict)
+            let program = await Program.findOne({id: record.program});
+            if (!program) {
+                res.writeHead(500, {
+                    "Content-Type": "text/plain"
+                })
+                res.end(`Volunteer user "${req.body.volunteer}" has an incomplete volunteering program for the program "${record.program}", but this program does not appear to exist. Something has likely gone VERY wrong.`)
+                return;
+            }
+
+            queryResponse = {
+                action: "conflict",
+                conflictDetails: {
+                    email: program.contact.email,
+                    phone: program.contact.phone,
+                    programName: program.name
+                }
+            }
+        }
+    } else {
+        // volunteer has no conflicts
+        queryResponse = {action: "checkin"};
+    }
+
+    res.writeHead(200, {
+        "Content-Type": "application/json"
+    })
+    res.end(JSON.stringify(queryResponse));
+}
+
+export async function checkInVolunteer(req: Request, res: Response) {
+    // ensure the program and volunteer exist
+    let program = await Program.findOne({id: req.body.program});
+    let volunteer = await VolunteerUser.findOne({uuid: req.body.volunteer});
+    if (!program || !volunteer) {
+        res.writeHead(404, {
+            "content-type": "text/plain"
+        })
+        res.end(`Could not find "${!program ? `program ${req.body.program}` : `volunteer ${req.body.volunteer}`}".`)
+        return;
+    }
+
+    // volunteers cannot be checked in if they have an incomplete time record
+    // find all incomplete records
+    let incompleteSession = await VolunteerAttendance.findOne({
+        uuid: req.body.volunteer,
+        endTime: -1
+    });
+    if (incompleteSession) {
+        res.writeHead(403, {
+            "content-type": "text/plain"
+        })
+        res.end(`Volunteer "${req.body.volunteer}" already has an existing and incomplete volunteering session with program "${incompleteSession.program}". They must be checked out before they can check-in to a new session.`)
+        return;
+    }
+
+    // error checking is done, create new attendance record
+    VolunteerAttendance.create({
+        program: validateData(req.body.program, res),
+        uuid: validateData(req.body.volunteer, res),
+        date: {
+            day: validateData(req.body.date.date, res),
+            month: validateData(req.body.date.month, res),
+            year: validateData(req.body.date.year, res)
+        },
+        startTime: validateData(req.body.startTime, res)
+    }).then(() => {
+        res.writeHead(200, {
+            "content-type": "text/plain"
+        })
+        res.end();
+    })
+}
+
+export async function checkOutVolunteer(req: Request, res: Response) {
+    // ensure the program and volunteer exist
+    let program = await Program.findOne({id: req.body.program});
+    let volunteer = await VolunteerUser.findOne({uuid: req.body.volunteer});
+    if (!program || !volunteer) {
+        res.writeHead(404, {
+            "content-type": "text/plain"
+        })
+        res.end(`Could not find "${!program ? `program ${req.body.program}` : `volunteer ${req.body.volunteer}`}".`)
+        return;
+    }
+
+    // find the incomplete attendance record
+    let record = await VolunteerAttendance.findOne({
+        program: validateData(req.body.program, res),
+        uuid: validateData(req.body.volunteer, res),
+        endTime: -1
+    })
+
+    // ensure an incomplete record/session exists
+    if (!record) {
+        res.writeHead(403, {
+            "content-type": "text/plain"
+        })
+        res.end(`Could not find an incomplete volunteering session for the program "${req.body.program}" for the volunteer "${req.body.volunteer}".`)
+        return;
+    }
+
+    // ensure the end time is after the start time
+    if (record.startTime >= req.body.endTime) {
+        res.writeHead(400, {
+            "content-type": "text/plain"
+        })
+        res.end("Session start time is later than or equal to the provided end time.");
+        return;
+    }
+
+    record.endTime = validateData(req.body.endTime, res);
+    record.note = req.body.note;
+    let hours = Math.round((record.endTime - record.startTime) * 100) / 100;
+    record.hours = hours;
+    let saveRecord = record.save();
+    for (var commitment of volunteer.assignments) {
+        if (commitment.program == req.body.program) {
+            commitment.hours += hours;
+        }
+    }
+
+    Promise.all([saveRecord, volunteer.save()]).then(() => {
+        res.writeHead(200, {
+            "content-type": "text/plain"
+        })
+        res.end();
     })
 }

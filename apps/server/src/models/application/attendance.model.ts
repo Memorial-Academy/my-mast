@@ -1,24 +1,38 @@
 import { Schema } from "mongoose";
 import { ApplicationDB } from "../../scripts/db";
 
-const Attendance = ApplicationDB.model(
-    "Attendance",
+export const StudentAttendance = ApplicationDB.model(
+    "StudentAttendance",
     new Schema({
         program: { type: String, required: true },
-        role: { type: String, required: true, enum: ["volunteer", "student"]},
         uuid: { type: String, required: true },
         date: {
             type: {
-                week: { type: Number, required: true },
+                year: { type: Number, required: true },
+                day: { type: Number, required: true },
+                month: { type: Number, required: true },
+            },
+            required: true
+        }
+    })
+)
+
+export const VolunteerAttendance = ApplicationDB.model(
+    "VolunteerAttendance",
+    new Schema({
+        program: { type: String, required: true },
+        uuid: { type: String, required: true },
+        date: {
+            type: {
                 year: { type: Number, required: true },
                 day: { type: Number, required: true },
                 month: { type: Number, required: true },
             },
             required: true
         },
-        present: { type: Boolean, required: true, default: false },
-        hours: { type: Number, required: false, default: 0 }
+        startTime: { type: Number, required: true },
+        endTime: { type: Number, required: true, default: -1 }, // -1 as end time == volunteer has been checked in but not checked out (volunteering time is incomplete)
+        hours: { type: Number, required: false, default: 0 },
+        note: { type: String , required: false }
     })
 )
-
-export default Attendance;

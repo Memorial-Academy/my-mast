@@ -30,5 +30,8 @@ AdminRouter.post("/addadmin", Controller.addProgramAdmin);
 AdminRouter.post("/unenroll/student", Controller.unenrollStudent_Admin);
 AdminRouter.post("/unenroll/volunteer", Controller.unenrollVolunteer_Admin);
 AdminRouter.post("/allowenrollments", Controller.toggleNewEnrollments);
+AdminRouter.post("/attendance/volunteer/checkin", Controller.checkInVolunteer);
+AdminRouter.post("/attendance/volunteer/checkout", Controller.checkOutVolunteer);
+AdminRouter.post("/attendance/volunteer/checkinstatus", Controller.volunteerCheckInStatus);
 
 export default AdminRouter;
