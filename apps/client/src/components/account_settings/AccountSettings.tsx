@@ -4,6 +4,7 @@ import AddStudent from "@/components/account_settings/AddStudentPopup";
 import { updateProfileFormHandler, updateStudentsFormHandler } from "@/app/lib/update_accounts";
 import { LabelledInput, Card, ConfirmationPopup } from "@mymast/ui";
 import API from "@/app/lib/APIHandler";
+import { leadingZero } from "@mymast/utils/string_helpers";
 
 type AccountSettingsFormProps = {
     session: Session,
@@ -202,10 +203,3 @@ export function ManageStudents({session, students}: ManageStudentProfilesProps) 
     )
 }
 
-function leadingZero(num: number) {
-    if (num < 10) {
-        return "0" + num;
-    } else {
-        return num.toString();
-    }
-}

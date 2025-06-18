@@ -58,3 +58,10 @@ export function getFullName(name: FullName) {
     return `${name.first} ${name.last}`;
 }
 
+export function leadingZero(num: number) {
+    if (num < 10) {
+        return "0" + num;
+    } else {
+        return num.toString();
+    }
+}
