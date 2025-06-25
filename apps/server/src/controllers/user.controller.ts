@@ -9,12 +9,13 @@ import { Templates } from "../scripts/pug_handler";
 import { sendMail } from "../scripts/mailer";
 import { unenrollStudent } from "../scripts/unenroll";
 import AuthUser from "../models/auth/user.model";
-import { validateEmail } from "../scripts/input_validation";
+import { validateData, validateEmail } from "../scripts/input_validation";
+import { VolunteerAttendance } from "../models/application/attendance.model";
 
 function checkRole(correctRole: "volunteer" | "parent", req: Request, res: Response) {
     if (req.params.role != correctRole) {
-        res.writeHead(404);
-        res.end();
+        res.writeHead(403);
+        res.end(`The role ${req.params.role} is not able to access this endpoint.`);
         return false;
     } else return true;
 }
@@ -661,4 +662,30 @@ export async function updateStudents(req: Request, res: Response) {
         "content-type": "text/plain"
     })
     res.end();
+}
+
+export async function getVolunteeringHours(req: Request, res: Response) {
+    if (!checkRole("volunteer", req, res)) return;
+
+    let records = await VolunteerAttendance.find({
+        uuid: validateData(req.body.uuid, res),
+        program: validateData(req.body.program, res),
+        endTime: { $gt: -1 }
+    }, {
+        "date": 1,
+        "startTime": 1,
+        "endTime": 1,
+        "hours": 1,
+        "note": 1,
+        "_id": 0
+    })
+
+    res.writeHead(200, {
+        "content-type": "application/json"
+    })
+    if (!records) {
+        res.end(JSON.stringify([{}]));
+    } else {
+        res.end(JSON.stringify(records));
+    }
 }

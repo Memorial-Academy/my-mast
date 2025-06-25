@@ -54,3 +54,19 @@ export type Course = {
     duration: number,
     available: number[]
 }
+
+export type VolunteerAttendanceRecord = {
+    program: string,
+    uuid: string,
+    date: {
+        date: number,
+        month: number,
+        year: number
+    },
+    startTime: number,
+    endTime: number,
+    hours: number,
+    note?: string
+}
+
+export type AbridgedVolunteerAttendanceRecord = Omit<VolunteerAttendanceRecord, "program" | "uuid">;

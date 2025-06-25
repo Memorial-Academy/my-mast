@@ -32,8 +32,8 @@ export const Table = {
     Row: (props: RowProps) => {
         return (
             <tr>
-                {props.data.map(data => {
-                    return <td key={data!.toString()}>{data}</td>
+                {props.data.map((data, index) => {
+                    return <td key={index}>{data}</td>
                 })}
             </tr>
         )

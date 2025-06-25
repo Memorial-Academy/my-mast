@@ -12,16 +12,7 @@ import { Templates } from "../scripts/pug_handler";
 import { sendMail } from "../scripts/mailer";
 import { unenrollStudent, unenrollVolunteer } from "../scripts/unenroll";
 import { VolunteerAttendance } from "../models/application/attendance.model";
-
-function validateData(data: any, res: Response) {
-    if (data) {
-        return data;
-    } else {
-        res.writeHead(400);
-        res.end("Ensure all required information is submitted");
-        return;
-    }
-}
+import { validateData } from "../scripts/input_validation";
 
 export function createProgram(req: Request, res: Response) {
     if (!permissionCheck(res, PERMISSIONS.DIRECTOR)) return;
@@ -628,7 +619,7 @@ export async function checkInVolunteer(req: Request, res: Response) {
         program: validateData(req.body.program, res),
         uuid: validateData(req.body.volunteer, res),
         date: {
-            day: validateData(req.body.date.date, res),
+            date: validateData(req.body.date.date, res),
             month: validateData(req.body.date.month, res),
             year: validateData(req.body.date.year, res)
         },

@@ -1,12 +1,18 @@
-import { DailySchedule } from "@mymast/api/Types";
 import getTimestamp from "./convert_timestamp";
 import { FullName } from "@mymast/api/Types";
 
-export function shortDateString(day: DailySchedule) {
+type GenericDate = {
+    date: number,
+    year: number,
+    month: number,
+    [key: string]: any
+}
+
+export function shortDateString(day: GenericDate) {
     return `${day.month}/${day.date}/${day.year}`;
 }
 
-export function longDateString(day: DailySchedule) {
+export function longDateString(day: GenericDate) {
     let month = "";
 
     switch (day.month) {

@@ -15,7 +15,7 @@ UserRouter.use("/:role", async (req: Request, res: Response, next: NextFunction)
     if (await validateSession(req.body.uuid, req.body.token, req.params.role)) {
         next();
     } else {
-        res.writeHead(403);
+        res.writeHead(401);
         res.end("Invalid session or role");
         return;
     }
@@ -31,5 +31,6 @@ UserRouter.post("/:role/deletestudent", Controller.deleteStudent)   // only for 
 UserRouter.post("/:role/conflicts", Controller.checkConflicts)
 UserRouter.post("/:role/update/profile", Controller.updateProfile)
 UserRouter.post("/:role/update/students", Controller.updateStudents)    // only for `parent` role
+UserRouter.post("/:role/gethours", Controller.getVolunteeringHours)     // only for `volunteer` role
 
 export default UserRouter;

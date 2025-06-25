@@ -2,6 +2,8 @@ import API from "@/app/lib/APIHandler";
 import { ConfirmedVolunteerAssignment } from "@mymast/api/Types";
 import { Card } from "@mymast/ui";
 import getTimestamp from "@mymast/utils/convert_timestamp";
+import ViewVolunteeringHoursPopup from "./ViewHoursPopup";
+import sessionInfo from "@mymast/utils/authorize_session";
 
 export default function ConfirmedVolunteerAssignmentsSection({signups}: {signups: ConfirmedVolunteerAssignment[]}) {
     return (
@@ -92,9 +94,14 @@ export default function ConfirmedVolunteerAssignmentsSection({signups}: {signups
                             {/* Volunteering hours and contact info */}
                             <div>
                                 <p><b>Volunteering Hours</b></p>
-                                <p>
-                                    <ins>Current hours earned: {assignment.hours}</ins>
-                                </p>
+                                <ViewVolunteeringHoursPopup 
+                                    program={{
+                                        name: program.name,
+                                        id: program.id
+                                    }}
+                                    totalHours={assignment.hours}
+                                    auth={(await sessionInfo())!}
+                                />
                                 <p>
                                     Contact the program director for questions relating to volunteering hours, including NHS/service hours and any inaccuracies.
                                     <br/>

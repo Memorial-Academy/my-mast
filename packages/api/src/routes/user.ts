@@ -1,7 +1,7 @@
 import * as Fetch from "../fetcher";
 import type { FullName, Birthday, PendingVolunteerAssignment, ConfirmedVolunteerAssignment, EmergencyContact } from "../../types/user";
 import { UserTypes, UserTypesString } from "../../types/userTypes";
-import { WeeklySchedule } from "../../types";
+import { AbridgedVolunteerAttendanceRecord, VolunteerAttendanceRecord, WeeklySchedule } from "../../types";
 
 export default class User {
     private url = "https://localhost:5000"
@@ -198,6 +198,18 @@ export default class User {
             uuid,
             token,
             students: studentInfo
+        })
+    }
+
+    async getVolunteeringHours(
+        uuid: string,
+        token: string,
+        program_id: string
+    ): Promise<Array<AbridgedVolunteerAttendanceRecord>> {
+        return await Fetch.POST.json(this.url, "volunteer/gethours", {
+            uuid,
+            token,
+            program: program_id
         })
     }
 }
