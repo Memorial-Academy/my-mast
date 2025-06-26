@@ -138,6 +138,7 @@ export async function ConfirmedVolunteerAssignmentsByWeek(props: ConfirmedVolunt
                                                                 id: props.program.id,
                                                                 name: props.program.name
                                                             }}
+                                                            volunteer_id={volunteer.uuid}
                                                         />
                                                     ]}
                                                 />

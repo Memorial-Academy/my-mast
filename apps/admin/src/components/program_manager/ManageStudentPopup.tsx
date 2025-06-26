@@ -38,7 +38,7 @@ export default function ManageStudentPopup(props: ManageStudentPopupProps) {
             <a href="#" onClick={e => {
                 e.preventDefault();
                 setActive(true);
-            }}>Notes & actions</a>
+            }}>{hasNotes ? "Notes & actions" : "Manage student"}</a>
             <Popup 
                 active={active}
                 onClose={() => {setActive(false)}}

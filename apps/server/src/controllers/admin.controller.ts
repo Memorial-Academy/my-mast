@@ -700,7 +700,7 @@ export async function addVolunteerHours(req: Request, res: Response) {
 
     // make sure hours do not already exist in this range
     let conflictingHours = await VolunteerAttendance.find({
-        uuid: req.body.uuid,
+        uuid: req.body.volunteer,
         program: req.body.program,
         "date.month": req.body.date.month,
         "date.date": req.body.date.date,
@@ -759,6 +759,10 @@ export async function viewVolunteerHours(req: Request, res: Response) {
         "hours": 1,
         "note": 1,
         "_id": 0
+    }).sort({
+        "date.year": "asc",
+        "date.month": "asc",
+        "date.date": "asc"
     })
 
     res.writeHead(200, {
@@ -776,7 +780,9 @@ export async function deleteVolunteeringSession(req: Request, res: Response) {
     const program: ProgramsDocument = res.locals.program;
 
     let deleteRecord = await VolunteerAttendance.findOne({
-        date: validateData(req.body.record.date, res),
+        "date.month": validateData(req.body.record.date.month, res),
+        "date.year": validateData(req.body.record.date.year, res),
+        "date.date": validateData(req.body.record.date.date, res),
         startTime: validateData(req.body.record.startTime, res),
         endTime: validateData(req.body.record.endTime, res),
         program: req.body.program,

@@ -60,7 +60,11 @@ export default function ManageVolunteerHours({program, auth, volunteer}: Volunte
                                                 program.id,
                                                 volunteer.uuid,
                                                 {
-                                                    date: record.date,
+                                                    date: {
+                                                        date: record.date.date,
+                                                        month: record.date.month,
+                                                        year: record.date.year
+                                                    },
                                                     startTime: record.startTime,
                                                     endTime: record.endTime,
                                                 }
