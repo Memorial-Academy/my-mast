@@ -71,7 +71,7 @@ export default function AddVolunteerHours({program, volunteer, auth}: VolunteerA
     return (
         <>
             <button onClick={() => {setPopupActive(true)}}>Add hours</button>
-            <Popup active={popupActive} onClose={() => {
+            <Popup active={popupActive} persist={false} onClose={() => {
                 router.refresh();
                 setPopupActive(false);
             }}>

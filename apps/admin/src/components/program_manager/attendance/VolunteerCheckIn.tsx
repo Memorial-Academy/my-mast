@@ -20,6 +20,7 @@ export default function VolunteerCheckIn({program, volunteer, auth}: VolunteerAt
             }}>Check-in</button>
             <Popup
                 active={popupActive}
+                persist={false}
                 onClose={() => {setPopupActive(false)}}
             >
                 <h2>Finalize check-in</h2>

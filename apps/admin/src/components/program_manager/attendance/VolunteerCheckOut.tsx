@@ -26,6 +26,7 @@ export default function VolunteerCheckOut({program, volunteer, auth, checkInTime
             }}>Check-out</button>
             <Popup
                 active={popupActive}
+                persist={false}
                 onClose={() => {setPopupActive(false)}}
             >
                 <h2>Please confirm!</h2>
