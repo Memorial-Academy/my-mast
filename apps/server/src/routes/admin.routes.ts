@@ -34,6 +34,15 @@ AdminRouter.use("/attendance/volunteer", async (req: Request, res: Response, nex
         })
         res.end(`Could not find "${!program ? `program ${req.body.program}` : `volunteer ${req.body.volunteer}`}".`)
         return;
+    // check if the volunteer is enrolled in the program or not
+    } else if (!program.enrollments.volunteers.find((elem) => {
+        return elem.indexOf(volunteer.uuid) != -1;
+    })) {
+        res.writeHead(403, {
+            "content-type": "text/plain"
+        })
+        res.end(`Volunteer "${req.body.volunteer}" is not enrolled in program "${req.body.program}".`);
+        return;
     } else {
         res.locals.program = program;
         res.locals.volunteer = volunteer;
@@ -57,5 +66,7 @@ AdminRouter.post("/attendance/volunteer/checkinstatus", Controller.volunteerChec
 AdminRouter.post("/attendance/volunteer/checkin", Controller.checkInVolunteer);
 AdminRouter.post("/attendance/volunteer/checkout", Controller.checkOutVolunteer);
 AdminRouter.post("/attendance/volunteer/addhours", Controller.addVolunteerHours);
+AdminRouter.post("/attendance/volunteer/gethours", Controller.viewVolunteerHours);
+AdminRouter.post("/attendance/volunteer/deletehours", Controller.deleteVolunteeringSession);
 
 export default AdminRouter;

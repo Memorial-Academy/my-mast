@@ -7,6 +7,7 @@ import { getFullName } from "@mymast/utils/string_helpers";
 import Link from "next/link";
 import { Suspense } from "react";
 import AddVolunteerHours from "@/components/program_manager/attendance/AddVolunteerHours";
+import ManageVolunteerHours from "@/components/program_manager/attendance/ManageVolunteerHours";
 
 export const generateMetadata = generateProgramManagerMetadata("Volunteer Attendance/Hours");
 
@@ -63,7 +64,17 @@ export default async function Page({params}: ParamsArgument) {
                                     }}
                                     auth={auth}
                             />
-                            
+                            <ManageVolunteerHours 
+                                    program={{
+                                        id: data.id,
+                                        name: data.name
+                                    }}
+                                    volunteer={{
+                                        uuid: volunteer.uuid,
+                                        fullName: getFullName(volunteer.name)
+                                    }}
+                                    auth={auth}
+                            />
                         </>,
                         signup.hours + " hrs"
                     ]}/>

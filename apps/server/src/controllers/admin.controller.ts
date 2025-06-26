@@ -663,13 +663,6 @@ export async function checkOutVolunteer(req: Request, res: Response) {
     record.hours = hours;
 
     // update overall volunteer hours
-    if (program.enrollments.volunteers.indexOf(req.body.volunteer) == -1) {
-        res.writeHead(403, {
-            "content-type": "text/plain"
-        })
-        res.end(`Volunteer "${req.body.volunteer}" is not enrolled in program "${req.body.program}".`);
-        return;
-    }
     let saveRecord = record.save();
     for (var commitment of volunteer.assignments) {
         if (commitment.program == req.body.program) {
@@ -689,17 +682,7 @@ export async function addVolunteerHours(req: Request, res: Response) {
     const volunteer: VolunteersDocument = res.locals.volunteer;
     const program: ProgramsDocument = res.locals.program;
 
-    if (!program.enrollments.volunteers.find((elem) => {
-        return elem.indexOf(volunteer.uuid) != -1;
-    })) {
-        res.writeHead(403, {
-            "content-type": "text/plain"
-        })
-        res.end(`Volunteer "${req.body.volunteer}" is not enrolled in program "${req.body.program}".`);
-        return;
-    }
-
-    // calculate hours, ensure they are negative
+    // calculate hours, ensure they are not negative
     let recordHours = roundTimeInteger(validateData(req.body.endTime, res) - validateData(req.body.startTime, res));
     if (recordHours <= 0) {
         res.writeHead(400, {
@@ -761,6 +744,63 @@ export async function addVolunteerHours(req: Request, res: Response) {
         res.writeHead(200, {
             "content-type": "text/plain"
         });
+        res.end();
+    })
+}
+
+export async function viewVolunteerHours(req: Request, res: Response) {
+    let records = await VolunteerAttendance.find({
+        uuid: req.body.volunteer,
+        program: req.body.program
+    }, {
+        "date": 1,
+        "startTime": 1,
+        "endTime": 1,
+        "hours": 1,
+        "note": 1,
+        "_id": 0
+    })
+
+    res.writeHead(200, {
+        "content-type": "application/json"
+    })
+    if (!records) {
+        res.end(JSON.stringify([{}]));
+    } else {
+        res.end(JSON.stringify(records));
+    }
+}
+
+export async function deleteVolunteeringSession(req: Request, res: Response) {
+    const volunteer: VolunteersDocument = res.locals.volunteer;
+    const program: ProgramsDocument = res.locals.program;
+
+    let deleteRecord = await VolunteerAttendance.findOne({
+        date: validateData(req.body.record.date, res),
+        startTime: validateData(req.body.record.startTime, res),
+        endTime: validateData(req.body.record.endTime, res),
+        program: req.body.program,
+        uuid: req.body.volunteer
+    })
+
+    if (!deleteRecord) {
+        res.writeHead(404, {
+            "content-type": "text/plain"
+        })
+        res.end(`Could not find any records for volunteer "${req.body.volunteer}" for the program "${req.body.program}" that matched the provided criteria: ${JSON.stringify(req.body.record)}`);
+        return;
+    }
+
+    for (var commitment of volunteer.assignments) {
+        if (commitment.program == program.id) {
+            commitment.hours = roundTimeInteger(commitment.hours - deleteRecord.hours)
+        }
+    }
+
+    Promise.all([volunteer.save(), deleteRecord.deleteOne()]).then(() => {
+        res.writeHead(200, {
+            "content-type": "text/plain"
+        })
         res.end();
     })
 }

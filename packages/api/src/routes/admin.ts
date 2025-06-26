@@ -1,5 +1,5 @@
 import { ConfirmedVolunteerAssignment, FullName, PendingVolunteerAssignment, VolunteeringCommitment } from "../../types";
-import { Program } from "../../types/application";
+import { AbridgedVolunteerAttendanceRecord, Program, VolunteerAttendanceRecord } from "../../types/application";
 import { UserTypes } from "../../types/userTypes";
 import * as Fetch from "../fetcher";
 
@@ -250,7 +250,7 @@ export default class Admin {
                 note
             })
         },
-        addVolunteerHours: async(
+        addVolunteerHours: async (
             uuid: string,
             token: string,
             program_id: string,
@@ -274,7 +274,34 @@ export default class Admin {
                 endTime,
                 note
             })
+        },
+        getVolunteerHours: async (
+            uuid: string,
+            token: string,
+            program_id: string,
+            volunteer_uuid: string,
+        ): Promise<AbridgedVolunteerAttendanceRecord[]> => {
+            return await Fetch.POST.json(this.url, "attendance/volunteer/gethours", {
+                uuid,
+                token,
+                program: program_id,
+                volunteer: volunteer_uuid
+            })
+        },
+        deleteVolunteeringSession: async (
+            uuid: string,
+            token: string,
+            program_id: string,
+            volunteer_uuid: string,
+            record: Omit<AbridgedVolunteerAttendanceRecord, "note" | "hours">
+        ): Promise<void> => {
+            return await Fetch.POST.json(this.url, "attendance/volunteer/deletehours", {
+                uuid,
+                token,
+                program: program_id,
+                volunteer: volunteer_uuid,
+                record
+            })
         }
     }
-
 }

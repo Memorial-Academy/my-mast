@@ -32,7 +32,7 @@ export const VolunteerAttendance = ApplicationDB.model(
         },
         startTime: { type: Number, required: true },
         endTime: { type: Number, required: true, default: -1 }, // -1 as end time == volunteer has been checked in but not checked out (volunteering time is incomplete)
-        hours: { type: Number, required: false, default: 0 },
+        hours: { type: Number, required: true, default: 0 },
         note: { type: String , required: false }
     })
 )
