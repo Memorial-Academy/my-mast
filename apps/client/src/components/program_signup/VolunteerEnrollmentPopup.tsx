@@ -43,8 +43,14 @@ export default function VolunteerEnrollmentPopup(props: VolunteerEnrollmentPopup
             {/* PAGE 1: initial course, week, and instructor preference selection */}
             <form
                 action={async data => {
-                    let signupVerification = await volunteerSignup(data, props.program.id);
-                    console.log(signupVerification);
+                    let signupVerification;
+                    try {
+                        signupVerification = await volunteerSignup(data, props.program.id);
+                    } catch(e) {
+                        alert("Please ensure you select the week (and if applicable, the course) you are interested in volunteering for.");
+                        return;
+                    }
+
                     if (signupVerification) {
                         setEnrollment(signupVerification)
                         setPage(2);

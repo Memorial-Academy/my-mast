@@ -72,7 +72,11 @@ export async function submitStudentEnrollment(data: Array<StudentEnrollmentInfor
 
 // Handlers for a volunteer signing up
 // initial verification of enrollment information
-export async function volunteerSignup(data: FormData, program_id: string) {
+export async function volunteerSignup(data: FormData, program_id: string): Promise<false | {
+    weeks: number[],
+    courses: number[],
+    instructor: boolean
+}> {
     const auth = (await sessionInfo())!;
     let courseInterest = data.getAll("course_interest").map(val => {
         return parseInt(val.toString());
@@ -82,22 +86,27 @@ export async function volunteerSignup(data: FormData, program_id: string) {
         return parseInt(val.toString());
     })
     
-    let {conflicts} = await API.User.checkVolunteerConflicts(
-        auth.uuid,
-        auth.token,
-        program_id,
-        weeks
-    );
-    
-    if (!conflicts) {
-        return {
-            weeks: weeks.length == 0 ? [1] : weeks,
-            courses: courseInterest.length == 0 ? [0] : courseInterest,
-            instructor: data.get("instructor")?.toString() == "yes" ? true : false
-        }
+    if (weeks.length == 0) {
+        throw new Error("Please select a valid week and course!");
     } else {
-        return false;
-    } 
+        console.log("in the else", weeks, courseInterest)
+        let {conflicts} = await API.User.checkVolunteerConflicts(
+            auth.uuid,
+            auth.token,
+            program_id,
+            weeks
+        );
+
+        if (!conflicts) {
+            return {
+                weeks: weeks.length == 0 ? [1] : weeks,
+                courses: courseInterest.length == 0 ? [0] : courseInterest,
+                instructor: data.get("instructor")?.toString() == "yes" ? true : false
+            }
+        } else {
+            return false;
+        } 
+    }
 }
 
 // submit volunteer signup
