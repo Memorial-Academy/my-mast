@@ -10,7 +10,7 @@
   },
   "license": "ISC",
   "devDependencies": {
-    "turbo": "^2.5.2"
+    "turbo": "^2.5.4"
   },
   "packageManager": "pnpm@9.9.0"
 }

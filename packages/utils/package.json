@@ -9,10 +9,10 @@
     },
     "dependencies": {
         "@mymast/api": "workspace:*",
-        "next": "^14.2.28"
+        "next": "^14.2.30"
     },
     "devDependencies": {
-        "@types/node": "^22.15.3",
+        "@types/node": "^22.15.33",
         "typescript": "^5.8.3"
     }
 }
