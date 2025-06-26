@@ -249,6 +249,31 @@ export default class Admin {
                 endTime,
                 note
             })
+        },
+        addVolunteerHours: async(
+            uuid: string,
+            token: string,
+            program_id: string,
+            volunteer_uuid: string,
+            date: {
+                date: number,
+                month: number,
+                year: number
+            },
+            startTime: number,
+            endTime: number,
+            note?: string
+        ): Promise<void> => {
+            return await Fetch.POST.json(this.url, "attendance/volunteer/addhours", {
+                uuid,
+                token,
+                program: program_id,
+                volunteer: volunteer_uuid,
+                date,
+                startTime,
+                endTime,
+                note
+            })
         }
     }
 

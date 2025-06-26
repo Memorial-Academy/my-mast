@@ -10,6 +10,6 @@
     "outDir": "./dist",
     "removeComments": true
   },
-  "include": ["src/**/*.ts", "types/"],
+  "include": ["src/**/*.ts", "src/types"],
   "exclude": ["node_modules"]
 }

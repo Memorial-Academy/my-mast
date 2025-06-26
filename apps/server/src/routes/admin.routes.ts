@@ -1,6 +1,9 @@
 import { Request, Response, NextFunction, Router } from "express";
 import validateSession, { validateAdmin } from "../scripts/validate_session";
 import * as Controller from "../controllers/admin.controller";
+import Program from "../models/application/program.model";
+import VolunteerUser from "../models/users/volunteer.model";
+import { validateData } from "../scripts/input_validation";
 
 const AdminRouter = Router();
 
@@ -12,9 +15,29 @@ AdminRouter.use(async (req: Request, res: Response, next: NextFunction) => {
         res.locals.adminLevel = adminLevel;
         next();
     } else {
-        res.writeHead(403);
+        res.writeHead(401, {
+            "content-type": "text/plain"
+        });
         res.end("Forbidden. Not a valid session or admin");
         return;
+    }
+})
+
+// middleware to ensure both a valid volunteer user and program exist (mainly for /attendance/volunteer endpoints)
+AdminRouter.use("/attendance/volunteer", async (req: Request, res: Response, next: NextFunction) => {
+    // ensure the program and volunteer exist
+    let program = await Program.findOne({id: validateData(req.body.program, res)});
+    let volunteer = await VolunteerUser.findOne({uuid: validateData(req.body.volunteer, res)});
+    if (!program || !volunteer) {
+        res.writeHead(404, {
+            "content-type": "text/plain"
+        })
+        res.end(`Could not find "${!program ? `program ${req.body.program}` : `volunteer ${req.body.volunteer}`}".`)
+        return;
+    } else {
+        res.locals.program = program;
+        res.locals.volunteer = volunteer;
+        next();
     }
 })
 
@@ -30,8 +53,9 @@ AdminRouter.post("/addadmin", Controller.addProgramAdmin);
 AdminRouter.post("/unenroll/student", Controller.unenrollStudent_Admin);
 AdminRouter.post("/unenroll/volunteer", Controller.unenrollVolunteer_Admin);
 AdminRouter.post("/allowenrollments", Controller.toggleNewEnrollments);
+AdminRouter.post("/attendance/volunteer/checkinstatus", Controller.volunteerCheckInStatus);
 AdminRouter.post("/attendance/volunteer/checkin", Controller.checkInVolunteer);
 AdminRouter.post("/attendance/volunteer/checkout", Controller.checkOutVolunteer);
-AdminRouter.post("/attendance/volunteer/checkinstatus", Controller.volunteerCheckInStatus);
+AdminRouter.post("/attendance/volunteer/addhours", Controller.addVolunteerHours);
 
 export default AdminRouter;

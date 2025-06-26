@@ -13,6 +13,7 @@ import { sendMail } from "../scripts/mailer";
 import { unenrollStudent, unenrollVolunteer } from "../scripts/unenroll";
 import { VolunteerAttendance } from "../models/application/attendance.model";
 import { validateData } from "../scripts/input_validation";
+import { ProgramsDocument, VolunteersDocument } from "../types/mongoose.gen";
 
 export function createProgram(req: Request, res: Response) {
     if (!permissionCheck(res, PERMISSIONS.DIRECTOR)) return;
@@ -589,17 +590,7 @@ export async function volunteerCheckInStatus(req: Request, res: Response) {
 }
 
 export async function checkInVolunteer(req: Request, res: Response) {
-    // ensure the program and volunteer exist
-    let program = await Program.findOne({id: req.body.program});
-    let volunteer = await VolunteerUser.findOne({uuid: req.body.volunteer});
-    if (!program || !volunteer) {
-        res.writeHead(404, {
-            "content-type": "text/plain"
-        })
-        res.end(`Could not find "${!program ? `program ${req.body.program}` : `volunteer ${req.body.volunteer}`}".`)
-        return;
-    }
-
+    console.log(res.locals);
     // volunteers cannot be checked in if they have an incomplete time record
     // find all incomplete records
     let incompleteSession = await VolunteerAttendance.findOne({
@@ -632,17 +623,13 @@ export async function checkInVolunteer(req: Request, res: Response) {
     })
 }
 
+function roundTimeInteger(int: number) {
+    return Math.round(int * 100) / 100;
+}
+
 export async function checkOutVolunteer(req: Request, res: Response) {
-    // ensure the program and volunteer exist
-    let program = await Program.findOne({id: req.body.program});
-    let volunteer = await VolunteerUser.findOne({uuid: req.body.volunteer});
-    if (!program || !volunteer) {
-        res.writeHead(404, {
-            "content-type": "text/plain"
-        })
-        res.end(`Could not find "${!program ? `program ${req.body.program}` : `volunteer ${req.body.volunteer}`}".`)
-        return;
-    }
+    const volunteer: VolunteersDocument = res.locals.volunteer;
+    const program: ProgramsDocument = res.locals.program;
 
     // find the incomplete attendance record
     let record = await VolunteerAttendance.findOne({
@@ -669,14 +656,24 @@ export async function checkOutVolunteer(req: Request, res: Response) {
         return;
     }
 
+    // complete the attendance record
     record.endTime = validateData(req.body.endTime, res);
     record.note = req.body.note;
-    let hours = Math.round((record.endTime - record.startTime) * 100) / 100;
+    let hours = roundTimeInteger(record.endTime - record.startTime);
     record.hours = hours;
+
+    // update overall volunteer hours
+    if (program.enrollments.volunteers.indexOf(req.body.volunteer) == -1) {
+        res.writeHead(403, {
+            "content-type": "text/plain"
+        })
+        res.end(`Volunteer "${req.body.volunteer}" is not enrolled in program "${req.body.program}".`);
+        return;
+    }
     let saveRecord = record.save();
     for (var commitment of volunteer.assignments) {
         if (commitment.program == req.body.program) {
-            commitment.hours += hours;
+            commitment.hours = roundTimeInteger(commitment.hours + hours);
         }
     }
 
@@ -684,6 +681,86 @@ export async function checkOutVolunteer(req: Request, res: Response) {
         res.writeHead(200, {
             "content-type": "text/plain"
         })
+        res.end();
+    })
+}
+
+export async function addVolunteerHours(req: Request, res: Response) {
+    const volunteer: VolunteersDocument = res.locals.volunteer;
+    const program: ProgramsDocument = res.locals.program;
+
+    if (!program.enrollments.volunteers.find((elem) => {
+        return elem.indexOf(volunteer.uuid) != -1;
+    })) {
+        res.writeHead(403, {
+            "content-type": "text/plain"
+        })
+        res.end(`Volunteer "${req.body.volunteer}" is not enrolled in program "${req.body.program}".`);
+        return;
+    }
+
+    // calculate hours, ensure they are negative
+    let recordHours = roundTimeInteger(validateData(req.body.endTime, res) - validateData(req.body.startTime, res));
+    if (recordHours <= 0) {
+        res.writeHead(400, {
+            "content-type": "text/plain"
+        });
+        res.end("The end time must be greater than the start time.");
+        return;
+    }
+
+    let date = {
+        month: validateData(req.body.date.month, res),
+        date: validateData(req.body.date.date, res),
+        year: validateData(req.body.date.year, res),
+    }
+
+    // make sure hours do not already exist in this range
+    let conflictingHours = await VolunteerAttendance.find({
+        uuid: req.body.uuid,
+        program: req.body.program,
+        "date.month": req.body.date.month,
+        "date.date": req.body.date.date,
+        "date.year": req.body.date.year,
+        $or: [
+            {$and: [
+                { startTime: { $gte: req.body.startTime } },
+                { endTime: { $lte: req.body.endTime } }
+            ]},
+            {$and: [
+                { startTime: { $lte: req.body.startTime } },
+                { endTime: { $gte: req.body.endTime } }
+            ]},
+        ]
+    })
+    if (conflictingHours.length > 0) {
+        res.writeHead(409, {
+            "content-type": "text/plain"
+        })
+        res.end(`Volunteer "${req.body.volunteer}" already has volunteering hours for the program "${req.body.program}" during this date and time range.`)
+        return;
+    }
+
+    let createRecord = VolunteerAttendance.create({
+        uuid: req.body.volunteer,
+        program: req.body.program,
+        date: date,
+        startTime: req.body.startTime,
+        endTime: req.body.endTime,
+        hours: recordHours,
+        note: req.body.note
+    })
+
+    for (var commitment of volunteer.assignments) {
+        if (commitment.program == req.body.program) {
+            commitment.hours = roundTimeInteger(commitment.hours + recordHours);
+        }
+    }
+
+    Promise.all([createRecord, volunteer.save()]).then(() => {
+        res.writeHead(200, {
+            "content-type": "text/plain"
+        });
         res.end();
     })
 }

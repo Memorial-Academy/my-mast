@@ -71,3 +71,12 @@ export function leadingZero(num: number) {
         return num.toString();
     }
 }
+
+export function formDateToDateObject(date: string) {    // formatted as YYYY-MM-DD
+    let dateArr = date.split("-");
+    return {
+        month: parseInt(dateArr[1]),
+        year: parseInt(dateArr[0]),
+        date: parseInt(dateArr[2])
+    }
+}
