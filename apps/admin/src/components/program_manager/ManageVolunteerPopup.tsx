@@ -34,6 +34,7 @@ export default function ManageVolunteerPopup(props: ManageVolunteerPopupProps) {
             >Manage volunteer</a>
             <Popup
                 active={active}
+                persist={false}
                 onClose={() => {
                     setActive(false);
                 }}
