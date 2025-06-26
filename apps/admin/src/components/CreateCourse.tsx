@@ -31,7 +31,7 @@ function CourseCard({count, scheduleWeeks}: {count: number, scheduleWeeks: Sched
     }
 
     // Determine options for enrollment available
-    let enrollmentAvailable: string[][] = [];
+    let enrollmentAvailable: [string, string][] = [];
     for (var i = 1; i < scheduleWeeks.length + 2 - duration; i++) {
         enrollmentAvailable.push([i.toString(), `Week ${i}`]);
     }
