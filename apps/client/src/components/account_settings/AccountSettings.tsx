@@ -5,6 +5,7 @@ import { updateProfileFormHandler, updateStudentsFormHandler } from "@/app/lib/u
 import { LabelledInput, Card, ConfirmationPopup } from "@mymast/ui";
 import API from "@/app/lib/APIHandler";
 import { leadingZero } from "@mymast/utils/string_helpers";
+import { useRouter } from "next/navigation";
 
 type AccountSettingsFormProps = {
     session: Session,
@@ -25,12 +26,18 @@ type AccountSettingsFormProps = {
 }
 
 export default function AccountSettingsForm({session, role, profile}: AccountSettingsFormProps) {
+    const router = useRouter();
     return (
         <form 
             className="edit-account"
             action={async (data: FormData) => {
+                if (data.get("email")?.toString() != profile.email && profile.email != "") {
+                    let confirmation = confirm(`You're attempting to change your email address. Please note that changing your email address changes both the email address you are contacted at AND the email address you use to login.\n\nCurrent email: ${profile.email}\nNew email: ${data.get("email")?.toString()}\n\nAre you sure you want to continue?`);
+                    if (!confirmation) return;
+                }
                 await updateProfileFormHandler(data, session, role);
                 alert("Your account has been updated!");
+                router.refresh();
             }}
         >
             <h3>Personal Information</h3>
