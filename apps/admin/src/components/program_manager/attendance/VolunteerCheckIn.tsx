@@ -36,7 +36,7 @@ export default function VolunteerCheckIn({program, volunteer, auth}: VolunteerAt
                         {
                             date: currentDate.getDate(),
                             year: currentDate.getFullYear(),
-                            month: currentDate.getMonth()
+                            month: currentDate.getMonth() + 1
                         },
                         time
                     )
