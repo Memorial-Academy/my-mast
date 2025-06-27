@@ -302,6 +302,23 @@ export default class Admin {
                 volunteer: volunteer_uuid,
                 record
             })
+        },
+        editVolunteeringHours: async (
+            uuid: string,
+            token: string,
+            program_id: string,
+            volunteer_uuid: string,
+            original_record: Omit<AbridgedVolunteerAttendanceRecord, "hours" | "note">,
+            new_record: Omit<AbridgedVolunteerAttendanceRecord, "hours">
+        ): Promise<void> => {
+            return await Fetch.POST.json(this.url, "attendance/volunteer/edithours", {
+                uuid,
+                token,
+                program: program_id,
+                volunteer: volunteer_uuid,
+                original: original_record,
+                new: new_record
+            })
         }
     }
 }

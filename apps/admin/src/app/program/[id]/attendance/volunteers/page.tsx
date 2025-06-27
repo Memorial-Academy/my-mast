@@ -74,6 +74,7 @@ export default async function Page({params}: ParamsArgument) {
                                         fullName: getFullName(volunteer.name)
                                     }}
                                     auth={auth}
+                                    totalHours={signup.hours}
                             />
                         </>,
                         signup.hours + " hrs"

@@ -68,5 +68,6 @@ AdminRouter.post("/attendance/volunteer/checkout", Controller.checkOutVolunteer)
 AdminRouter.post("/attendance/volunteer/addhours", Controller.addVolunteerHours);
 AdminRouter.post("/attendance/volunteer/gethours", Controller.viewVolunteerHours);
 AdminRouter.post("/attendance/volunteer/deletehours", Controller.deleteVolunteeringSession);
+AdminRouter.post("/attendance/volunteer/edithours", Controller.editVolunteeringSession);
 
 export default AdminRouter;

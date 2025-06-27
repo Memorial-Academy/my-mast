@@ -8,8 +8,13 @@ import getTimestamp, { calculateTimeDifference } from "@mymast/utils/convert_tim
 import API from "@/app/lib/APIHandler";
 import { useRouter } from "next/navigation";
 import AddVolunteerHours from "./AddVolunteerHours";
+import EditVolunteeringHours from "./EditVolunteeringHours";
 
-export default function ManageVolunteerHours({program, auth, volunteer}: VolunteerAttendanceCheckInProps) {
+interface ManageVolunteerHoursProps extends VolunteerAttendanceCheckInProps {
+    totalHours: number
+}
+
+export default function ManageVolunteerHours({program, auth, volunteer, totalHours}: ManageVolunteerHoursProps) {
     const [popupActive, setPopupActive] = useState(false);
     const [records, setRecords] = useState<AbridgedVolunteerAttendanceRecord[]>();
     const [loaded, setLoaded] = useState(false);
@@ -32,6 +37,11 @@ export default function ManageVolunteerHours({program, auth, volunteer}: Volunte
             <button onClick={() => {setPopupActive(true)}}>Manage hours</button>
             <Popup active={popupActive} onClose={() => {setPopupActive(false)}}>
                 <h2>Manage volunteering hours for {volunteer.fullName}</h2>
+                <p>
+                    <b>Program:</b> {program.name}
+                    <br/>
+                    <b>Total hours:</b> {totalHours} hrs
+                </p>
                 {loaded ? 
                     <Table.Root columns={[
                         "Date",
@@ -73,6 +83,21 @@ export default function ManageVolunteerHours({program, auth, volunteer}: Volunte
                                             })
                                         }}
                                     />
+                                    {record.endTime != -1 && <>
+                                        <br/>
+                                        <EditVolunteeringHours 
+                                            program={{
+                                                id: program.id,
+                                                name: program.name
+                                            }}
+                                            auth={auth}
+                                            volunteer={{
+                                                uuid: volunteer.uuid,
+                                                fullName: volunteer.fullName
+                                            }}
+                                            record={record}
+                                        />
+                                    </>}
                                 </>
                             ]} />
                         }) : <p>No records found for {volunteer.fullName} for the program {program.name}. Try adding some volunteering hours!</p>}

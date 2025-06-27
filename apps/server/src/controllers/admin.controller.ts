@@ -490,7 +490,6 @@ export async function unenrollStudent_Admin(req: Request, res: Response) {
     let unenrollPromise = unenrollStudent(req.body.enrollmentID);
     unenrollPromise.then((statusCode) => {
         res.type("text/plain");
-        console.log(statusCode)
         if (statusCode == 0) {
             res.writeHead(200);
             res.end();
@@ -590,7 +589,6 @@ export async function volunteerCheckInStatus(req: Request, res: Response) {
 }
 
 export async function checkInVolunteer(req: Request, res: Response) {
-    console.log(res.locals);
     // volunteers cannot be checked in if they have an incomplete time record
     // find all incomplete records
     let incompleteSession = await VolunteerAttendance.findOne({
@@ -804,6 +802,88 @@ export async function deleteVolunteeringSession(req: Request, res: Response) {
     }
 
     Promise.all([volunteer.save(), deleteRecord.deleteOne()]).then(() => {
+        res.writeHead(200, {
+            "content-type": "text/plain"
+        })
+        res.end();
+    })
+}
+
+export async function editVolunteeringSession(req: Request, res: Response) {
+    const volunteer: VolunteersDocument = res.locals.volunteer;
+    // find the record to update and error if it doesn't exist
+    let existingRecord = await VolunteerAttendance.findOne({
+        uuid: req.body.volunteer,
+        program: req.body.program,
+        "date.month": validateData(req.body.original.date.month, res),
+        "date.year": validateData(req.body.original.date.year, res),
+        "date.date": validateData(req.body.original.date.date, res),
+        startTime: validateData(req.body.original.startTime, res),
+        endTime: validateData(req.body.original.endTime, res),
+    })
+
+    if (!existingRecord) {
+        res.writeHead(404, {
+            "content-type": "text/plain"
+        });
+        res.end(`The record "${JSON.stringify(req.body.original)}" was not found for the volunteer "${req.body.volunteer}" for the program "${req.body.program}".`)
+        return;
+    }
+
+    // ensure no conflicting records with the new record
+    if (!validateData(req.body.new.startTime, res) || !validateData(req.body.new.endTime, res)) return;
+    let conflictingRecord = await VolunteerAttendance.findOne({
+        uuid: req.body.volunteer,
+        program: req.body.program,
+        "date.month": validateData(req.body.new.date.month, res),
+        "date.year": validateData(req.body.new.date.year, res),
+        "date.date": validateData(req.body.new.date.date, res),
+        $or: [
+            {$and: [
+                { startTime: { $gte: req.body.new.startTime } },
+                { endTime: { $lte: req.body.new.endTime } }
+            ]},
+            {$and: [
+                { startTime: { $lte: req.body.new.startTime } },
+                { endTime: { $gte: req.body.new.endTime } }
+            ]},
+        ]
+    })
+
+    if (conflictingRecord && conflictingRecord._id.toString() != existingRecord._id.toString()) {
+        res.writeHead(409, {
+            "content-type": "text/plain"
+        })
+        res.end(`Volunteer "${req.body.volunteer}" already has volunteering hours for the program "${req.body.program}" during this date and time range.`)
+        return;
+    }
+
+    // update the record
+    existingRecord.date = req.body.new.date;
+    existingRecord.startTime = req.body.new.startTime;
+    existingRecord.endTime = req.body.new.endTime;
+    existingRecord.note = req.body.new.note;
+
+    // update hours
+    let originalHours = existingRecord.hours;
+    let recordHours = roundTimeInteger(req.body.new.endTime - req.body.new.startTime);
+    if (recordHours <= 0) {
+        res.writeHead(400, {
+            "content-type": "text/plain"
+        });
+        res.end("The end time must be greater than the start time.");
+        return;
+    }
+
+    existingRecord.hours = recordHours;
+
+    for (var commitment of volunteer.assignments) {
+        if (commitment.program == req.body.program) {
+            commitment.hours = roundTimeInteger(commitment.hours - originalHours + recordHours);
+        }
+    }
+
+    Promise.all([existingRecord.save(), volunteer.save()]).then(() => {
         res.writeHead(200, {
             "content-type": "text/plain"
         })

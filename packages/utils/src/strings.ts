@@ -80,3 +80,7 @@ export function formDateToDateObject(date: string) {    // formatted as YYYY-MM-
         date: parseInt(dateArr[2])
     }
 }
+
+export function dateObjectToFormDate(date: GenericDate) {
+    return `${date.year}-${leadingZero(date.month)}-${leadingZero(date.date)}`;
+}

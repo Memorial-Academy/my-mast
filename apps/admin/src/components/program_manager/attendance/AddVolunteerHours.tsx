@@ -15,7 +15,7 @@ export default function AddVolunteerHours({program, volunteer, auth}: VolunteerA
     const router = useRouter();
 
     async function processFormData(data: FormData, submit?: boolean) {
-        let date = data.get("date")?.toString();
+        let formDate = data.get("date")?.toString();
         let times = {
             start: data.get("start_time")?.toString(),
             end: data.get("end_time")?.toString()
@@ -33,28 +33,27 @@ export default function AddVolunteerHours({program, volunteer, auth}: VolunteerA
             return;
         }
 
-        if (date) {
-            setDate( longDateString(formDateToDateObject(date)) );
+        if (formDate) {
+            setDate( longDateString(formDateToDateObject(formDate)) );
         } else if (submit) {
             alert("Please enter a date!");
             return;
         };
 
         if (submit) {
-            console.log("submitting");
             try {
                 await API.Admin.attendance.addVolunteerHours(
                     auth.uuid,
                     auth.token,
                     program.id,
                     volunteer.uuid,
-                    formDateToDateObject(date!),
+                    formDateToDateObject(formDate!),
                     convert24hrTimestamp(times.start!),
                     convert24hrTimestamp(times.end!),
                     data.get("note")?.toString()
                 )
-                console.log("done")
                 router.refresh();
+                
                 if (data.get("prevent_closing")?.toString() != "true") {
                     setPopupActive(false);
                 } else {
