@@ -5,7 +5,7 @@ import { ConfirmationPopup, Popup } from "@mymast/ui";
 import { Suspense, useState } from "react";
 import { VolunteerCheckInStatus } from "./attendance/VolunteerAttendanceStatus";
 import AddVolunteerHours from "./attendance/AddVolunteerHours";
-import ManageVolunteerHours from "./attendance/ManageVolunteerHours";
+import Link from "next/link";
 
 type ManageVolunteerPopupProps = {
     name: string,
@@ -73,14 +73,8 @@ export default function ManageVolunteerPopup(props: ManageVolunteerPopupProps) {
                         uuid: props.volunteer_id
                     }}
                 />
-                <ManageVolunteerHours
-                    program={props.program}
-                    auth={props.auth}
-                    volunteer={{
-                        fullName: props.name,
-                        uuid: props.volunteer_id
-                    }}
-                />
+                <br/>
+                <p>Visit the <Link href={`../attendance/volunteers`}>Volunteer Attendance & Hours page</Link> to edit and delete volunteering hours.</p>
                 <h3>Danger Zone</h3>
                 <ConfirmationPopup
                     buttonText="Delete signup"
