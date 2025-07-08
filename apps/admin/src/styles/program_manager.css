@@ -53,7 +53,7 @@
 a#close-mobile-nav {
     display: none;
     position: absolute;
-    bottom: 3vh;
+    bottom: 18vh;
     right: 5ch;
     z-index: 996;
     width: auto;
@@ -83,6 +83,7 @@ main.program-manager {
     margin: 0;
     padding: 0;
     padding-right: 4vw;
+    padding-bottom: 3vh;
     display: grid;
     grid-template-columns: 20% auto;
     gap: 2.5%;
