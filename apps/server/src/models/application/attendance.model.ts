@@ -9,7 +9,7 @@ export const StudentAttendance = ApplicationDB.model(
         date: {
             type: {
                 year: { type: Number, required: true },
-                day: { type: Number, required: true },
+                date: { type: Number, required: true },
                 month: { type: Number, required: true },
             },
             required: true

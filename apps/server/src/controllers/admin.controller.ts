@@ -11,9 +11,9 @@ import adminProgramSignup from "../scripts/admin_program_signup";
 import { Templates } from "../scripts/pug_handler";
 import { sendMail } from "../scripts/mailer";
 import { unenrollStudent, unenrollVolunteer } from "../scripts/unenroll";
-import { VolunteerAttendance } from "../models/application/attendance.model";
+import { StudentAttendance, VolunteerAttendance } from "../models/application/attendance.model";
 import { validateData } from "../scripts/input_validation";
-import { ProgramsDocument, VolunteersDocument } from "../types/mongoose.gen";
+import { ProgramsDocument, StudentsDocument, VolunteersDocument } from "../types/mongoose.gen";
 
 export function createProgram(req: Request, res: Response) {
     if (!permissionCheck(res, PERMISSIONS.DIRECTOR)) return;
@@ -889,4 +889,119 @@ export async function editVolunteeringSession(req: Request, res: Response) {
         })
         res.end();
     })
+}
+
+// ATTENDANCE FOR STUDENTS
+export async function checkStudentAttendanceStatus(req: Request, res: Response) {
+    const student: StudentsDocument = res.locals.student;
+    const program: ProgramsDocument = res.locals.program;
+
+    if (!req.body.week || req.body.week <= 0 || req.body.week > program.schedule.length) {
+        res.writeHead(400, {
+            "content-type": "text/plain"
+        })
+        res.end(`Value "${req.body.week}}" is not valid for the property week.`);
+        return;
+    };
+    let programSchedule = program.schedule.toObject() as any[][];
+    let schedule = programSchedule[req.body.week - 1];
+    
+    let scheduleQuery = schedule.map(day => {
+        return {
+            "date.month": day.month,
+            "date.year": day.year,
+            "date.date": day.date
+        }
+    })
+    
+    let records = await StudentAttendance.find({
+        uuid: req.body.student,
+        program: req.body.program,
+        $or: scheduleQuery
+    })
+    
+    let status: boolean[] = [];
+    if (records.length == 0) {
+        for (let day of schedule) {
+            status.push(false);
+        }
+    } else {
+        for (let day = 0; day < schedule.length; day++) {
+            for (var record of records) {
+                if (
+                    schedule[day].date == record.date.date &&
+                    schedule[day].month == record.date.month &&
+                    schedule[day].year == record.date.year
+                ) {
+                    status.push(true);
+                } else status.push(false);
+            }
+        }
+    }
+
+    res.writeHead(200, {
+        "content-type": "application/json"
+    })
+    res.end(JSON.stringify(status));
+}
+
+export async function toggleStudentAttendance(req: Request, res: Response) {
+    const student: StudentsDocument = res.locals.student;
+    const program: ProgramsDocument = res.locals.program;
+
+    if (
+        !validateData(req.body.date.date, res) ||
+        !validateData(req.body.date.month, res) ||
+        !validateData(req.body.date.year, res)
+    ) {
+        res.writeHead(400, {
+            "content-type": "text/plain"
+        })
+        res.end(`Date "${JSON.stringify(req.body.date)}" is missing one of the following properties: date, month, year.`);
+        return;
+    }
+
+    // ensure requested date exists in the program
+    let programSchedule = program.schedule.toObject() as any[][];
+    let dateExists = false;
+    for (let week of programSchedule) {
+        for (let day of week) {
+            if (
+                day.month == req.body.date.month &&
+                day.date == req.body.date.date &&
+                day.year == req.body.date.year
+            ) {
+                dateExists = true;
+                break;
+            }
+        }
+        if (dateExists) break;
+    }
+    if (!dateExists) {
+        res.writeHead(404, {
+            "content-type": "text/plain"
+        })
+        res.end(`Date "${JSON.stringify(req.body.date)}" does not exist in the schedule for program "${req.body.program}"`);
+        return;
+    }
+
+    // see if the attendance record exists (in which case delete it)
+    let doc = {
+        program: req.body.program,
+        uuid: req.body.student,
+        "date.date": req.body.date.date,
+        "date.month": req.body.date.month,
+        "date.year": req.body.date.year
+    }
+    let existingRecord = await StudentAttendance.findOne(doc)
+    res.writeHead(200, {
+        "content-type": "application/json"
+    })
+    if (existingRecord) {
+        await existingRecord.deleteOne();
+        res.end(JSON.stringify({status: false}));
+    } else {
+        await StudentAttendance.create(doc);
+        res.end(JSON.stringify({status: true}));
+    }
 }

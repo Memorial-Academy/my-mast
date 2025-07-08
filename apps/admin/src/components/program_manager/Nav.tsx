@@ -35,10 +35,10 @@ export default function ProgramManagerNav({id, name}: {id: string, name: string}
                     text="Volunteers"
                 />
                 <p><b>Attendance & Hours</b></p>
-                {/* <NavLink
+                <NavLink
                     link="attendance/students"
                     text="Student Attendance"
-                /> */}
+                />
                 <NavLink
                     link="attendance/volunteers"
                     text="Volunteer Attendance & Hours"

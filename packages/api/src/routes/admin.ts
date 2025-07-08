@@ -187,6 +187,7 @@ export default class Admin {
     }
 
     attendance = {
+        // VOLUNTEER ATTENDANCE
         checkVolunteerStatus: async (
             uuid: string,
             token: string,
@@ -318,6 +319,41 @@ export default class Admin {
                 volunteer: volunteer_uuid,
                 original: original_record,
                 new: new_record
+            })
+        },
+        // STUDENT ATTENDANCE
+        checkStudentStatus: async (
+            uuid: string,
+            token: string,
+            program_id: string,
+            student_uuid: string,
+            week: number    // start from 1 (week 1 is index 0)
+        ): Promise<boolean[]> => {
+            return await Fetch.POST.json(this.url, "attendance/student/status", {
+                uuid,
+                token,
+                program: program_id,
+                student: student_uuid,
+                week
+            })
+        },
+        toggleStudentAttendance: async (
+            uuid: string,
+            token: string,
+            program_id: string,
+            student_uuid: string,
+            date: {
+                date: number,
+                month: number,
+                year: number
+            }
+        ): Promise<{status: boolean}> => {  // status == true when the operation results in the student being marked present
+            return await Fetch.POST.json(this.url, "attendance/student/toggle", {
+                uuid,
+                token,
+                program: program_id,
+                student: student_uuid,
+                date
             })
         }
     }

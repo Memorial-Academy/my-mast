@@ -4,6 +4,7 @@ import * as Controller from "../controllers/admin.controller";
 import Program from "../models/application/program.model";
 import VolunteerUser from "../models/users/volunteer.model";
 import { validateData } from "../scripts/input_validation";
+import StudentUser from "../models/users/student.model";
 
 const AdminRouter = Router();
 
@@ -41,7 +42,7 @@ AdminRouter.use("/attendance/volunteer", async (req: Request, res: Response, nex
         res.writeHead(403, {
             "content-type": "text/plain"
         })
-        res.end(`Volunteer "${req.body.volunteer}" is not enrolled in program "${req.body.program}".`);
+        res.end(`Volunteer "${req.body.volunteer}" is not signed up for program "${req.body.program}".`);
         return;
     } else {
         res.locals.program = program;
@@ -49,6 +50,34 @@ AdminRouter.use("/attendance/volunteer", async (req: Request, res: Response, nex
         next();
     }
 })
+
+// middleware to ensure both a valid student user and program exist (mainly for /attendance/student endpoints)
+AdminRouter.use("/attendance/student", async (req: Request, res: Response, next: NextFunction) => {
+    // ensure the program and student exist
+    let program = await Program.findOne({id: validateData(req.body.program, res)});
+    let student = await StudentUser.findOne({uuid: validateData(req.body.student, res)});
+    if (!program || !student) {
+        res.writeHead(404, {
+            "content-type": "text/plain"
+        })
+        res.end(`Could not find "${!program ? `program ${req.body.program}` : `student ${req.body.student}`}".`)
+        return;
+    // check if the student is enrolled in the program or not
+    } else if (!program.enrollments.students.find((elem) => {
+        return elem.indexOf(student.uuid) != -1;
+    })) {
+        res.writeHead(403, {
+            "content-type": "text/plain"
+        })
+        res.end(`Student "${req.body.student}" is not enrolled in program "${req.body.program}".`);
+        return;
+    } else {
+        res.locals.program = program;
+        res.locals.student = student;
+        next();
+    }
+})
+
 
 // Routes
 AdminRouter.post("/createprogram", Controller.createProgram);
@@ -69,5 +98,7 @@ AdminRouter.post("/attendance/volunteer/addhours", Controller.addVolunteerHours)
 AdminRouter.post("/attendance/volunteer/gethours", Controller.viewVolunteerHours);
 AdminRouter.post("/attendance/volunteer/deletehours", Controller.deleteVolunteeringSession);
 AdminRouter.post("/attendance/volunteer/edithours", Controller.editVolunteeringSession);
+AdminRouter.post("/attendance/student/status", Controller.checkStudentAttendanceStatus);
+AdminRouter.post("/attendance/student/toggle", Controller.toggleStudentAttendance);
 
 export default AdminRouter;
