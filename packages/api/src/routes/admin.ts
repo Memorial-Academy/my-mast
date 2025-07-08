@@ -346,14 +346,16 @@ export default class Admin {
                 date: number,
                 month: number,
                 year: number
-            }
+            },
+            present: boolean     // true if the student is present
         ): Promise<{status: boolean}> => {  // status == true when the operation results in the student being marked present
             return await Fetch.POST.json(this.url, "attendance/student/toggle", {
                 uuid,
                 token,
                 program: program_id,
                 student: student_uuid,
-                date
+                date,
+                present
             })
         }
     }

@@ -998,8 +998,12 @@ export async function toggleStudentAttendance(req: Request, res: Response) {
     res.writeHead(200, {
         "content-type": "application/json"
     })
-    if (existingRecord) {
+    if (existingRecord && !req.body.present) {
         await existingRecord.deleteOne();
+        res.end(JSON.stringify({status: false}));
+    } else if (existingRecord && req.body.present) {
+        res.end(JSON.stringify({status: true}));
+    } else if (!existingRecord && !req.body.present) {
         res.end(JSON.stringify({status: false}));
     } else {
         await StudentAttendance.create(doc);

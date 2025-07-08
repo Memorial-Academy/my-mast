@@ -1,7 +1,7 @@
 import StudentAttendanceCheckbox from "@/components/program_manager/attendance/StudentCheckbox";
 import generateProgramManagerMetadata, { ParamsArgument } from "../../generate_metadata";
 import API from "@/app/lib/APIHandler";
-import { Table } from "@mymast/ui";
+import { ReloadPage, Table } from "@mymast/ui";
 import sessionInfo from "@mymast/utils/authorize_session";
 import { getFullName, shortDateString } from "@mymast/utils/string_helpers";
 import { ReactNode } from "react";
@@ -76,12 +76,15 @@ export default async function Page({params}: ParamsArgument) {
                 }
 
                 return (
-                    <section className="enrollment-section" key={"week_" + index}>
-                        <h3>Week {index + 1}</h3>
-                        <Table.Root columns={columns}>
-                            {sortedSignups[index]}
-                        </Table.Root>
-                    </section>
+                    <>
+                        <section className="enrollment-section" key={"week_" + index}>
+                            <h3>Week {index + 1}</h3>
+                            <Table.Root columns={columns}>
+                                {sortedSignups[index]}
+                            </Table.Root>
+                        </section>
+                        <ReloadPage/>
+                    </>
                 )
             })}
         </>

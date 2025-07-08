@@ -8,6 +8,7 @@ export * from "./Popup";
 export * from "./IncreaseableInputSection";
 export * from "./ConfirmationPopup";
 export * from "./Links";
+export * from "./Reload";
 // utility components
 export * from "./MainLayout";
 export * from "./Loading";

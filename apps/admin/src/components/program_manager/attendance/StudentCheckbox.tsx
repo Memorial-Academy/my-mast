@@ -35,7 +35,8 @@ export default function StudentAttendanceCheckbox({auth, program, day, student, 
                     auth.token,
                     program,
                     student,
-                    day
+                    day,
+                    !checkboxStatus
                 ).then(({status: result}) => {
                     setCheckboxStatus(result);
                     router.refresh();
