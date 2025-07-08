@@ -933,8 +933,9 @@ export async function checkStudentAttendanceStatus(req: Request, res: Response) 
                     schedule[day].month == record.date.month &&
                     schedule[day].year == record.date.year
                 ) {
-                    status.push(true);
-                } else status.push(false);
+                    status[day] = true;
+                    break;
+                } else status[day] = false;
             }
         }
     }

@@ -76,7 +76,7 @@ export default async function Page({params}: ParamsArgument) {
                 }
 
                 return (
-                    <section className="enrollment-section">
+                    <section className="enrollment-section" key={"week_" + index}>
                         <h3>Week {index + 1}</h3>
                         <Table.Root columns={columns}>
                             {sortedSignups[index]}

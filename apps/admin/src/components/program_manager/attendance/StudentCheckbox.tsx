@@ -2,6 +2,7 @@
 import API from "@/app/lib/APIHandler";
 import { Session } from "@mymast/api/Types";
 import { longDateString } from "@mymast/utils/string_helpers";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 type StudentAttendanceCheckboxProps = {
@@ -18,6 +19,7 @@ type StudentAttendanceCheckboxProps = {
 
 export default function StudentAttendanceCheckbox({auth, program, day, student, status}: StudentAttendanceCheckboxProps) {
     const [checkboxStatus, setCheckboxStatus] = useState(status);
+    const router = useRouter();
     
     return (
         <input 
@@ -26,7 +28,8 @@ export default function StudentAttendanceCheckbox({auth, program, day, student, 
             checked={checkboxStatus}
             aria-label={`Student present on ${longDateString(day)}`}
             title={`Student present on ${longDateString(day)}`}
-            onClick={() => {
+            onChange={(e) => {
+                e.preventDefault();
                 API.Admin.attendance.toggleStudentAttendance(
                     auth.uuid,
                     auth.token,
@@ -35,6 +38,7 @@ export default function StudentAttendanceCheckbox({auth, program, day, student, 
                     day
                 ).then(({status: result}) => {
                     setCheckboxStatus(result);
+                    router.refresh();
                 })
             }}
         />
