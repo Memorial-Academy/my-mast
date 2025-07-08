@@ -17,6 +17,7 @@
 
 body {
     background-color: var(--background-white);
+    position: relative;
 }
 
 h1 {
