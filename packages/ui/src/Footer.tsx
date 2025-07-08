@@ -11,7 +11,7 @@ export default function Footer() {
                 &nbsp;|&nbsp;
                 <a href="https://memorialacademy.org/donate">Donate</a>
                 &nbsp;|&nbsp;
-                <a href="https://memorialacademy.org/privacy">Privacy</a>
+                <a href="https://memorialacademy.org/legal/privacy">Privacy</a>
             </p>
         </footer>
     )

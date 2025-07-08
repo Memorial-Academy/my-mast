@@ -2,7 +2,8 @@ footer {
     /* position: absolute; */
     bottom: 0;
     margin-top: 6vh;
-    width: 100%;
+    width: calc(100% - 10vw);
+    padding: 0 5vw;
 }
 
 footer p, footer a, footer a:visited {
