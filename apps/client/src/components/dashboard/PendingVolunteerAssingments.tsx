@@ -1,4 +1,4 @@
-import { Card } from "@mymast/ui";
+import { Card, EmailLink, PhoneNumberLink } from "@mymast/ui";
 import { PendingVolunteerAssignment } from "@mymast/api/Types";
 import API from "@/app/lib/APIHandler";
 
@@ -66,9 +66,9 @@ export default function PendingVolunteerAssignmentsSection({signups}: {signups: 
                                     <br/>
                                     Name: {program.contact.name.first} {program.contact.name.last}
                                     <br/>
-                                    Email: <a href={`mailto:${program.contact.email}`}>{program.contact.email}</a>
+                                    Email: <EmailLink email={program.contact.email}/>
                                     <br/>
-                                    Phone: {program.contact.phone}
+                                    Phone: <PhoneNumberLink phoneNumber={program.contact.phone}/>
                                 </p>
                             </div>
                         </div>

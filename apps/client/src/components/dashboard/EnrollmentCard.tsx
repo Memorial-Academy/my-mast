@@ -1,6 +1,8 @@
-import { Card, ConfirmationPopup } from "@mymast/ui";
+import { Card, EmailLink, PhoneNumberLink } from "@mymast/ui";
 import EnrollmentCardSchedule from "./EnrollmentCardSchedule"
 import { Program } from "@mymast/api/Types";
+import MYMAST_URL from "@mymast/utils/urls";
+import Link from "next/link";
 
 type EnrollmentCardProps = {
     program: Program,
@@ -15,16 +17,6 @@ export default function EnrollmentCard({ program, course, week, studentName, enr
         <>
             <Card 
                 header={program.name}
-                // actionElement={
-                //     <ConfirmationPopup 
-                //         buttonText="Unenroll"
-                //         message={`You are about to unenroll ${studentName} from ${program.name}. They will immediately be removed from this program. If you decide you would still like to have your student attend this program, you will have re-enroll them. Are you sure you want to continue?`}
-                //         callback={async () => {
-                //             "use server";
-                //             console.log(enrollmentID);
-                //         }}
-                //     />
-                // }
             >
                 <div className="tri-fold">
                     {/* Basic course info */}
@@ -40,7 +32,11 @@ export default function EnrollmentCard({ program, course, week, studentName, enr
                                     <br/>
                                     {program.location.city}, {program.location.state} {program.location.zip}
                                 </>
-                            : "Virtual (links will be sent out at a later date)"}
+                            : <>
+                                Virtual
+                                <br/>
+                                Link: <Link target="_blank" href={`${MYMAST_URL.CLIENT}/virtual_program/${program.id}`}>{`${MYMAST_URL.CLIENT}/virtual_program/${program.id}`}</Link>
+                            </>}
                         </p>
                     </div>
                     {/* Schedule */}
@@ -58,9 +54,9 @@ export default function EnrollmentCard({ program, course, week, studentName, enr
                     <p>
                         <b>Questions?</b> Contact the program director, {program.contact.name.first} {program.contact.name.last}!
                         <br/>
-                        Email: <a href={`mailto:${program.contact.email}`}>{program.contact.email}</a>
+                        Email: <EmailLink email={program.contact.email}/>
                         <br/>
-                        Phone: <a href={`tel:${program.contact.phone}`}>{program.contact.phone}</a>
+                        Phone: <PhoneNumberLink phoneNumber={program.contact.phone}/>
                     </p>
                 </div>
             </Card>

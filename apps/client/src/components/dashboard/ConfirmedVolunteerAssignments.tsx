@@ -4,6 +4,8 @@ import { Card } from "@mymast/ui";
 import getTimestamp from "@mymast/utils/convert_timestamp";
 import ViewVolunteeringHoursPopup from "./ViewHoursPopup";
 import sessionInfo from "@mymast/utils/authorize_session";
+import MYMAST_URL from "@mymast/utils/urls";
+import Link from "next/link";
 
 export default function ConfirmedVolunteerAssignmentsSection({signups}: {signups: ConfirmedVolunteerAssignment[]}) {
     return (
@@ -84,10 +86,7 @@ export default function ConfirmedVolunteerAssignmentsSection({signups}: {signups
                                     {program.location.loc_type == "virtual" && <>
                                         <ins>Virtual</ins>
                                         <br/>
-                                        {program.location.link ? 
-                                            <span>Link: <a href={program.location.link}>{program.location.link}</a></span>
-                                        :   <span>A link to join the virtual classroom will be published shortly before the program begins.</span>
-                                        }
+                                        Link: <Link target="_blank" href={`${MYMAST_URL.CLIENT}/virtual_program/${program.id}`}>{`${MYMAST_URL.CLIENT}/virtual_program/${program.id}`}</Link>
                                     </>}
                                 </p>
                             </div>

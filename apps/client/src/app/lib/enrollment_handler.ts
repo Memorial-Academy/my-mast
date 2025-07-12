@@ -89,7 +89,7 @@ export async function volunteerSignup(data: FormData, program_id: string): Promi
     if (weeks.length == 0) {
         throw new Error("Please select a valid week and course!");
     } else {
-        console.log("in the else", weeks, courseInterest)
+        // console.log("in the else", weeks, courseInterest)
         let {conflicts} = await API.User.checkVolunteerConflicts(
             auth.uuid,
             auth.token,
