@@ -12,7 +12,7 @@ export const generateMetadata = generateProgramManagerMetadata("");
 
 export default async function Page({params}: ParamsArgument) {
     const data = await API.Application.getProgram((await params).id);
-    const auth = (await authorizeSession())!;    
+    const auth = (await authorizeSession())!;
 
     return (
         <>
