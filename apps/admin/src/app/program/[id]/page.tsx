@@ -16,7 +16,7 @@ export default async function Page({params}: ParamsArgument) {
 
     return (
         <>
-            <h2>Information for "{data.name}"</h2>
+            <h2>Information for {data.name}</h2>
             <h3 id="schedule">Schedule</h3>
             <section className="tri-fold">
                 {data.schedule.map((week, index) => {
