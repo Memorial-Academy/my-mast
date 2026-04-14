@@ -186,6 +186,20 @@ export default class Admin {
         })
     }
 
+    async updateVirtualClassroomLink (params: {
+        uuid: string,
+        token: string,
+        program_id: string,
+        newLink: string
+    }): Promise<void> {
+        return await Fetch.POST.json(this.url, "updatevirtualclassroom", {
+            uuid: params.uuid,
+            token: params.token,
+            program: params.program_id,
+            link: params.newLink
+        })
+    }
+
     attendance = {
         // VOLUNTEER ATTENDANCE
         checkVolunteerStatus: async (
@@ -357,6 +371,6 @@ export default class Admin {
                 date,
                 present
             })
-        }
+        },
     }
 }

@@ -947,7 +947,7 @@ export async function checkStudentAttendanceStatus(req: Request, res: Response) 
 }
 
 export async function toggleStudentAttendance(req: Request, res: Response) {
-    const student: StudentsDocument = res.locals.student;
+    // req.body.present tells us if the student is being marked present (true) or not (false)
     const program: ProgramsDocument = res.locals.program;
 
     if (
@@ -1009,4 +1009,29 @@ export async function toggleStudentAttendance(req: Request, res: Response) {
         await StudentAttendance.create(doc);
         res.end(JSON.stringify({status: true}));
     }
+}
+
+export async function updateVirtualClassroomLink(req: Request, res: Response) {
+    // req.body.link contains the updated link
+    const program = await Program.findOne({ id: req.body.program });
+    if (!program) {
+        res.writeHead(404);
+        res.end(`Program '${req.body.program}' does not exist.`);
+        return;
+    }
+
+    // ensure the program is virtual
+    if (program.location.loc_type != "virtual") {
+        res.writeHead(422);
+        res.end(`The program '${res.locals.program}' is not a virtual program and therefore cannot have its link updated.`);
+        return;
+    }
+
+    program.location.link = validateData(req.body.link, res);
+    program.save().then(() => {
+        res.writeHead(200, {
+            "content-type": "text/plain"
+        });
+        res.end();
+    });
 }

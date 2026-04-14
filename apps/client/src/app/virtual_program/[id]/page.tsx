@@ -17,7 +17,7 @@ const messages = [
     "Houston, we have lift off!",
     "Engaging the hyperdrive...",
     "Enjoy your journey through the interwebs!",
-    "If you're reading this, hi from the developer of MyMAST! (also you're smart)".split("").map(val => {
+    "If you're reading this, hi from the dev of MyMAST! (you're smart)".split("").map(val => {
         return val.charCodeAt(0).toString(2) + " ";
     }).join(""),
     "We're on it! Our highly trained penguins are connecting you to your program!",
@@ -27,7 +27,6 @@ const messages = [
 
 export default async function Page({params}: {params: Promise<{id: string}>}) {
     const program = await API.Application.getProgram((await params).id);
-    const session = (await sessionInfo())!;
 
     if (program.location.loc_type == "virtual") {
         if (program.location.link) {
@@ -35,7 +34,9 @@ export default async function Page({params}: {params: Promise<{id: string}>}) {
                 <>
                     <h2>{messages[Math.round(Math.random() * (messages.length - 1))]}</h2>
                     <p>
-                        We're about to automatically redirect you to the virtual classroom for {program.name}. If your browser doesn't automatically redirect you in a few seconds, please click this link:&nbsp;
+                        We're about to automatically redirect you to the virtual classroom for {program.name}!
+                        <br/>
+                        If your browser doesn't automatically redirect you in a few seconds, please click this link:&nbsp;
                         <VirtualProgramRedirect link={program.location.link}/>
                     </p>
                     <p>Now have fun, learn cool things, and make awesome creations!</p>

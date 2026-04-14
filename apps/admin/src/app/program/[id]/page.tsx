@@ -1,12 +1,13 @@
 import authorizeSession from "@mymast/utils/authorize_session";
 import API from "@/app/lib/APIHandler";
 import { UserTypes } from "@mymast/api/Types";
-import { Card, VirtualProgramLink } from "@mymast/ui";
+import { Card, Popup, VirtualProgramLink } from "@mymast/ui";
 import AddDirectorPopup from "@/components/program_manager/AddDirectorPopup";
 import { hasPermssion, PERMISSIONS } from "@/app/lib/permissions";
 import AllowEnrollmentControls from "@/components/program_manager/AllowEnrollments";
 import { shortDateString, startEndTimesString } from "@mymast/utils/string_helpers";
 import generateProgramManagerMetadata, { ParamsArgument } from "./generate_metadata";
+import UpdateVirtualClassroomLink from "@/components/program_manager/UpdateVirtualClassroomLink";
 
 export const generateMetadata = generateProgramManagerMetadata("");
 
@@ -62,13 +63,24 @@ export default async function Page({params}: ParamsArgument) {
                     <p>
                         <b>Location type:</b> Virtual
                         <br/>
-                        <b>Public virtual classroom link:</b> <VirtualProgramLink programID={data.id} /> <i>(Share only this link publicly!)</i>
-                    </p>
-                    <p>
-                        <b>Internal virtual classroom link:</b> {data.location.link ? <a href={data.location.link}>{data.location.link}</a> : "Not yet set."}
+                        <b>Public virtual classroom link:</b> <VirtualProgramLink programID={data.id} />
                         <br/>
-                        <i>DO NOT share this publicly. This is where the public virtual classroom link will redirect to.</i>
+                        <i>Share only this link publicly!</i>
                     </p>
+                    <div>
+                        <p>
+                            <b>Internal virtual classroom link:</b> {data.location.link ? <a href={data.location.link}>{data.location.link}</a> : "Not yet set."}
+                            <br/>
+                            <i>DO NOT share this publicly. This is where the public virtual classroom link will redirect to.</i>
+                            <br/>
+                        </p>
+                        <UpdateVirtualClassroomLink 
+                            program={data.id}
+                            uuid={auth.uuid}
+                            session={auth.token}
+                            currentLink={data.location.link}
+                        />
+                    </div>
                 </>}
             </div>
 
