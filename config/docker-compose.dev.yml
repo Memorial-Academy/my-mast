@@ -1,0 +1,14 @@
+name: mymast
+services:
+  mongodb:
+    build:
+      context: .
+      dockerfile: ./Mongo.Dockerfile
+    env_file: "./mongo.env"
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    restart: always
+volumes:
+  mongo_data:
