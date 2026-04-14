@@ -1,4 +1,4 @@
-import { Card, EmailLink, PhoneNumberLink } from "@mymast/ui";
+import { Card, EmailLink, PhoneNumberLink, VirtualProgramLink } from "@mymast/ui";
 import EnrollmentCardSchedule from "./EnrollmentCardSchedule"
 import { Program } from "@mymast/api/Types";
 import MYMAST_URL from "@mymast/utils/urls";
@@ -35,7 +35,9 @@ export default function EnrollmentCard({ program, course, week, studentName, enr
                             : <>
                                 Virtual
                                 <br/>
-                                Link: <Link target="_blank" href={`${MYMAST_URL.CLIENT}/virtual_program/${program.id}`}>{`${MYMAST_URL.CLIENT}/virtual_program/${program.id}`}</Link>
+                                Join here: <VirtualProgramLink programID={program.id} />
+                                <br/>
+                                Please note: you must be logged into your MyMAST account to access this link, otherwise you will be asked to log-in!
                             </>}
                         </p>
                     </div>

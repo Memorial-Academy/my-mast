@@ -47,7 +47,7 @@ export default function ProgramInfo(props: ProgramInfoProps) {
                     <>
                         <b>Virtual</b>
                         <br/>
-                        Links will be sent to enrolled members via email and published on their MyMAST dashboard a few days before the program begins.
+                        Links will be sent to enrolled parents/students via email and immediately viewable on their MyMAST dashboard upon signup.
                     </> : <>
                         <b>{data.location.common_name}</b>
                         <br/>

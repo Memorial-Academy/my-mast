@@ -1,7 +1,7 @@
 import authorizeSession from "@mymast/utils/authorize_session";
 import API from "@/app/lib/APIHandler";
 import { UserTypes } from "@mymast/api/Types";
-import { Card } from "@mymast/ui";
+import { Card, VirtualProgramLink } from "@mymast/ui";
 import AddDirectorPopup from "@/components/program_manager/AddDirectorPopup";
 import { hasPermssion, PERMISSIONS } from "@/app/lib/permissions";
 import AllowEnrollmentControls from "@/components/program_manager/AllowEnrollments";
@@ -48,14 +48,26 @@ export default async function Page({params}: ParamsArgument) {
 
             <h3 id="location">Location</h3>
             <div className="bi-fold">
-                <p><b>Location type:</b> {data.location.loc_type == "physical" ? "In-person" : "Virtual"}</p>
                 {data.location.loc_type == "physical" && <>
+                    <p><b>Location type:</b> In-person</p>
                     <p>
                         <b>Address for "{data.location.common_name}":</b>
                         <br/>
                         {data.location.address}
                         <br/>
                         {data.location.city}, {data.location.state} {data.location.zip}
+                    </p>
+                </>}
+                {data.location.loc_type == "virtual" && <>
+                    <p>
+                        <b>Location type:</b> Virtual
+                        <br/>
+                        <b>Public virtual classroom link:</b> <VirtualProgramLink programID={data.id} /> <i>(Share only this link publicly!)</i>
+                    </p>
+                    <p>
+                        <b>Internal virtual classroom link:</b> {data.location.link ? <a href={data.location.link}>{data.location.link}</a> : "Not yet set."}
+                        <br/>
+                        <i>DO NOT share this publicly. This is where the public virtual classroom link will redirect to.</i>
                     </p>
                 </>}
             </div>

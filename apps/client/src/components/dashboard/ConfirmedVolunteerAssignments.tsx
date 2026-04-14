@@ -1,6 +1,6 @@
 import API from "@/app/lib/APIHandler";
 import { ConfirmedVolunteerAssignment } from "@mymast/api/Types";
-import { Card } from "@mymast/ui";
+import { Card, VirtualProgramLink } from "@mymast/ui";
 import getTimestamp from "@mymast/utils/convert_timestamp";
 import ViewVolunteeringHoursPopup from "./ViewHoursPopup";
 import sessionInfo from "@mymast/utils/authorize_session";
@@ -86,7 +86,9 @@ export default function ConfirmedVolunteerAssignmentsSection({signups}: {signups
                                     {program.location.loc_type == "virtual" && <>
                                         <ins>Virtual</ins>
                                         <br/>
-                                        Link: <Link target="_blank" href={`${MYMAST_URL.CLIENT}/virtual_program/${program.id}`}>{`${MYMAST_URL.CLIENT}/virtual_program/${program.id}`}</Link>
+                                        Join here: <VirtualProgramLink programID={program.id} />
+                                        <br/>
+                                        Please note: you must be logged into your MyMAST account to access this link, otherwise you will be asked to log-in!
                                     </>}
                                 </p>
                             </div>

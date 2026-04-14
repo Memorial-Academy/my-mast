@@ -1,4 +1,4 @@
-import { Card, EmailLink, PhoneNumberLink } from "@mymast/ui";
+import { Card, EmailLink, PhoneNumberLink, VirtualProgramLink } from "@mymast/ui";
 import { PendingVolunteerAssignment } from "@mymast/api/Types";
 import API from "@/app/lib/APIHandler";
 
@@ -59,7 +59,7 @@ export default function PendingVolunteerAssignmentsSection({signups}: {signups: 
                                         {program.location.address}
                                         <br/>
                                         {program.location.city}, {program.location.state} {program.location.zip}
-                                    </> : <>{program.location.link || "Virtual classroom link will be released soon!"}</>}
+                                    </> : <>Join the virtual classroom here: <VirtualProgramLink programID={program.id} /></>}
                                 </p>
                                 <p>
                                     <b>Program Director</b> (Questions? This is the person to contact!)
