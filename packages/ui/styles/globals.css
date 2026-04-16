@@ -30,12 +30,15 @@ h2 {
     font-family: "Play";
     font-size: 1.8rem;
     font-weight: bold;
+    margin-block: 1em 0;
+
 }
 
 h3 {
     font-family: "Play";
     font-weight: bold;
     font-size: 1.5rem;
+    margin-block: 1em 0;
 }
 
 h4 {
