@@ -4,6 +4,8 @@ import CreateCourse from "./CreateCourse";
 import { LabelledInput, MultipleChoice } from "@mymast/ui";
 import { FormEvent, useState } from "react";
 import SubmitNewProgram from "@/app/lib/submit_program";
+import { NewProgramHelpPopup } from "./program_manager/HelpPopup";
+import * as CreateProgramHelp from "./CreateProgramHelp";
 
 // types inherited from @/index.d.ts
 
@@ -28,8 +30,8 @@ export default function CreateProgramForm(props: CreateProgramFormProps) {
     function generateData(e: FormEvent<HTMLFormElement>) {
         let formData = new FormData(e.currentTarget);
         
+        // retrieve and populate all the location data depending on what location type was chosen
         let locationData;
-        
         let locationTypeFormData = getFormData(formData, "location_type")
         setLocationType(locationTypeFormData!)
         if (locationTypeFormData == "virtual") {
@@ -51,6 +53,7 @@ export default function CreateProgramForm(props: CreateProgramFormProps) {
             }
         }
 
+        // populate all the data in a JSON object
         let data: ProgramDataSubmitted = {
             name: getFormData(formData, "name")!,
             location: locationData,
@@ -86,7 +89,7 @@ export default function CreateProgramForm(props: CreateProgramFormProps) {
                     break;
                 }
 
-                // string from form is formatted YYYY-MM-DD, make into an array of individual properties
+                // string from form is formatted YYYY-MM-DD, make it into a string array of individual properties
                 let dateString = getFormData(formData, `week${weekIndex}_day${dayIndex}_date`)!
                     .split("-")
                     .map(str => {
@@ -108,6 +111,7 @@ export default function CreateProgramForm(props: CreateProgramFormProps) {
             weekIndex++;
         }
 
+        // find all the courses created and add them to an array in the data object
         let courseExists = true;
         let courseIndex = 1;
         while (courseExists) {
@@ -159,6 +163,7 @@ export default function CreateProgramForm(props: CreateProgramFormProps) {
             />
 
             <h3>Location</h3>
+            <NewProgramHelpPopup InfoElem={CreateProgramHelp.LocationInfo} />
             <MultipleChoice
                 name="location_type"
                 type="radio"
@@ -210,10 +215,15 @@ export default function CreateProgramForm(props: CreateProgramFormProps) {
                 </div>
             </> : (
                 /* Virtual ("virtual") location */
-               locationType == "virtual" ? <p>Location will be displayed as "Virtual." Remember to send out meeting links at a later date!</p> : <></> 
+               locationType == "virtual" ? <p>
+                    Location will be displayed as "Virtual." A proxy/redirect link will automatically be created with the program and shared with all parents and volunteers upon signup.
+                    <br/>
+                    Sometime after creating the program, please ensure a link to a virtual classroom (such as Zoom, Webex, or Google Meet) is added from the main page of the Program Manager for this program. As a reminder: MyMAST does not provide virtual classrooms.
+                </p> : <></> 
             )}
 
             <h3>Contact Information</h3>
+            <NewProgramHelpPopup InfoElem={CreateProgramHelp.ContactInfo} />
             <p>Primary contact only</p>
             <div className="bi-fold">
                 <LabelledInput
@@ -251,10 +261,12 @@ export default function CreateProgramForm(props: CreateProgramFormProps) {
             </div>
             
             <h3>Schedule</h3>
+            <NewProgramHelpPopup InfoElem={CreateProgramHelp.ScheduleInfo} />
             <CreateWeeklySchedule/>
 
             {page > 1 ? <>
                 <h3>Courses</h3>
+                <NewProgramHelpPopup InfoElem={CreateProgramHelp.CoursesInfo} />
                 <p>Using a single curriculum? Create one course and provide it any name; the system will automatically select that course during enrollment.</p>
                 <p>Note: "Enrollment available" determines the start date of the course. For example: setting a course with a 2 week duration to have enrollment available during weeks 1 and 2 would mean session 1 would occur during weeks 1 and 2, while session 2 would occur weeks 2 and 3.</p>
                 <CreateCourse schedule={programData!.schedule} />

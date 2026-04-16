@@ -32,6 +32,11 @@ main {
     margin: 0 25%;
 }
 
+.create-program-help-link {
+    font-size: 0.8rem;
+    margin: 0.8rem 0rem;
+}
+
 /* Responsiveness */
 @media screen and (max-width: 1900px) {
     header {

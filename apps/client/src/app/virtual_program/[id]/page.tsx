@@ -40,6 +40,7 @@ export default async function Page({params}: {params: Promise<{id: string}>}) {
                         <VirtualProgramRedirect link={program.location.link}/>
                     </p>
                     <p>Now have fun, learn cool things, and make awesome creations!</p>
+                    <p><b>Please note:</b> you are leaving Memorial Academy of Science and Technology's website and continuing to the website linked above. By continuing, you agree to the above linked website's policies. While we may use external websites in our programs, MAST does not explictly endorse the content or policies of any external websites.</p>
                 </>
             )
         } else {

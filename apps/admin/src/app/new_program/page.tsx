@@ -1,6 +1,7 @@
 import CreateProgramForm from "@/components/NewProgramForm";
 import { Metadata } from "next";
 import sessionInfo from "@mymast/utils/authorize_session";
+import Link from "next/link";
 
 export const metadata: Metadata = {
     title: "Create New Program | Admin Control Panel | Memorial Academy of Science and Technology"
@@ -33,6 +34,7 @@ export default async function Page() {
         <main>
             <h2>Add a new program</h2>
             <p>Completing this form will create a new program in the MyMAST database. Volunteers and parents will immediately be able to begin enrolling in this program.</p>
+            <p><b>Need help?</b> Check out the <Link href="/new_program/help" target="_blank">help guide</Link> (opens in new tab). Alternatively, click the "What's this?" link under each section to open a useful popup explanation!</p>
             <CreateProgramForm contact={autofillContactInfo} />
         </main>
     )
