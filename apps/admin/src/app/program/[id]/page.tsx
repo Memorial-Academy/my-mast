@@ -8,6 +8,8 @@ import AllowEnrollmentControls from "@/components/program_manager/AllowEnrollmen
 import { shortDateString, startEndTimesString } from "@mymast/utils/string_helpers";
 import generateProgramManagerMetadata, { ParamsArgument } from "./generate_metadata";
 import UpdateVirtualClassroomLink from "@/components/program_manager/UpdateVirtualClassroomLink";
+import { CopyableLink } from "../../../../../../packages/ui/src/CopyableLink";
+import MYMAST_URL from "@mymast/utils/urls";
 
 export const generateMetadata = generateProgramManagerMetadata("");
 
@@ -18,6 +20,13 @@ export default async function Page({params}: ParamsArgument) {
     return (
         <>
             <h2>Information for {data.name}</h2>
+            <section>
+                <p>
+                    <b>Parent/student signup link:</b> <CopyableLink link={`${MYMAST_URL.CLIENT}/programs/enroll/${data.id}`} />
+                    <br/>
+                    <b>Volunteer signup link:</b> <CopyableLink link={`${MYMAST_URL.CLIENT}/programs/volunteer/${data.id}`} />
+                </p>
+            </section>
             <h3 id="schedule">Schedule</h3>
             <section className="tri-fold">
                 {data.schedule.map((week, index) => {
