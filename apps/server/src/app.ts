@@ -18,7 +18,8 @@ app.use(BodyParser.json());
 if (process.env.NODE_ENV === "production") {
     let whitelist = [
         "https://my.memorialacademy.org",
-        "https://admin.memorialacademy.org"
+        "https://admin.memorialacademy.org",
+        "https://memorialacademy.org"
     ]
     app.use(cors({
         origin: (origin, callback) => {

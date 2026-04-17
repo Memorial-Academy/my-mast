@@ -570,7 +570,7 @@ Allows an admin user to see student enrollments for a program.
 ## `/app`
 These are paths used by the application to retrieve/manage information related to the app's core functionality.
 
-### `/app/getprogram/<program_id>`
+### `/app/program/<program_id>`
 Returns all information for the provided program ID.
 
 **Method:** `GET`

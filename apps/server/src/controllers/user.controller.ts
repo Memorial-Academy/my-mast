@@ -286,37 +286,63 @@ export async function getAssignments(req: Request, res: Response) {
         return;
     }
 
+    // load date for all pending assignments
     let pendingAssignments = [];
-
-    for (let pa of volunteer.pendingAssignments) {
-        let signup = await VolunteerSignup.findOne({id: pa});
+    for (let pendingAssignmentID of volunteer.pendingAssignments) {
+        let signup = await VolunteerSignup.findOne({id: pendingAssignmentID});
 
         if (!signup) {
             break;
         }
 
+        let pendingAssignmentProgram = (await Program.findOne({id: signup.program}, {
+            "volunteering_hours": 1,
+            "schedule": 1
+        }))!;
         let hours = 0;
+        let weeklyHourAllowance = pendingAssignmentProgram.volunteering_hours.weekly;
 
-        let weeklyHourAllowance = (await Program.findOne({id: signup.program}, {
-            "volunteering_hours": 1
-        }))!.volunteering_hours.weekly
-
+        // calculate hours
         signup.weeks.forEach(week => {
             hours += weeklyHourAllowance[week - 1];
         })
 
-        pendingAssignments.push({
-            program: signup.program,
-            courses: signup.courses,
-            weeks: signup.weeks,
-            instructor: signup.instructorInterest,
-            hours: hours
-        })
+        // only display the assignment if the program occurred within the past month
+        let lastWeek = pendingAssignmentProgram.schedule[pendingAssignmentProgram.schedule.length - 1]
+        let lastDateObj = lastWeek[(lastWeek.length as number) - 1]!;
+        let lastDate = new Date(`${lastDateObj.month}/${lastDateObj.date}/${lastDateObj.year}`).valueOf();
+        // assingments become invisible after 180 days, or 15552000000 milliseconds
+        // 180 days * 24 hrs * 60 mins * 60 seconds * 1000 ms
+        if (lastDate + 15552000000 > Date.now()) {
+            pendingAssignments.push({
+                program: signup.program,
+                courses: signup.courses,
+                weeks: signup.weeks,
+                instructor: signup.instructorInterest,
+                hours: hours
+            })
+        }
+    }
+
+    let confirmedAssignments = [];
+    for (let confirmedAssignment of volunteer.assignments) {
+        let confirmedAssignmentProgram = (await Program.findOne({id: confirmedAssignment.program}, {
+            "schedule": 1
+        }))!;
+
+        let lastWeek = confirmedAssignmentProgram.schedule[confirmedAssignmentProgram.schedule.length - 1]
+        let lastDateObj = lastWeek[(lastWeek.length as number) - 1]!;
+        let lastDate = new Date(`${lastDateObj.month}/${lastDateObj.date}/${lastDateObj.year}`).valueOf();
+        // assingments become invisible after 180 days, or 15552000000 milliseconds
+        // 180 days * 24 hrs * 60 mins * 60 seconds * 1000 ms
+        if (lastDate + 15552000000 > Date.now()) {
+            confirmedAssignments.push(confirmedAssignment);
+        }
     }
 
     res.end(JSON.stringify({
         pending: pendingAssignments,
-        assignments: volunteer.assignments
+        assignments: confirmedAssignments
     }));
     return;
 }

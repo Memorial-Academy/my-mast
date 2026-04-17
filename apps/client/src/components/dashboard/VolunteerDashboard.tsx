@@ -2,6 +2,7 @@ import API from "@/app/lib/APIHandler";
 import PendingVolunteerAssignmentsSection from "./PendingVolunteerAssingments";
 import ConfirmedVolunteerAssignmentsSection from "./ConfirmedVolunteerAssignments";
 import Link from "next/link";
+import { EmailLink } from "@mymast/ui";
 
 type VolunteerDashboardProps = {
     uuid: string
@@ -30,6 +31,8 @@ export default async function VolunteerDashboard(props: VolunteerDashboardProps)
 
             {/* Confirmed assignments */}
             <ConfirmedVolunteerAssignmentsSection signups={signups.assignments} />
+
+            <p>Looking for a program you previously signed up for? Only programs that ended within the past 180 days are displayed here. Please contact us at <EmailLink email="hello@memorialacademy.org" subject="Question Regarding Previous Program - <put the program name here>" /> if you have questions about past programs!</p>
         </>
     )
 }

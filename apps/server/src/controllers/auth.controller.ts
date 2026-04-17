@@ -23,6 +23,7 @@ async function generateSession(uuid: string, role: string) {
 
     // calculate session expiry date
     // sessions will last for 40 days, or 3456000000 milliseconds
+    // 40 days * 24 hrs * 60 mins * 60 seconds * 1000 ms
     let sessionExpiry = Date.now() + 3456000000;
     
     await UserSession.create({
