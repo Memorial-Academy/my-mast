@@ -31,7 +31,7 @@ export default async function authenticate(data: FormData, endpoint: string, pro
             maxAge: (credentials.sessionExpiry - Date.now()) / 1000,
             expires: new Date(credentials.sessionExpiry),
             secure: process.env.NODE_ENV == "production" ? true : false,
-            sameSite: process.env.NODE_ENV == "production" ? "strict" : "none",
+            sameSite: "strict",
             domain: process.env.NODE_ENV === "production" ? ".memorialacademy.org" : ".localhost"
         })
 
