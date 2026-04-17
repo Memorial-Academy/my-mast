@@ -4,13 +4,16 @@ import LoginButton from "./LoginButton";
 import { useRef, useState} from "react";
 import { sendPasswordResetEmail, submitNewPassword } from "@/app/lib/reset_password";
 import { useRouter } from "next/navigation";
+import { usePlausible } from "next-plausible";
 
 export function RequestPasswordReset() {
     const [resetRequested, setResetRequested] = useState(false);
     const [email, setEmail] = useState("");
+    const plausible = usePlausible();
 
     async function passwordResetHandler(data: FormData) {
-        var providedEmail = data.get("email")!.toString()
+        plausible("PasswordResetRequested");
+        var providedEmail = data.get("email")!.toString();
         setResetRequested(true);
         setEmail(providedEmail);
         sendPasswordResetEmail(providedEmail);
@@ -48,7 +51,8 @@ export function RequestPasswordReset() {
 function ResendLink({email}: {email: string}) {
     const [time, setTimeRemaining] = useState(30);
     const [helpTip, setHelpTip] = useState(false);
-    
+    const plausible = usePlausible();
+
     const resendWaitTime = useRef(setInterval(()=>{},10000));
 
     clearInterval(resendWaitTime.current);
@@ -64,6 +68,7 @@ function ResendLink({email}: {email: string}) {
     countdown();
 
     function resendEmail() {
+        plausible("PasswordReset_LinkResendRequested");
         setHelpTip(true);
         sendPasswordResetEmail(email);
         setTimeRemaining(30);

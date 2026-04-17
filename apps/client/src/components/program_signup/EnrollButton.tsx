@@ -6,6 +6,7 @@ import StudentEnrollmentPopup from "./StudentEnrollmentPopup";
 import VolunteerEnrollmentPopup from "./VolunteerEnrollmentPopup";
 import { Program } from "@mymast/api/Types";
 import API from "@/app/lib/APIHandler";
+import { usePlausible } from "next-plausible";
 
 type EnrollButtonProps = {
     signupType: "enroll" | "volunteer",
@@ -25,6 +26,7 @@ export default function EnrollButton(props: EnrollButtonProps) {
     const [popupActive, setPopupActive] = useState(false);
     const [email, setEmail] = useState<string>("");
     const router = useRouter();
+    const plausible = usePlausible();
     let text = "";
 
     if (props.uuid && props.sessionToken) {
@@ -50,9 +52,22 @@ export default function EnrollButton(props: EnrollButtonProps) {
     function signupHandler() {
         if (!props.uuid) {
             alert(`You need an account in order to ${props.signupType == "volunteer" ? "volunteer for" : "enroll in"} a program! Click \"OK\" to go to the login/create account page!\nOnce you're done, you'll be bought back to this page!`);
+            plausible("ProgramSignupAuthRedirect", {props: {
+                signupType: props.signupType,
+                program: props.program.name
+            }});
             router.push(`/?program_redirect=${props.program.id}`);
         } else {
             setPopupActive(true);
+            if (props.signupType == "volunteer") {
+                plausible("ProgramSignupOpened_Volunteer", {props: {
+                    program: props.program.name
+                }});
+            } else {
+                plausible("ProgramSignupOpened_Parent", {props: {
+                    program: props.program.name
+                }});
+            }
         }
     }
 
@@ -66,7 +81,18 @@ export default function EnrollButton(props: EnrollButtonProps) {
             >
                 {text}
             </button>
-            <Popup active={popupActive} onClose={() => {setPopupActive(false)}}>
+            <Popup active={popupActive} onClose={() => {
+                setPopupActive(false);
+                if (props.signupType == "volunteer") {
+                    plausible("ProgramSignupClosed_Volunteer", {props: {
+                        program: props.program.name
+                    }});
+                } else {
+                    plausible("ProgramSignupClosed_Parent", {props: {
+                        program: props.program.name
+                    }});
+                }
+            }}>
                 <h2>Let's {props.signupType == "volunteer" ? "volunteer" : "get enrolled"}!</h2>
                 
                 {(props.signupType == "enroll" && props.students) ? <>

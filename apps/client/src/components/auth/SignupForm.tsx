@@ -7,10 +7,12 @@ import Authenticate from "@/app/lib/auth";
 
 import ParentSignupPage from "./ParentSignup";
 import VolunteerSignupPage from "./VolunteerSignup";
+import { usePlausible } from "next-plausible";
 
 export default function SignupForm({programRedirect}: {programRedirect? :string}) {
     const [userRole, setUserRole] = useState("");
     const [formMessage, setFormMessage] = useState("");
+    const plausible = usePlausible();
 
     async function formSubmissionHandler(data: FormData) {
         const status = await Authenticate(data, "/auth/signup", programRedirect);
@@ -18,6 +20,10 @@ export default function SignupForm({programRedirect}: {programRedirect? :string}
         if (status) {
             // setFormMessage("Could not create account");
             setFormMessage(status);
+        } else {
+            plausible("AccountCreated", {props: {
+                accountType: userRole
+            }});
         }
     }
     

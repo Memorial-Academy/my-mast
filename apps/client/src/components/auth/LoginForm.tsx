@@ -3,9 +3,11 @@ import Authenticate from "@/app/lib/auth";
 import { LabelledInput } from "@mymast/ui";
 import LoginButton from "@/components/auth/LoginButton";
 import { useState } from "react";
+import { usePlausible } from "next-plausible";
 
 export default function LoginFom({programRedirect}: {programRedirect?: string}) {
     const [formMessage, setFormMessage] = useState("");
+    const plausible = usePlausible();
 
     async function formSubmissionHandler(data: FormData) {
         setFormMessage(""); // blank message on every login attempt
@@ -14,6 +16,8 @@ export default function LoginFom({programRedirect}: {programRedirect?: string}) 
         if (status) {
             // setFormMessage("Could not login. Make sure the email and password are correct.");
             setFormMessage(status);
+        } else {
+            plausible("UserLoggedIn");
         }
     }
 

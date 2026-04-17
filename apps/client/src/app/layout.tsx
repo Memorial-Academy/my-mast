@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Layout }  from "@mymast/ui"
+import PlausibleProvider from "next-plausible";
 
 export const metadata: Metadata = {
   title: "MyMAST",
@@ -14,7 +15,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <Layout>
-        {children}
+        <PlausibleProvider src={process.env.NEXT_PUBLIC_CLIENT_ANALYTICS}>
+          {children}
+        </PlausibleProvider>
       </Layout>
     </html>
   );

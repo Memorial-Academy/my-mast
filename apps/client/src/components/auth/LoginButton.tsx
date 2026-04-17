@@ -3,7 +3,7 @@ import React from "react";
 import { useFormStatus } from "react-dom";
 
 export default function LoginButton({text}: {text: string}) {
-  const { pending } = useFormStatus()
+  const { pending } = useFormStatus();
 
   const handleClick = (event: React.MouseEvent) => {
     if (pending) {

@@ -30,9 +30,9 @@ export default async function authenticate(data: FormData, endpoint: string, pro
             httpOnly: true,
             maxAge: (credentials.sessionExpiry - Date.now()) / 1000,
             expires: new Date(credentials.sessionExpiry),
-            secure: true,
-            sameSite: "strict",
-            domain: process.env.NODE_ENV === "production" ? ".memorialacademy.org" : "localhost"
+            secure: process.env.NODE_ENV == "production" ? true : false,
+            sameSite: process.env.NODE_ENV == "production" ? "strict" : "none",
+            domain: process.env.NODE_ENV === "production" ? ".memorialacademy.org" : ".localhost"
         })
 
         if (programRedirect) {
