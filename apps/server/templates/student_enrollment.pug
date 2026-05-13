@@ -8,7 +8,9 @@ ul
         li 
             | Location: Virtual
             br
-            | Links to join the virtual classroom will be available on MyMAST and sent out via email a few days before the program begins.
+            | To join the virtual classroom, please visit this link: 
+            a(href=location.link) #{location.link}
+            | .
     else
         li 
             | Location: #{location.name}

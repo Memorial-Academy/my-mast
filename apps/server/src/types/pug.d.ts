@@ -23,6 +23,7 @@ type StudentEnrollmentLocals = {
     session: string,
     course: string,
     location: EmailLocation,
+    link: string,   // for virtual program... MyMAST virtual classroom link
     email: string,  // contact email
     mymast: string
 }
@@ -38,6 +39,7 @@ type VolunteerEnrollmentLocals = {
     instructor: boolean,
     pending_notice: boolean,
     location: EmailLocation,
+    link: string,   // for virtual program... MyMAST virtual classroom link
     email: string,  // contact email
     mymast: string
 }
@@ -53,6 +55,7 @@ type ConfirmVolunteerLocals = {
         instructor: boolean
     }[],
     location: EmailLocation,
+    link: string,   // for virtual program... MyMAST virtual classroom link
     mymast: string,
     email: string
 }

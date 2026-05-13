@@ -162,6 +162,7 @@ export async function newEnrollment(req: Request, res: Response) {  // for stude
                     program: program.name,
                     course: course.name,
                     location: location,
+                    link: `${process.env.MYMAST_URL}/virtual_program/${program.id}`,
                     session: sessionStr,
                     // email: program.program_type == "stempark" ? "stempark@memorialacademy.org" : "letscode@memorialacademy.org",
                     email: program.contact.email,
@@ -248,6 +249,7 @@ export async function newEnrollment(req: Request, res: Response) {  // for stude
                 email: program.contact.email,
                 instructor: enrollmentData.instructor,
                 location: location,
+                link: `${process.env.MYMAST_URL}/virtual_program/${program.id}`,
                 pending_notice: program.courses.length > 1,
                 mymast: process.env.MYMAST_URL!
             })

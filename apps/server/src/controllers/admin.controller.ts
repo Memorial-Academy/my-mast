@@ -382,6 +382,7 @@ export async function confirmVolunteerAssignment(req: Request, res: Response) {
             programName: program.name,
             mymast: process.env.MYMAST_URL!,
             location: location,
+            link: `${process.env.MYMAST_URL}/virtual_program/${program.id}`,
             commitments: commitments,
             email: program.contact.email
         })
