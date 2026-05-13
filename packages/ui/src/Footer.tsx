@@ -9,7 +9,7 @@ export default function Footer() {
             <p>
                 <a href="https://memorialacademy.org">Main Website</a>
                 &nbsp;|&nbsp;
-                <a href="https://memorialacademy.org/donate">Donate</a>
+                <a href="https://memorialacademy.org/donate?utm_source=website&utm_medium=footer&utm_campaign=mymast">Donate</a>
                 &nbsp;|&nbsp;
                 <a href="https://memorialacademy.org/legal/privacy">Privacy</a>
             </p>

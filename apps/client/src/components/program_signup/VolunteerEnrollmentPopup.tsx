@@ -5,6 +5,7 @@ import { submitVolunteerSignup, volunteerSignup } from "@/app/lib/enrollment_han
 import { calculateHoursFromWeek } from "@/app/lib/calculate_hours";
 import Link from "next/link";
 import { Program } from "@mymast/api/Types";
+import { usePlausible } from "next-plausible";
 
 type VolunteerEnrollmentPopupProps = {
     program: Program,
@@ -12,6 +13,7 @@ type VolunteerEnrollmentPopupProps = {
 }
 
 export default function VolunteerEnrollmentPopup(props: VolunteerEnrollmentPopupProps) {
+    const plausible = usePlausible();
     const [confirmation, setConfirmation] = useState("");
     const [page, setPage] = useState(1);
     const [enrollment, setEnrollment] = useState<{
@@ -154,6 +156,9 @@ export default function VolunteerEnrollmentPopup(props: VolunteerEnrollmentPopup
                             if (status) {
                                 setConfirmation("Whoops! We encountered an error processing your signup. Please make sure you're logged in and that you have no other conflicting volunteer assignments, then try again!")
                             } else {
+                                plausible("ProgramSignupComplete_Volunteer", { props: {
+                                    program: props.program.name
+                                }});
                                 setPage(3);
                             }
                         }}

@@ -36,7 +36,7 @@ export default async function authenticate(data: FormData, endpoint: string, pro
         })
 
         if (programRedirect) {
-            redirect(`/programs/enroll/${programRedirect}`);
+            redirect(`/programs/enroll/${programRedirect}?utm_source=authredirect`);
         } else {
             redirect("/dashboard");
         }

@@ -4,6 +4,7 @@ import {  MultipleChoice } from "@mymast/ui";
 import { studentEnrollment, submitStudentEnrollment } from "@/app/lib/enrollment_handler";
 import Link from "next/link";
 import { Program } from "@mymast/api/Types";
+import { usePlausible } from "next-plausible";
 
 type StudentEnrollmentPopupProps = {
     students: Array<{
@@ -23,6 +24,7 @@ export default function StudentEnrollmentPopup(props: StudentEnrollmentPopupProp
     const [enrollment, setEnrollment] = useState<Array<StudentEnrollmentInformation>>([]);
     const [confirmation, setConfirmation] = useState("");
     const [conflictStudent, setConflictStudent] = useState("");
+    const plausible = usePlausible();
 
     return (
         <>
@@ -108,7 +110,7 @@ export default function StudentEnrollmentPopup(props: StudentEnrollmentPopupProp
                     <br/>
                     Note: donations are completely optional and have no impact on your enrollment.
                 </p>
-                <p><a href="https://memorialacademy.org/donate" target="_blank" rel="noopener">Click here</a> to make a tax-deductible donation (link will open in a new tab).</p>
+                <p><a href="https://memorialacademy.org/donate?utm_source=website&utm_medium=student_signup&utm_campaign=mymast" target="_blank" rel="noopener">Click here</a> to make a tax-deductible donation (link will open in a new tab).</p>
 
                 <h3>Complete the Program Enrollment Agreement</h3>
                 <p>
@@ -129,6 +131,9 @@ export default function StudentEnrollmentPopup(props: StudentEnrollmentPopupProp
                     if (status) {
                         setConfirmation("Whoops! We encountered an error processing your enrollment. Please make sure you're logged in, and that the student(s) you're enrolling have no conflicting enrollments!")
                     } else {
+                        plausible("ProgramSignupComplete_Student", { props: {
+                            program: props.program.name
+                        }});
                         setPage(3);
                     }
                 }}/>
